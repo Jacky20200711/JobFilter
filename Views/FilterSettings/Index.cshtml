@@ -3,7 +3,7 @@
 <h1>設定列表</h1>
 
 <p style="margin-left: 2px;">
-    <a asp-action="Create">新增設定</a>&nbsp;&nbsp;&nbsp;
+    <a asp-action="Create">新增設定</a><span>&nbsp; &nbsp; &nbsp;</span>
     @if (User.Identity.Name == AuthorizeManager.SuperAdmin)
     {
         <a asp-action="DeleteAll">刪除全部</a><span>&nbsp; &nbsp; &nbsp;</span>
@@ -30,27 +30,68 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
             <tr>
-                <td>
-                    <div style="width:100%;white-space:normal;word-wrap:break-word;word-break:break-all;">
-                        @Html.DisplayFor(modelItem => item.CrawlUrl)
-                    </div>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MinimumWage)
-                </td>
-                <td>
-                    <div style="width:100%;white-space:normal;word-wrap:break-word;word-break:break-all;">
-                        @Html.DisplayFor(modelItem => item.ExcludeWord)
-                    </div>
-                </td>
-                <td>
-                    <div style="width:100%;white-space:normal;word-wrap:break-word;word-break:break-all;">
-                        @Html.DisplayFor(modelItem => item.IgnoreCompany)
-                    </div>
+                <td style="white-space: nowrap;">
+                    @{
+                        if (item.CrawlUrl == null)
+                        {
+                            <span>無</span>
+                        }
+                        else if (item.CrawlUrl.Length < 26)
+                        {
+
+                            <span>@item.CrawlUrl</span>
+                        }
+                        else
+                        {
+                            @item.CrawlUrl.Substring(0, 26)
+                            <span>...</span>
+                        }
+                    }
                 </td>
                 <td style="white-space: nowrap;">
+                    @Html.DisplayFor(modelItem => item.MinimumWage)
+                </td>
+                <td style="white-space: nowrap;">
+                    @{
+                        if (item.ExcludeWord == null)
+                        {
+                            <span>無</span>
+                        }
+                        else if (item.ExcludeWord.Length < 25)
+                        {
+
+                            <span>@item.ExcludeWord</span>
+                        }
+                        else
+                        {
+                            @item.ExcludeWord.Substring(0, 25)
+                            <span>...</span>
+                        }
+                    }
+                </td>
+                <td style="white-space: nowrap;">
+                    @{
+                        if (item.IgnoreCompany == null)
+                        {
+                            <span>無</span>
+                        }
+                        else if (item.IgnoreCompany.Length < 25)
+                        {
+
+                            <span>@item.IgnoreCompany</span>
+                        }
+                        else
+                        {
+                            @item.IgnoreCompany.Substring(0, 25)
+                            <span>...</span>
+                        }
+                    }
+                </td>
+                <td style="white-space: nowrap;">
+                    <a asp-action="DoCrawl" asp-route-id="@item.Id">執行</a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
                 </td>
