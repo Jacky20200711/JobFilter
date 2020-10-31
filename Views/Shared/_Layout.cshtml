@@ -33,13 +33,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" id="navbarSupportedContent">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
-                        @if (!AuthorizeManager.InAdminGroup(User.Identity.Name))
+                        <li>@Html.ActionLink("首頁", "Index", "Home", null, new { @class = "my-class" })</li>
+                        @if (!string.IsNullOrEmpty(User.Identity.Name))
                         {
-                            <li>@Html.ActionLink("首頁", "Index", "Home", null, new { @class = "my-class" })</li>
+                            <li>@Html.ActionLink("設定", "Index", "FilterSettings", null, new { @class = "my-class" })</li>
                         }
-                        else
+                        @if (AuthorizeManager.InAdminGroup(User.Identity.Name))
                         {
-                            <li>@Html.ActionLink("首頁", "Index", "Home", null, new { @class = "my-class" })</li>
                             <li>@Html.ActionLink("會員", "Index", "User", null, new { @class = "my-class" })</li>
                         }
                     </ul>

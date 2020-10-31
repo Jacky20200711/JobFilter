@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using JobFilter.Models;
 
 namespace JobFilter.Data
 {
@@ -12,5 +13,6 @@ namespace JobFilter.Data
             : base(options)
         {
         }
+        public DbSet<JobFilter.Models.FilterSetting> FilterSetting { get; set; }
     }
 }

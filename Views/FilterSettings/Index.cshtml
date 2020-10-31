@@ -1,0 +1,48 @@
+﻿@model IEnumerable<JobFilter.Models.FilterSetting>
+
+<h1>設定列表</h1>
+
+<p style="margin-left: 2px;">
+    <a asp-action="Create">新增設定</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                目標網址
+            </th>
+            <th>
+                最低薪資
+            </th>
+            <th>
+                排除關鍵字
+            </th>
+            <th>
+                排除公司
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CrawlUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinimumWage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExcludeWord)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IgnoreCompany)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
