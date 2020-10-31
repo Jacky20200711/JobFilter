@@ -67,6 +67,14 @@ namespace JobFilter
                 options.ClientSecret = googleAuthNSection["ClientSecret"];
                 options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
             });
+
+            services.AddSession();
+            services.AddHttpContextAccessor();
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,6 +98,7 @@ namespace JobFilter
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
