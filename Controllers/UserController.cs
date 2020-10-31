@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JobFilter.Data;
@@ -24,17 +18,14 @@ namespace JobFilter.Controllers
 
         // 注入會用到的工具
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger _logger;
 
-        public UserController(
-                ApplicationDbContext usertext,
-                ILogger<UserController> logger,
-                UserManager<IdentityUser> userManager)
+        public UserController(ApplicationDbContext usertext, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
         {
             _context = usertext;
-            _logger = logger;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(int page = 1)

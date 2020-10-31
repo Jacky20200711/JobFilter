@@ -19,5 +19,7 @@ namespace JobFilter.Models
 
         [StringLength(300, ErrorMessage = "最多只能輸入300個字元!")]
         public string IgnoreCompany { get; set; }
+
+        public string UserId { get; set; }
     }
 }

@@ -7,27 +7,45 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using JobFilter.Data;
 using JobFilter.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace JobFilter.Controllers
 {
     public class FilterSettingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger _logger;
 
-        public FilterSettingsController(ApplicationDbContext context)
+        public FilterSettingsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
         {
             _context = context;
+            _userManager = userManager;
+            _logger = logger;
         }
 
-        // GET: FilterSettings
         public async Task<IActionResult> Index()
         {
-            return View(await _context.FilterSetting.ToListAsync());
+            if (string.IsNullOrEmpty(User.Identity.Name)) return NotFound();
+
+            string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!AuthorizeManager.InAdminGroup(User.Identity.Name))
+            {
+                return View(await _context.FilterSetting.Where(m => m.UserId == UserId).ToListAsync());
+            }
+            else
+            {
+                return View(await _context.FilterSetting.OrderBy(m => m.UserId).ToListAsync());
+            }
         }
 
-        // GET: FilterSettings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+
             if (id == null)
             {
                 return NotFound();
@@ -43,21 +61,22 @@ namespace JobFilter.Controllers
             return View(filterSetting);
         }
 
-        // GET: FilterSettings/Create
         public IActionResult Create()
         {
+            if (string.IsNullOrEmpty(User.Identity.Name)) return NotFound();
+
             return View();
         }
 
-        // POST: FilterSettings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage")] FilterSetting filterSetting)
         {
+            if (string.IsNullOrEmpty(User.Identity.Name)) return NotFound();
+
             if (ModelState.IsValid)
             {
+                filterSetting.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 _context.Add(filterSetting);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -65,9 +84,10 @@ namespace JobFilter.Controllers
             return View(filterSetting);
         }
 
-        // GET: FilterSettings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (string.IsNullOrEmpty(User.Identity.Name)) return NotFound();
+
             if (id == null)
             {
                 return NotFound();
@@ -78,16 +98,20 @@ namespace JobFilter.Controllers
             {
                 return NotFound();
             }
+
+            // 令管理員以外的用戶只能編輯自己的設定
+            string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserId != UserId) return NotFound();
+
             return View(filterSetting);
         }
 
-        // POST: FilterSettings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage")] FilterSetting filterSetting)
         {
+            if (string.IsNullOrEmpty(User.Identity.Name)) return NotFound();
+
             if (id != filterSetting.Id)
             {
                 return NotFound();
@@ -97,28 +121,31 @@ namespace JobFilter.Controllers
             {
                 try
                 {
-                    _context.Update(filterSetting);
+                    // 令管理員以外的用戶只能編輯自己的設定
+                    string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    FilterSetting Setting = _context.FilterSetting.FirstOrDefault(m => m.Id == id);
+                    if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && Setting.UserId != UserId)  return NotFound();
+
+                    // 更新設定
+                    Setting.CrawlUrl = filterSetting.CrawlUrl;
+                    Setting.MinimumWage = filterSetting.MinimumWage;
+                    Setting.ExcludeWord = filterSetting.ExcludeWord;
+                    Setting.IgnoreCompany = filterSetting.IgnoreCompany;
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    if (!FilterSettingExists(filterSetting.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _logger.LogError(ex.ToString());
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(filterSetting);
         }
 
-        // GET: FilterSettings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (string.IsNullOrEmpty(User.Identity.Name)) return NotFound();
+
             if (id == null)
             {
                 return NotFound();
@@ -131,15 +158,10 @@ namespace JobFilter.Controllers
                 return NotFound();
             }
 
-            return View(filterSetting);
-        }
+            // 令管理員以外的用戶只能刪除自己的設定
+            string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserId != UserId) return NotFound();
 
-        // POST: FilterSettings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var filterSetting = await _context.FilterSetting.FindAsync(id);
             _context.FilterSetting.Remove(filterSetting);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -148,6 +170,16 @@ namespace JobFilter.Controllers
         private bool FilterSettingExists(int id)
         {
             return _context.FilterSetting.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> DeleteAll()
+        {
+            if (User.Identity.Name != AuthorizeManager.SuperAdmin) return NotFound();
+
+            _context.RemoveRange(_context.FilterSetting);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
