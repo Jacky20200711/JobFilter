@@ -12,6 +12,7 @@ using JobFilter.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace JobFilter
 {
@@ -38,7 +39,7 @@ namespace JobFilter
 
             services.Configure<IdentityOptions>(options =>
             {
-                // 密碼相關
+                // About Password
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
@@ -46,15 +47,25 @@ namespace JobFilter
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 0;
 
-                // 郵件相關
+                // About Email
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
                 options.SignIn.RequireConfirmedAccount = false;
                 options.User.RequireUniqueEmail = true;
 
-                // 登入次數限制(若連續錯誤5次則上鎖30分鐘)
+                // Lock the account for 30min when error occur 5 times.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 5;
+            });
+
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                IConfigurationSection googleAuthNSection =
+                    Configuration.GetSection("Authentication:Google");
+
+                options.ClientId = googleAuthNSection["ClientId"];
+                options.ClientSecret = googleAuthNSection["ClientSecret"];
+                options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
             });
         }
 
