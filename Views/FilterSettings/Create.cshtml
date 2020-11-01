@@ -47,7 +47,7 @@
     function CheckValue() {
         // 檢查目標網址
         var CrawlUrl = document.getElementById("CrawlUrl");
-        if (CrawlUrl.value > 0 && !CrawlUrl.value.startsWith("https://www.104.com.tw/jobs/")) {
+        if (CrawlUrl.value.length < 1 || !CrawlUrl.value.startsWith("https://www.104.com.tw/jobs")) {
             alert("網址開頭必須是https://www.104.com.tw/jobs/");
             return false;
         }
@@ -55,14 +55,11 @@
         var value = document.getElementById("ExcludeWord").value;
         for (var i = 0; i < value.length; i++) {
             var CharCode = value[i].charCodeAt();
-            if (value[i] == ',' ||
+            if (!(value[i] == ',' ||
                 CharCode > 47 && CharCode < 58 ||
                 CharCode > 64 && CharCode < 91 ||
                 CharCode > 96 && CharCode < 123 ||
-                CharCode > 0x4E00 && CharCode < 0x9FA5) {
-                return true;
-            }
-            else {
+                CharCode > 0x4E00 && CharCode < 0x9FA5)) {
                 alert("欲排除的關鍵字和公司，只能輸入中英文、數字和逗點");
                 return false;
             }
@@ -71,18 +68,17 @@
         var value = document.getElementById("IgnoreCompany").value;
         for (var i = 0; i < value.length; i++) {
             var CharCode = value[i].charCodeAt();
-            if (value[i] == ',' ||
+            if (!(value[i] == ',' ||
                 CharCode > 47 && CharCode < 58 ||
                 CharCode > 64 && CharCode < 91 ||
                 CharCode > 96 && CharCode < 123 ||
-                CharCode > 0x4E00 && CharCode < 0x9FA5) {
-                return true;
-            }
-            else {
+                CharCode > 0x4E00 && CharCode < 0x9FA5)) {
                 alert("欲排除的關鍵字和公司，只能輸入中英文、數字和逗點");
                 return false;
             }
         }
+        // 全部通過則返回 true
+        return true;
     }
     // 攔截最低薪資的輸入
     $('#MinimumWage').on("input", function (e) {
