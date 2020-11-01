@@ -19,6 +19,9 @@
     <thead>
         <tr>
             <th style="white-space: nowrap;">
+                設定人員
+            </th>
+            <th style="white-space: nowrap;">
                 目標網址
             </th>
             <th style="white-space: nowrap;">
@@ -37,6 +40,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td style="white-space: nowrap;">
+                    @Html.DisplayFor(modelItem => item.UserEmail)
+                </td>
                 <td style="white-space: nowrap;">
                     @{
                         if (item.CrawlUrl == null)

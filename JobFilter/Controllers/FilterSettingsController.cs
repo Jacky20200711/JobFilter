@@ -124,6 +124,7 @@ namespace JobFilter.Controllers
                 if (!JobFilterManager.IsValidSetting(filterSetting)) 
                     return Content("表單資料錯誤，請檢查輸入的內容!");
 
+                filterSetting.UserEmail = User.Identity.Name;
                 filterSetting.UserId = UserId;
                 _context.Add(filterSetting);
                 await _context.SaveChangesAsync();
