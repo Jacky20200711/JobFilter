@@ -1,4 +1,6 @@
 ﻿@model JobFilter.Models.FilterSetting
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 <h1>新增設定</h1>
 <h5>★ 欲排除的關鍵字和公司名稱若有多個，請以逗點做分隔</h5>
@@ -9,33 +11,37 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CrawlUrl" class="control-label">目標網址</label>
-                <input asp-for="CrawlUrl" class="form-control" id="CrawlUrl"/>
+                <input asp-for="CrawlUrl" class="form-control" id="CrawlUrl" />
                 <span asp-validation-for="CrawlUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MinimumWage" class="control-label">最低薪資</label>
-                <input type="text" asp-for="MinimumWage" class="form-control" id="MinimumWage"/>
+                <input type="text" asp-for="MinimumWage" class="form-control" id="MinimumWage" />
                 <span asp-validation-for="MinimumWage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ExcludeWord" class="control-label">排除關鍵字</label>
-                <input asp-for="ExcludeWord" class="form-control" id="ExcludeWord"/>
+                <input asp-for="ExcludeWord" class="form-control" id="ExcludeWord" />
                 <span asp-validation-for="ExcludeWord" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IgnoreCompany" class="control-label">排除公司</label>
-                <input asp-for="IgnoreCompany" class="form-control" id="IgnoreCompany"/>
+                <input asp-for="IgnoreCompany" class="form-control" id="IgnoreCompany" />
                 <span asp-validation-for="IgnoreCompany" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="建立" class="btn btn-primary"/>
+                <input type="submit" value="建立" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">返回列表</a>
+    @{
+        int? TryGetPage = HttpContextAccessor.HttpContext.Session.GetInt32("returnPage");
+        int page = TryGetPage != null ? (int)TryGetPage : 1;
+    }
+    @Html.ActionLink("返回列表", "Index", "FilterSettings", new { page = @page })
 </div>
 
 @section Scripts {
@@ -48,7 +54,7 @@
         // 檢查目標網址
         var CrawlUrl = document.getElementById("CrawlUrl");
         if (CrawlUrl.value.length < 1 || !CrawlUrl.value.startsWith("https://www.104.com.tw/jobs")) {
-            alert("網址開頭必須是https://www.104.com.tw/jobs/");
+            alert("網址開頭必須是https://www.104.com.tw/jobs");
             return false;
         }
         // 檢查想排除的關鍵字

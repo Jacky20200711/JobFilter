@@ -1,11 +1,15 @@
-﻿@model IEnumerable<JobFilter.Models.FilterSetting>
+﻿@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<FilterSetting>
 
 <h1>設定列表</h1>
+<span class="text-danger">@TempData["CreateSettingError"]</span>
 
-<p style="margin-left: 2px;">
-    <a asp-action="Create">新增設定</a><span>&nbsp; &nbsp; &nbsp;</span>
+<p>
+    @Html.ActionLink("新增設定(最多10筆)", "Create", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
     @if (User.Identity.Name == AuthorizeManager.SuperAdmin)
     {
+        @Html.ActionLink("所有設定", "SetSessionForCheckAllSettings", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
+        @Html.ActionLink("個人設定", "RemoveSessionOfCheckAllSettings", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
         <a asp-action="DeleteAll">刪除全部</a><span>&nbsp; &nbsp; &nbsp;</span>
         <a asp-controller="CSV" asp-action="ExportSettings">匯出資料</a><span>&nbsp; &nbsp; &nbsp;</span>
         <a asp-controller="CSV" asp-action="ImportSettings">匯入資料</a><span>&nbsp; &nbsp; &nbsp;</span>
@@ -91,11 +95,20 @@
                     }
                 </td>
                 <td style="white-space: nowrap;">
-                    <a asp-action="DoCrawl" asp-route-id="@item.Id">執行</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
+                    @Html.ActionLink("執行 |", "DoCrawl", new { id = item.Id, returnPage = Model.PageNumber })
+                    @Html.ActionLink("編輯 |", "Edit", new { id = item.Id, returnPage = Model.PageNumber })
+                    @Html.ActionLink("刪除", "Delete", new { id = item.Id, returnPage = Model.PageNumber })
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+Page @(Model.PageCount< Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+    new X.PagedList.Mvc.Core.Common.PagedListRenderOptions
+    {
+        LinkToPreviousPageFormat = "上一頁",
+        LinkToNextPageFormat = "下一頁"
+    })
+
