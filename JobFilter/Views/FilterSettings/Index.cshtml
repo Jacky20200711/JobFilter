@@ -11,8 +11,8 @@
         @Html.ActionLink("所有設定", "SetSessionForCheckAllSettings", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
         @Html.ActionLink("個人設定", "RemoveSessionOfCheckAllSettings", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
         <a asp-action="DeleteAll">刪除全部</a><span>&nbsp; &nbsp; &nbsp;</span>
-        <a asp-controller="CSV" asp-action="ExportSettings">匯出資料</a><span>&nbsp; &nbsp; &nbsp;</span>
-        <a asp-controller="CSV" asp-action="ImportSettings">匯入資料</a><span>&nbsp; &nbsp; &nbsp;</span>
+        <a asp-controller="CSV" asp-action="ExportFilterSetting">匯出資料</a><span>&nbsp; &nbsp; &nbsp;</span>
+        <a asp-controller="CSV" asp-action="ImportFilterSetting">匯入資料</a><span>&nbsp; &nbsp; &nbsp;</span>
     }
 </p>
 <table class="table">
@@ -45,18 +45,18 @@
                 </td>
                 <td style="white-space: nowrap;">
                     @{
-                        if (item.CrawlUrl == null)
+                        if (string.IsNullOrEmpty(item.CrawlUrl))
                         {
                             <span>無</span>
                         }
-                        else if (item.CrawlUrl.Length < 26)
+                        else if (item.CrawlUrl.Length < 19)
                         {
 
                             <span>@item.CrawlUrl</span>
                         }
                         else
                         {
-                            @item.CrawlUrl.Substring(0, 26)
+                            @item.CrawlUrl.Substring(0, 19)
                             <span>...</span>
                         }
                     }
@@ -66,36 +66,36 @@
                 </td>
                 <td style="white-space: nowrap;">
                     @{
-                        if (item.ExcludeWord == null)
+                        if (string.IsNullOrEmpty(item.ExcludeWord))
                         {
                             <span>無</span>
                         }
-                        else if (item.ExcludeWord.Length < 25)
+                        else if (item.ExcludeWord.Length < 23)
                         {
 
                             <span>@item.ExcludeWord</span>
                         }
                         else
                         {
-                            @item.ExcludeWord.Substring(0, 25)
+                            @item.ExcludeWord.Substring(0, 23)
                             <span>...</span>
                         }
                     }
                 </td>
                 <td style="white-space: nowrap;">
                     @{
-                        if (item.IgnoreCompany == null)
+                        if (string.IsNullOrEmpty(item.IgnoreCompany))
                         {
                             <span>無</span>
                         }
-                        else if (item.IgnoreCompany.Length < 25)
+                        else if (item.IgnoreCompany.Length < 22)
                         {
 
                             <span>@item.IgnoreCompany</span>
                         }
                         else
                         {
-                            @item.IgnoreCompany.Substring(0, 25)
+                            @item.IgnoreCompany.Substring(0, 22)
                             <span>...</span>
                         }
                     }
