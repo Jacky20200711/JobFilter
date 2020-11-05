@@ -101,7 +101,7 @@
                     }
                 </td>
                 <td style="white-space: nowrap;">
-                    @Html.ActionLink("執行 |", "DoCrawl", new { id = item.Id, returnPage = Model.PageNumber })
+                    @Html.ActionLink("執行 |", "DoCrawl", "JobFilter", new { id = item.Id })
                     @Html.ActionLink("編輯 |", "Edit", new { id = item.Id, returnPage = Model.PageNumber })
                     @Html.ActionLink("刪除", "Delete", new { id = item.Id, returnPage = Model.PageNumber })
                 </td>

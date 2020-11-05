@@ -2,7 +2,7 @@
 
 namespace JobFilter.Models
 {
-    public static class JobFilterManager
+    public static class FilterSettingManager
     {
         public static string TargetUrlHead = "https://www.104.com.tw/jobs";
 

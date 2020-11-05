@@ -121,7 +121,7 @@ namespace JobFilter.Controllers
                 }
 
                 // 在後端進行表單驗證
-                if (!JobFilterManager.IsValidSetting(filterSetting)) 
+                if (!FilterSettingManager.IsValidSetting(filterSetting)) 
                     return Content("表單資料錯誤，請檢查輸入的內容!");
 
                 filterSetting.UserEmail = User.Identity.Name;
@@ -174,7 +174,7 @@ namespace JobFilter.Controllers
                 try
                 {
                     // 在後端進行表單驗證
-                    if (!JobFilterManager.IsValidSetting(filterSetting)) return Content("表單資料錯誤，請檢查輸入的內容!");
+                    if (!FilterSettingManager.IsValidSetting(filterSetting)) return Content("表單資料錯誤，請檢查輸入的內容!");
 
                     // 令管理員以外的用戶只能編輯自己的設定
                     string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

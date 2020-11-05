@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace JobFilter.Models.Tests
 {
     [TestClass()]
-    public class JobFilterManagerTests
+    public class FilterSettingManagerTests
     {
         [TestMethod()]
         public void IsValidSettingTest()
@@ -30,7 +30,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 1000000,
                     ExcludeWord = "",
                     IgnoreCompany = null
@@ -38,7 +38,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = "<",
                     IgnoreCompany = ""
@@ -46,7 +46,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = "<"
@@ -58,7 +58,7 @@ namespace JobFilter.Models.Tests
             {
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = null
@@ -66,7 +66,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = null,
                     IgnoreCompany = ""
@@ -74,7 +74,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = null,
                     IgnoreCompany = null
@@ -82,7 +82,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = ""
@@ -90,7 +90,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 100,
                     ExcludeWord = "",
                     IgnoreCompany = ""
@@ -98,7 +98,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = "測試A,測試B,321",
                     IgnoreCompany = ""
@@ -106,7 +106,7 @@ namespace JobFilter.Models.Tests
 
                 new FilterSetting
                 {
-                    CrawlUrl = JobFilterManager.TargetUrlHead,
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = "測試A,測試B,321"
@@ -116,13 +116,13 @@ namespace JobFilter.Models.Tests
             // 比對所有錯誤的設定
             foreach (FilterSetting filterSetting in InValidfilterSettings)
             {
-                Assert.AreEqual(false, JobFilterManager.IsValidSetting(filterSetting));
+                Assert.AreEqual(false, FilterSettingManager.IsValidSetting(filterSetting));
             }
 
             // 比對所有正確的設定
             foreach (FilterSetting filterSetting in ValidfilterSettings)
             {
-                Assert.AreEqual(true, JobFilterManager.IsValidSetting(filterSetting));
+                Assert.AreEqual(true, FilterSettingManager.IsValidSetting(filterSetting));
             }
         }
     }
