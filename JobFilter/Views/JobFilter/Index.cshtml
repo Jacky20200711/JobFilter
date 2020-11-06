@@ -1,0 +1,111 @@
+﻿@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<JobFilter.Models.DataStructure.Job>
+
+<style>
+    .Container {
+        width: 100%;
+        padding-bottom: 2%;
+        height: auto;
+    }
+
+    .Row {
+        width: 99.6%;
+        white-space: nowrap;
+        background-color: #fffaf2;
+        border: 1px solid #ff9100;
+        border-radius: 16px;
+        height: auto;
+    }
+
+    div a {
+        display: inline-block;
+        word-wrap: break-word;
+        word-break: normal;
+        max-width: 90%;
+        vertical-align: top;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 16px;
+        color: #1654b9;
+        margin-left: 1%;
+        margin-top: 1%;
+    }
+
+    a:hover {
+        color: #008dff;
+        text-decoration: none;
+    }
+
+    .Company {
+        position: relative;
+        font-size: 12px;
+        margin-left: 1%;
+        top: 5px;
+        color: #1654b9;
+    }
+
+    .AreaAndLimit {
+        position: relative;
+        font-size: 13px;
+        margin-left: 1%;
+        top: 10px;
+    }
+
+    .PartialContent {
+        display: inline-block;
+        max-width: 100%;
+        border-radius: 3px;
+        white-space: normal;
+        word-wrap: break-word;
+        word-break: break-all;
+        padding: 0 4px;
+        margin: 0 4px 4px 0;
+        font-size: 14px;
+        color: #7e7e7e;
+        margin-left: 0.8%;
+        margin-top: 1.2%;
+    }
+
+    .Wage {
+        display: inline-block;
+        max-width: 100%;
+        border-radius: 3px;
+        padding: 0 4px;
+        margin: 0 4px 4px 0;
+        font-size: 14px;
+        color: brown;
+        background-color: #eee;
+        margin-left: 1%;
+    }
+</style>
+
+<h1>工作列表</h1>
+
+<div class="Container">
+    @{
+        foreach (var job in Model)
+        {
+            <div class="Row">
+                <a href="@job.Link" target="_blank">@job.Name</a>
+                <br>
+                <div class="Company" target="_blank">@job.Company</div>
+                <strong class="AreaAndLimit">@job.Area&nbsp;&nbsp;@job.Experience&nbsp;&nbsp;@job.Education</strong>
+                <br>
+                <div class="PartialContent">@job.PartialContent</div>
+                <br>
+                <div class="Wage">@job.Wage</div>
+                <br><br>
+            </div>
+            <br>
+        }
+    }
+</div>
+
+Page @(Model.PageCount< Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+    new X.PagedList.Mvc.Core.Common.PagedListRenderOptions
+    {
+        LinkToPreviousPageFormat = "上一頁",
+        LinkToNextPageFormat = "下一頁"
+    })
+

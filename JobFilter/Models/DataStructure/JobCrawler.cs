@@ -9,7 +9,7 @@ namespace JobFilter.Models.DataStructure
     {
         private static string PageContent = null;
         private static readonly List<string> TagsContent = new List<string>();
-        private static readonly List<Dictionary<string, string>> Jobs = new List<Dictionary<string, string>>();
+        private static readonly List<Job> Jobs = new List<Job>();
         private static string _url;
 
         public JobCrawler(string url)
@@ -17,7 +17,7 @@ namespace JobFilter.Models.DataStructure
             _url = url;
         }
 
-        public List<Dictionary<string, string>>  GetJobsDict()
+        public List<Job>  GetJobs()
         {
             return Jobs;
         }
@@ -143,17 +143,17 @@ namespace JobFilter.Models.DataStructure
                 if (GetLowestWage(JobWage) < LowestWage) continue;
 
                 // 儲存工作資料
-                Jobs.Add(new Dictionary<string, string>()
-                    {
-                        { "JobName", JobName },
-                        { "Company", Company },
-                        { "JobLink", JobLink },
-                        { "JobArea", JobArea },
-                        { "JobExperience", JobExperience },
-                        { "Education", Education },
-                        { "PartialContent", PartialContent },
-                        { "JobWage", JobWage }
-                    });
+                Jobs.Add(new Job()
+                {
+                    Name = JobName,
+                    Company = Company,
+                    Link = JobLink,
+                    Area = JobArea,
+                    Experience = JobExperience,
+                    Education = Education,
+                    PartialContent = PartialContent,
+                    Wage = JobWage,
+                });
             }
         }
 
