@@ -21,6 +21,7 @@
 
             // 從工作區塊中，擷取出想要的資料
             _jobCrawler.ExtractJobData();
+            _jobCrawler.SetMissionCompleteFlag(true);
         }
     }
 }

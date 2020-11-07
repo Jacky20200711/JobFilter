@@ -7,14 +7,25 @@ namespace JobFilter.Models.DataStructure
 {
     public class JobCrawler
     {
-        private static string PageContent = null;
-        private static readonly List<string> TagsContent = new List<string>();
-        private static readonly List<Job> Jobs = new List<Job>();
-        private static string _url;
+        readonly List<string> TagsContent = new List<string>();
+        readonly List<Job> Jobs = new List<Job>();
+        readonly string _url;
+        bool MissionComplete = false;
+        string PageContent = null;
 
         public JobCrawler(string url)
         {
             _url = url;
+        }
+
+        public void SetMissionCompleteFlag(bool value)
+        {
+            MissionComplete = value;
+        }
+
+        public bool IsMissionComplete()
+        {
+            return MissionComplete;
         }
 
         public List<Job>  GetJobs()
@@ -83,22 +94,22 @@ namespace JobFilter.Models.DataStructure
             }
 
             // 沒寫數字代表待遇面議
-            return chars.Count == 0 ? 40000 : int.Parse(string.Join("", chars));
+             return chars.Count == 0 ? 40000 : int.Parse(string.Join("", chars));
         }
 
         public void ExtractJobData()
         {
-            int LowestWage = 30000;
-
             HashSet<string> IgnoreCompany = new HashSet<string>();
 
             foreach (string tag in TagsContent)
             {
+                if (tag == null) continue;
+
                 // 擷取工作名稱
                 string TargetStr = "data-job-name";
                 int Index = tag.IndexOf(TargetStr) + TargetStr.Length;
-                string JobName = tag.Substring(Index, 50);
-                JobName = GetValueBetweenChars(JobName, '\"', '\"');
+                string JobTitle = tag.Substring(Index, 50);
+                JobTitle = GetValueBetweenChars(JobTitle, '\"', '\"');
 
                 // 擷取公司名稱(若在黑名單則過濾掉這筆工作)
                 TargetStr = "data-cust-name";
@@ -116,7 +127,7 @@ namespace JobFilter.Models.DataStructure
                 // 擷取地區 & 經歷 & 學歷
                 TargetStr = "b-list-inline b-clearfix job-list-intro b-content";
                 Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length; // 定位到ul
-                Index = tag.IndexOf("li", Index);      // 從ul移動到li
+                Index = tag.IndexOf("<li", Index);     // 從ul移動到li
                 string JobArea = tag.Substring(Index, 30);
                 JobArea = GetValueBetweenChars(JobArea, '>', '<');
 
@@ -140,19 +151,19 @@ namespace JobFilter.Models.DataStructure
                 Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
                 string JobWage = tag.Substring(Index, 30);
                 JobWage = GetValueBetweenChars(JobWage, '>', '<');
-                if (GetLowestWage(JobWage) < LowestWage) continue;
 
                 // 儲存工作資料
                 Jobs.Add(new Job()
                 {
-                    Name = JobName,
+                    Title = JobTitle,
                     Company = Company,
                     Link = JobLink,
                     Area = JobArea,
                     Experience = JobExperience,
                     Education = Education,
                     PartialContent = PartialContent,
-                    Wage = JobWage,
+                    WageRange = JobWage,
+                    MinimumWage = GetLowestWage(JobWage)
                 });
             }
         }
