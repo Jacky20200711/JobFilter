@@ -12,11 +12,11 @@
     }
 
     a.MyLink {
-        position:relative;
+        position: relative;
         color: #008dff;
         text-decoration: none;
         margin-left: 2.7%;
-        top:14px;
+        top: 14px;
         font-size: xx-large;
     }
 
@@ -66,7 +66,8 @@
 </style>
 
 <h1>工作列表</h1>
-<hr/>
+<hr />
+<p class="text-danger" style="font-size: x-large;">@TempData["NoMatchingJob"]</p>
 
 @foreach (var job in Model)
 {
@@ -85,10 +86,10 @@
 }
 
 Page @(Model.PageCount< Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
-        new X.PagedList.Mvc.Core.Common.PagedListRenderOptions
-        {
-            LinkToPreviousPageFormat = "上一頁",
-            LinkToNextPageFormat = "下一頁"
-        })
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+    new X.PagedList.Mvc.Core.Common.PagedListRenderOptions
+    {
+        LinkToPreviousPageFormat = "上一頁",
+        LinkToNextPageFormat = "下一頁"
+    })
 
