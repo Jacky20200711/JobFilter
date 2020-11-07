@@ -1,5 +1,7 @@
 ﻿@using X.PagedList.Mvc.Core
 @model X.PagedList.IPagedList<JobFilter.Models.DataStructure.Job>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 <style>
     .Row {
@@ -22,6 +24,11 @@
 
     a:hover {
         color: #008dff;
+        text-decoration: none;
+    }
+
+    a:visited {
+        color: mediumpurple;
         text-decoration: none;
     }
 
@@ -67,7 +74,11 @@
 
 <h1>工作列表</h1>
 <hr />
-<p class="text-danger" style="font-size: x-large;">@TempData["NoMatchingJob"]</p>
+
+@{
+    string JobNum = HttpContextAccessor.HttpContext.Session.GetString("JobNum");
+}
+<p class="text-danger" style="font-size: x-large;">符合的工作數量 : @JobNum</p>
 
 @foreach (var job in Model)
 {

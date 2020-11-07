@@ -33,11 +33,7 @@ namespace JobFilter.Controllers
             }
 
             var jobs = JsonConvert.DeserializeObject<Jobs>(HttpContext.Session.GetString("Jobs"));
-            if(jobs.Count == 0)
-            {
-                TempData["NoMatchingJob"] = "查無符合的工作!";
-            }
-
+            HttpContext.Session.SetString("JobNum", jobs.Count.ToString());
             return View(await jobs.ToPagedListAsync((int)page, 10));
         }
 
