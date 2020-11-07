@@ -174,12 +174,18 @@ namespace JobFilter.Controllers
                 try
                 {
                     // 在後端進行表單驗證
-                    if (!FilterSettingManager.IsValidSetting(filterSetting)) return Content("表單資料錯誤，請檢查輸入的內容!");
+                    if (!FilterSettingManager.IsValidSetting(filterSetting))
+                    {
+                        return Content("表單資料錯誤，請檢查輸入的內容!");
+                    }
 
                     // 令管理員以外的用戶只能編輯自己的設定
                     string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     FilterSetting Setting = _context.FilterSetting.FirstOrDefault(m => m.Id == id);
-                    if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && Setting.UserId != UserId)  return NotFound();
+                    if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && Setting.UserId != UserId)
+                    {
+                        return NotFound();
+                    }
 
                     // 更新設定
                     Setting.CrawlUrl = filterSetting.CrawlUrl;

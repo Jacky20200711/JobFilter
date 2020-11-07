@@ -44,18 +44,21 @@ namespace JobFilter.Controllers
                 return NotFound();
             }
 
-            // 取得設定檔的目標網址
             var filterSetting = _context.FilterSetting.FirstOrDefault(x => x.Id == id);
             if(filterSetting == null)
             {
                 return NotFound();
             }
+
+            // 令用戶只能執行自己的設定
+            if(filterSetting.UserEmail != User.Identity.Name)
+            {
+                return NotFound();
+            }
+
+            // 創建多個爬蟲 & 在目標網址尾端添加頁數的參數
             string TargetUrl = filterSetting.CrawlUrl;
-
-            // 在目標網址尾端添加指定頁數
             char ConnectionChar = TargetUrl.Last() == '/' ? '?' : '&';
-
-            // 創建多個爬蟲
             List<JobCrawler> JobCrawlers = new List<JobCrawler>
             {
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=1"),
@@ -63,25 +66,27 @@ namespace JobFilter.Controllers
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=3"),
             };
 
-            // 創建爬蟲容器 & 各自對應到一個 Thread (令爬蟲就位XD)
-            JobFilterThread JobFilterThread0 = new JobFilterThread(JobCrawlers[0]);
-            JobFilterThread JobFilterThread1 = new JobFilterThread(JobCrawlers[1]);
-            JobFilterThread JobFilterThread2 = new JobFilterThread(JobCrawlers[2]);
-
-            List<Thread> JobFilterThreads = new List<Thread>
+            // 令每個爬蟲各自對應到一個 Thread (令爬蟲就位XD)
+            List<JobFilterThread> JobFilterThreads = new List<JobFilterThread>();
+            foreach(var jobCrawler in JobCrawlers)
             {
-                new Thread(JobFilterThread0.DoFilter),
-                new Thread(JobFilterThread1.DoFilter),
-                new Thread(JobFilterThread2.DoFilter),
-            };
+                JobFilterThreads.Add(new JobFilterThread(jobCrawler));
+            }
+
+            // 指定 Thread 要執行的 Function
+            List<Thread> Threads = new List<Thread>();
+            foreach (var jobFilterThread in JobFilterThreads)
+            {
+                Threads.Add(new Thread(jobFilterThread.DoFilter));
+            }
 
             // 執行所有的 Thread
-            foreach(Thread thread in JobFilterThreads)
+            foreach(Thread thread in Threads)
             {
                 thread.Start();
             }
 
-            // 等待所有 Thread 完成任務
+            // 等待爬蟲們將各自頁面的工作資訊萃取完畢
             while (!JobCrawlers.All(jobCrawler => jobCrawler.IsMissionComplete() == true))
             {
                 Thread.Sleep(500);
