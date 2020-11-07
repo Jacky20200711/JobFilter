@@ -1,7 +1,9 @@
 ﻿using JobFilter.Data;
 using JobFilter.Models.DataStructure;
 using JobFilter.Models.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,7 +14,6 @@ namespace JobFilter.Controllers
 {
     public class JobFilterController : Controller
     {
-        private readonly List<Job> Jobs = new List<Job>();
         private readonly ApplicationDbContext _context;
 
         public JobFilterController(ApplicationDbContext context)
@@ -24,7 +25,7 @@ namespace JobFilter.Controllers
         {
             page = page == null ? 1 : page;
 
-            return View(await Jobs.ToPagedListAsync((int)page, 10));
+            return View(await JsonConvert.DeserializeObject<Jobs>(HttpContext.Session.GetString("Jobs")).ToPagedListAsync((int)page, 10));
         }
 
         public IActionResult DoCrawl(int? id)
@@ -42,48 +43,50 @@ namespace JobFilter.Controllers
             }
             string TargetUrl = filterSetting.CrawlUrl;
 
-            // 創建三個爬蟲(一次爬三頁)
-            JobCrawler JobCrawler1 = new JobCrawler($"{TargetUrl}&page=1");
-            JobCrawler JobCrawler2 = new JobCrawler($"{TargetUrl}&page=2");
-            JobCrawler JobCrawler3 = new JobCrawler($"{TargetUrl}&page=3");
-
-            // 創建三個爬蟲容器(只爬三頁)
-            JobFilterThread JobFilterThread1 = new JobFilterThread(JobCrawler1);
-            JobFilterThread JobFilterThread2 = new JobFilterThread(JobCrawler2);
-            JobFilterThread JobFilterThread3 = new JobFilterThread(JobCrawler3);
-
-            // 令每個容器各自對應到一個 Thread (令爬蟲就位XD)
-            Thread thread1 = new Thread(JobFilterThread1.DoFilter);
-            Thread thread2 = new Thread(JobFilterThread2.DoFilter);
-            Thread thread3 = new Thread(JobFilterThread3.DoFilter);
-
-            // 令爬蟲同時執行(DoFilter 中有等待機制，所以不需要額外進行等待)
-            thread1.Start();
-            thread2.Start();
-            thread3.Start();
-
-            // 裝載新的工作內容(此步驟是為了美化之後的語法)
-            List<List<Job>> JobsContainer = new List<List<Job>>
+            // 創建多個爬蟲
+            List<JobCrawler> JobCrawlers = new List<JobCrawler>
             {
-                JobCrawler1.GetJobs(),
-                JobCrawler2.GetJobs(),
-                JobCrawler3.GetJobs(),
+                new JobCrawler($"{TargetUrl}&page=1"),
+                //new JobCrawler($"{TargetUrl}&page=2"),
+                //new JobCrawler($"{TargetUrl}&page=3"),
             };
 
-            // 清空舊的爬取內容
-            Jobs.Clear();
+            // 創建爬蟲容器 & 各自對應到一個 Thread (令爬蟲就位XD)
+            JobFilterThread JobFilterThread0 = new JobFilterThread(JobCrawlers[0]);
+            //JobFilterThread JobFilterThread1 = new JobFilterThread(JobCrawlers[1]);
+            //JobFilterThread JobFilterThread2 = new JobFilterThread(JobCrawlers[2]);
 
-            // 根據設定檔的內容進行過濾
-            foreach(var jobs in JobsContainer)
+            List<Thread> JobFilterThreads = new List<Thread>
             {
-                JobFilterManager.GetFilterJobs(
-                    Jobs,
-                    jobs,
-                    filterSetting.MinimumWage,
-                    filterSetting.ExcludeWord,
-                    filterSetting.IgnoreCompany
-                );
+                new Thread(JobFilterThread0.DoFilter),
+                //new Thread(JobFilterThread1.DoFilter),
+                //new Thread(JobFilterThread2.DoFilter),
+            };
+
+            // 執行所有的 Thread
+            foreach(Thread thread in JobFilterThreads)
+            {
+                thread.Start();
             }
+
+            // 等待所有 Thread 完成任務
+            while (!JobCrawlers.Any(jobCrawler => jobCrawler.IsMissionComplete())) ;
+
+            // 過濾掉不符合條件的工作
+            Jobs jobs = new Jobs();
+            foreach (JobCrawler jobCrawler in JobCrawlers)
+            {
+                foreach (Job job in jobCrawler.GetJobs())
+                {
+                    if (JobFilterManager.IsValidJob(filterSetting, job))
+                    {
+                        jobs.Add(job);
+                    }
+                }
+            }
+
+            // 將過濾後的工作儲存到 Session
+            HttpContext.Session.SetString("Jobs", JsonConvert.SerializeObject(jobs));
 
             return RedirectToAction("Index");
         }
