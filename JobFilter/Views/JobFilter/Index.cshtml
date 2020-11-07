@@ -3,7 +3,7 @@
 
 <style>
     .Row {
-        width: 60%;
+        width: 100%;
         white-space: nowrap;
         background-color: #fffaf2;
         border: 2px solid #ff9100;
@@ -15,8 +15,8 @@
         position:relative;
         color: #008dff;
         text-decoration: none;
-        margin-left: 3%;
-        top:10px;
+        margin-left: 2.7%;
+        top:14px;
         font-size: xx-large;
     }
 
@@ -27,15 +27,15 @@
 
     .Company {
         position: relative;
-        top: 10px;
-        margin-left: 3.6%;
+        top: 16px;
+        margin-left: 3%;
         font-size: large;
     }
 
     .AreaAndLimit {
         position: relative;
-        top: 14px;
-        margin-left: 3.5%;
+        top: 22px;
+        margin-left: 3%;
         font-size: large;
     }
 
@@ -49,35 +49,24 @@
         color: #7e7e7e;
         margin-top: 2.6%;
         margin-left: 3%;
+        margin-right: 2.1%;
         font-size: x-large;
     }
 
     .Wage {
         display: inline-block;
         max-width: 100%;
-        color: brown;
+        color: red;
         background-color: #eee;
         margin-top: 1%;
-        margin-left: 3.4%;
-        margin-bottom: 2.5%;
+        margin-left: 3%;
+        margin-bottom: 2%;
         font-size: large;
     }
 </style>
 
 <h1>工作列表</h1>
-
-@*<div class="Row">
-    <a href="1" target="_blank" class="MyLink">工作內容</a>
-    <br>
-    <div class="Company">XXXX股份有限公司</div>
-    <strong class="AreaAndLimit">區域&nbsp;&nbsp;經驗&nbsp;&nbsp;學歷</strong>
-    <br>
-    <div class="PartialContent">工作內容工作內容工作內容</div>
-    <br>
-    <div class="Wage">40000</div>
-    <br>
-</div>
-<br>*@
+<hr/>
 
 @foreach (var job in Model)
 {
@@ -89,7 +78,7 @@
         <br>
         <div class="PartialContent">@job.PartialContent</div>
         <br>
-        <div class="Wage">@job.MinimumWage</div>
+        <div class="Wage">@job.WageRange</div>
         <br>
     </div>
     <br>

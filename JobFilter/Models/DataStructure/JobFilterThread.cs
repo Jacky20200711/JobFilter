@@ -2,7 +2,7 @@
 {
     public class JobFilterThread
     {
-        private static JobCrawler _jobCrawler;
+        JobCrawler _jobCrawler;
 
         public JobFilterThread(JobCrawler jobCrawler)
         {

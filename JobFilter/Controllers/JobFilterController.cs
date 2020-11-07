@@ -47,20 +47,17 @@ namespace JobFilter.Controllers
             List<JobCrawler> JobCrawlers = new List<JobCrawler>
             {
                 new JobCrawler($"{TargetUrl}&page=1"),
-                //new JobCrawler($"{TargetUrl}&page=2"),
-                //new JobCrawler($"{TargetUrl}&page=3"),
+                new JobCrawler($"{TargetUrl}&page=2"),
             };
 
             // 創建爬蟲容器 & 各自對應到一個 Thread (令爬蟲就位XD)
             JobFilterThread JobFilterThread0 = new JobFilterThread(JobCrawlers[0]);
-            //JobFilterThread JobFilterThread1 = new JobFilterThread(JobCrawlers[1]);
-            //JobFilterThread JobFilterThread2 = new JobFilterThread(JobCrawlers[2]);
+            JobFilterThread JobFilterThread1 = new JobFilterThread(JobCrawlers[1]);
 
             List<Thread> JobFilterThreads = new List<Thread>
             {
                 new Thread(JobFilterThread0.DoFilter),
-                //new Thread(JobFilterThread1.DoFilter),
-                //new Thread(JobFilterThread2.DoFilter),
+                new Thread(JobFilterThread1.DoFilter),
             };
 
             // 執行所有的 Thread
@@ -70,7 +67,7 @@ namespace JobFilter.Controllers
             }
 
             // 等待所有 Thread 完成任務
-            while (!JobCrawlers.Any(jobCrawler => jobCrawler.IsMissionComplete())) ;
+            while (!JobCrawlers.All(jobCrawler => jobCrawler.IsMissionComplete() == true)) ;
 
             // 過濾掉不符合條件的工作
             Jobs jobs = new Jobs();

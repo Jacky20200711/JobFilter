@@ -49,7 +49,6 @@ namespace JobFilter.Models
                 }
             }
                 
-            // 全部都通過則返回 true
             return true;
         }
     }
