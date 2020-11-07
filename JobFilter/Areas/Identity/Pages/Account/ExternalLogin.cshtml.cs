@@ -86,7 +86,7 @@ namespace JobFilter.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect(returnUrl);
+                return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
             }
             if (result.IsLockedOut)
             {
