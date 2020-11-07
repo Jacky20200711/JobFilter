@@ -54,8 +54,9 @@
     function CheckValue() {
         // 檢查目標網址
         var CrawlUrl = document.getElementById("CrawlUrl");
-        if (CrawlUrl.value.length < 1 || !CrawlUrl.value.startsWith("https://www.104.com.tw/jobs")) {
-            alert("網址開頭必須是https://www.104.com.tw/jobs");
+        var TargetUrlHead = "https://www.104.com.tw/jobs/search/";
+        if (CrawlUrl.value.length < 1 || !CrawlUrl.value.startsWith(TargetUrlHead)) {
+            alert("網址開頭必須是" + TargetUrlHead);
             return false;
         }
         // 檢查想排除的關鍵字

@@ -4,7 +4,7 @@ namespace JobFilter.Models
 {
     public static class FilterSettingManager
     {
-        public static string TargetUrlHead = "https://www.104.com.tw/jobs";
+        public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
 
         public static bool IsValidSetting(FilterSetting filterSetting)
         {
