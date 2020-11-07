@@ -108,41 +108,40 @@ namespace JobFilter.Models.DataStructure
                 // 擷取工作名稱
                 string TargetStr = "data-job-name";
                 int Index = tag.IndexOf(TargetStr) + TargetStr.Length;
-                string JobTitle = tag.Substring(Index, 50);
+                string JobTitle = tag.Substring(Index, 32) + "...";
                 JobTitle = GetValueBetweenChars(JobTitle, '\"', '\"');
 
-                // 擷取公司名稱(若在黑名單則過濾掉這筆工作)
+                // 擷取公司名稱
                 TargetStr = "data-cust-name";
                 Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                string Company = tag.Substring(Index, 20);
+                string Company = tag.Substring(Index, 40);
                 Company = GetValueBetweenChars(Company, '\"', '\"');
-                if (IgnoreCompany.Contains(Company)) continue;
 
                 // 擷取工作網址
                 TargetStr = "<a";
                 Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                string JobLink = tag.Substring(Index, 60);
+                string JobLink = tag.Substring(Index, 70);
                 JobLink = "https:" + GetValueBetweenChars(JobLink, '\"', '\"');
 
                 // 擷取地區 & 經歷 & 學歷
                 TargetStr = "b-list-inline b-clearfix job-list-intro b-content";
-                Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length; // 定位到ul
-                Index = tag.IndexOf("<li", Index);     // 從ul移動到li
+                Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
+                Index = tag.IndexOf("<li", Index) + 2; // 從ul移動到li
                 string JobArea = tag.Substring(Index, 30);
                 JobArea = GetValueBetweenChars(JobArea, '>', '<');
 
-                Index = tag.IndexOf("<li", Index) + 3; // 移動到下一個li
+                Index = tag.IndexOf("<li", Index) + 2; // 移動到下一個li
                 string JobExperience = tag.Substring(Index, 20);
                 JobExperience = GetValueBetweenChars(JobExperience, '>', '<');
 
-                Index = tag.IndexOf("<li", Index) + 3; // 移動到下一個li
+                Index = tag.IndexOf("<li", Index) + 2; // 移動到下一個li
                 string Education = tag.Substring(Index, 20);
                 Education = GetValueBetweenChars(Education, '>', '<');
 
                 // 擷取部分的工作說明
                 TargetStr = "job-list-item__info b-clearfix b-content";
                 Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                string PartialContent = tag.Substring(Index, 50) + "...";
+                string PartialContent = tag.Substring(Index, 45) + "...";
                 PartialContent = GetValueBetweenChars(PartialContent, '>', '<').TrimEnd();
                 PartialContent = PartialContent.Replace("\n", " ");
 
