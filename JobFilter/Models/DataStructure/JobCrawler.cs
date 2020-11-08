@@ -167,9 +167,11 @@ namespace JobFilter.Models.DataStructure
                 // 擷取部分的工作說明
                 TargetStr = "job-list-item__info b-clearfix b-content";
                 Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                string PartialContent = tag.Substring(Index, 45) + "...";
+                string PartialContent = tag.Substring(Index, 140);
+                PartialContent = PartialContent.Replace("<em class=\"b-txt--highlight\">", "");
+                PartialContent = PartialContent.Replace("</em>", "");
                 PartialContent = GetValueBetweenChars(PartialContent, '>', '<').TrimEnd();
-                PartialContent = PartialContent.Replace("\n", " ");
+                PartialContent = PartialContent.Replace("\n", " ") + "...";
 
                 // 擷取工作薪資 & 最低薪資(若太低則過濾掉這筆工作)
                 TargetStr = "b-tag--default";

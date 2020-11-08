@@ -67,6 +67,8 @@ namespace JobFilter.Controllers
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=1"),
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=2"),
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=3"),
+                new JobCrawler($"{TargetUrl}{ConnectionChar}page=4"),
+                new JobCrawler($"{TargetUrl}{ConnectionChar}page=5"),
             };
 
             // 令每個爬蟲各自對應到一個 Thread (令爬蟲就位XD)
