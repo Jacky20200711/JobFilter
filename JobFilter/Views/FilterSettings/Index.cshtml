@@ -22,9 +22,6 @@
                 設定人員
             </th>
             <th style="white-space: nowrap;">
-                目標網址
-            </th>
-            <th style="white-space: nowrap;">
                 最低月薪
             </th>
             <th style="white-space: nowrap;">
@@ -42,24 +39,6 @@
             <tr>
                 <td style="white-space: nowrap;">
                     @Html.DisplayFor(modelItem => item.UserEmail)
-                </td>
-                <td style="white-space: nowrap;">
-                    @{
-                        if (string.IsNullOrEmpty(item.CrawlUrl))
-                        {
-                            <span>無</span>
-                        }
-                        else if (item.CrawlUrl.Length < 19)
-                        {
-
-                            <span>@item.CrawlUrl</span>
-                        }
-                        else
-                        {
-                            @item.CrawlUrl.Substring(0, 19)
-                            <span>...</span>
-                        }
-                    }
                 </td>
                 <td style="white-space: nowrap;">
                     @Html.DisplayFor(modelItem => item.MinimumWage)
