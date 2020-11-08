@@ -2,7 +2,7 @@
 {
     public class JobFilterThread
     {
-        JobCrawler _jobCrawler;
+        readonly JobCrawler _jobCrawler;
 
         public JobFilterThread(JobCrawler jobCrawler)
         {

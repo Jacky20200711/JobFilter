@@ -4,6 +4,7 @@ using JobFilter.Models.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,12 @@ namespace JobFilter.Controllers
     public class JobFilterController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger _logger;
 
-        public JobFilterController(ApplicationDbContext context)
+        public JobFilterController(ApplicationDbContext context, ILogger<JobFilterController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(int? page = 1)
@@ -79,7 +82,7 @@ namespace JobFilter.Controllers
             {
                 Threads.Add(new Thread(jobFilterThread.DoFilter));
             }
-
+            
             // 執行所有的 Thread
             foreach(Thread thread in Threads)
             {
@@ -89,7 +92,7 @@ namespace JobFilter.Controllers
             // 等待爬蟲們將各自頁面的工作資訊萃取完畢
             while (!JobCrawlers.All(jobCrawler => jobCrawler.IsMissionComplete() == true))
             {
-                Thread.Sleep(500);
+                Thread.Sleep(300);
             }
 
             // 過濾掉不符合條件的工作

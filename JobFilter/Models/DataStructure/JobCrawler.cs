@@ -1,13 +1,15 @@
 ﻿using AngleSharp;
-using NLog.Web.LayoutRenderers;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 
 namespace JobFilter.Models.DataStructure
 {
     public class JobCrawler
     {
+        readonly Logger _logger = LogManager.GetCurrentClassLogger();
         readonly List<string> TagsContent = new List<string>();
         readonly List<Job> Jobs = new List<Job>();
         readonly string _url;
@@ -38,11 +40,17 @@ namespace JobFilter.Models.DataStructure
         {
             if (FunctionName == "LoadPage")
             {
-                while (PageContent == null) ;
+                while (PageContent == null)
+                {
+                    Thread.Sleep(300);
+                }
             }
             else if (FunctionName == "ExtractTags")
             {
-                while (TagsContent == null) ;
+                while (TagsContent.Count < 2 && !IsMissionComplete())
+                {
+                    Thread.Sleep(300);
+                }
             }
         }
 
@@ -107,7 +115,17 @@ namespace JobFilter.Models.DataStructure
 
         public void ExtractJobData()
         {
-            HashSet<string> IgnoreCompany = new HashSet<string>();
+            // 解析失敗，提前結束任務
+            if (TagsContent.Count < 2)
+            {
+                MissionComplete = true;
+                _logger.Error($"解析失敗，<article>標籤數量太少");
+                return;
+            }
+
+            // 最後兩筆不是工作的資料，所以去除掉
+            TagsContent.RemoveAt(TagsContent.Count - 1);
+            TagsContent.RemoveAt(TagsContent.Count - 1);
 
             foreach (string tag in TagsContent)
             {
@@ -185,6 +203,10 @@ namespace JobFilter.Models.DataStructure
             {
                 PageContent = responseMessage.Content.ReadAsStringAsync().Result;
             }
+            else
+            {
+                PageContent = "Fail to load page.";
+            }
         }
 
         public async void ExtractTags(string Tag)
@@ -200,10 +222,6 @@ namespace JobFilter.Models.DataStructure
             {
                 TagsContent.Add(tag.ToHtml());
             }
-
-            // 最後兩筆不是工作的資料，所以去除掉
-            TagsContent.RemoveAt(TagsContent.Count - 1);
-            TagsContent.RemoveAt(TagsContent.Count - 1);
         }
     }
 }
