@@ -1,4 +1,5 @@
 ﻿using AngleSharp;
+using NLog.Web.LayoutRenderers;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -93,8 +94,15 @@ namespace JobFilter.Models.DataStructure
                 }
             }
 
-            // 沒寫數字代表待遇面議
-             return chars.Count == 0 ? 40000 : int.Parse(string.Join("", chars));
+            // 沒寫數字代表待遇面議(即最低40000)
+            int result = chars.Count == 0 ? 40000 : int.Parse(string.Join("", chars));
+
+            if (TargetSection.Contains("年薪"))
+            {
+                return result / 12;
+            }
+
+            return result;
         }
 
         public void ExtractJobData()
