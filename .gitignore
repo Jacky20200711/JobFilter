@@ -3,3 +3,5 @@ release/
 .vs/
 obj/
 bin/
+JobFilter/Properties/PublishProfiles/FolderProfile.pubxml.user
+JobFilter/Properties/PublishProfiles/FolderProfile.pubxml
