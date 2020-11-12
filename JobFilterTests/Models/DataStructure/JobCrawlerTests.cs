@@ -19,7 +19,7 @@ namespace JobFilter.Models.DataStructure.Tests
         }
 
         [TestMethod()]
-        public void GetLowestWageTest()
+        public void GetMinWageTest()
         {
             JobCrawler jobCrawler = new JobCrawler("");
 
