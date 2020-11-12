@@ -105,7 +105,7 @@ namespace JobFilter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage")] FilterSetting filterSetting)
+        public async Task<IActionResult> Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage")] FilterSetting filterSetting)
         {
             if (ModelState.IsValid)
             {
@@ -162,7 +162,7 @@ namespace JobFilter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage")] FilterSetting filterSetting)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage")] FilterSetting filterSetting)
         {
             if (id != filterSetting.Id)
             {
@@ -190,6 +190,7 @@ namespace JobFilter.Controllers
                     // 更新設定
                     Setting.CrawlUrl = filterSetting.CrawlUrl;
                     Setting.MinimumWage = filterSetting.MinimumWage;
+                    Setting.MaximumWage = filterSetting.MaximumWage;
                     Setting.ExcludeWord = filterSetting.ExcludeWord;
                     Setting.IgnoreCompany = filterSetting.IgnoreCompany;
                     await _context.SaveChangesAsync();

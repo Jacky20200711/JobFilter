@@ -10,13 +10,19 @@ namespace JobFilter.Models
         {
             // 檢查目標網址
             if (filterSetting.CrawlUrl == null ||
-                !filterSetting.CrawlUrl.StartsWith(TargetUrlHead)) return false;
+                !filterSetting.CrawlUrl.StartsWith(TargetUrlHead)) 
+                return false;
 
             // 檢查最低薪資
-            if (filterSetting.MinimumWage < 100 || filterSetting.MinimumWage > 999999) return false;
+            if (filterSetting.MinimumWage < 100 || filterSetting.MinimumWage > 999999) 
+                return false;
+
+            // 檢查最高薪資
+            if (filterSetting.MaximumWage < filterSetting.MinimumWage) 
+                return false;
 
             // 檢查欲排除的關鍵字
-            if(filterSetting.ExcludeWord != null)
+            if (filterSetting.ExcludeWord != null)
             {
                 foreach (char c in filterSetting.ExcludeWord)
                 {

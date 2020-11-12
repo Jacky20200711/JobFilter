@@ -1,8 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JobFilter.Models.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JobFilter.Models.Services.Tests
 {

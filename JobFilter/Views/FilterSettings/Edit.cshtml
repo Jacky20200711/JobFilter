@@ -16,9 +16,14 @@
                 <span asp-validation-for="CrawlUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MinimumWage" class="control-label">最低薪資</label>
+                <label asp-for="MinimumWage" class="control-label">最低月薪(不能低於)</label>
                 <input asp-for="MinimumWage" class="form-control" id="MinimumWage" />
                 <span asp-validation-for="MinimumWage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaximumWage" class="control-label">最高月薪(不能低於)</label>
+                <input asp-for="MaximumWage" class="form-control" id="MaximumWage" />
+                <span asp-validation-for="MaximumWage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ExcludeWord" class="control-label">排除關鍵字</label>
@@ -59,6 +64,13 @@
             alert("網址開頭必須是" + TargetUrlHead);
             return false;
         }
+        // 檢查最高月薪是否大於等於最低月薪
+        var MaxWage = document.getElementById("MaximumWage").value;
+        var MinWage = document.getElementById("MinimumWage").value;
+        if (MaxWage < MinWage) {
+            alert("最高月薪必須大於或等於最低月薪!");
+            return false;
+        }
         // 檢查想排除的關鍵字
         var value = document.getElementById("ExcludeWord").value;
         for (var i = 0; i < value.length; i++) {
@@ -88,7 +100,7 @@
         // 全部通過則返回 true
         return true;
     }
-    // 攔截最低薪資的輸入
+    // 攔截最低月薪的輸入
     $('#MinimumWage').on("input", function (e) {
         var value = document.getElementById("MinimumWage").value;
         // 將輸入修正成只有數字
@@ -102,6 +114,22 @@
         // 限制輸入長度
         if (value.length > 6) {
             document.getElementById("MinimumWage").value = value.substr(0, 6);
+        }
+    });
+    // 攔截最高月薪的輸入
+    $('#MaximumWage').on("input", function (e) {
+        var value = document.getElementById("MaximumWage").value;
+        // 將輸入修正成只有數字
+        var InputModify = "";
+        for (var i = 0; i < value.length; i++) {
+            if (value[i].charCodeAt() > 47 && value[i].charCodeAt() < 58) {
+                InputModify += value[i];
+            }
+        }
+        document.getElementById("MaximumWage").value = InputModify;
+        // 限制輸入長度
+        if (value.length > 7) {
+            document.getElementById("MaximumWage").value = value.substr(0, 7);
         }
     });
 </script>

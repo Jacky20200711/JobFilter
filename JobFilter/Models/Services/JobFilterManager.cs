@@ -51,8 +51,10 @@ namespace JobFilter.Models.Services
             HashSet<string> ExcludeWordSet = GetExcludeWordSet(filterSetting.ExcludeWord);
             HashSet<string> IgnoreCompanySet = GetIgnoreCompanySet(filterSetting.IgnoreCompany);
 
-            // 檢查這一份工作的最低薪資和公司名稱
-            if (job.MinimumWage < filterSetting.MinimumWage || IgnoreCompanySet.Contains(job.Company))
+            // 檢查這一份工作的薪資範圍和公司名稱
+            if (job.MinimumWage < filterSetting.MinimumWage ||
+                job.MaximumWage < filterSetting.MaximumWage ||
+                IgnoreCompanySet.Contains(job.Company))
             {
                 return false;
             }

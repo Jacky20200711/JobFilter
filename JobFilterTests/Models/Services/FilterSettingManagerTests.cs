@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace JobFilter.Models.Tests
+namespace JobFilter.Models.Services.Tests
 {
     [TestClass()]
     public class FilterSettingManagerTests
@@ -16,6 +16,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = null,
                     MinimumWage = -1,
+                    MaximumWage = -1,
                     ExcludeWord = null,
                     IgnoreCompany = null
                 },
@@ -24,6 +25,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = "",
                     MinimumWage = -1,
+                    MaximumWage = -1,
                     ExcludeWord = null,
                     IgnoreCompany = ""
                 },
@@ -32,6 +34,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 1000000,
+                    MaximumWage = 2000000,
                     ExcludeWord = "",
                     IgnoreCompany = null
                 },
@@ -40,6 +43,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 2000000,
                     ExcludeWord = "<",
                     IgnoreCompany = ""
                 },
@@ -48,9 +52,19 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 2000000,
                     ExcludeWord = "",
                     IgnoreCompany = "<"
-                }
+                },
+
+                new FilterSetting
+                {
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
+                    MinimumWage = 999999,
+                    MaximumWage = 999998,
+                    ExcludeWord = "",
+                    IgnoreCompany = ""
+                },
             };
 
             // 設計多個正確的設定
@@ -60,6 +74,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = null
                 },
@@ -68,6 +83,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 999999,
                     ExcludeWord = null,
                     IgnoreCompany = ""
                 },
@@ -76,6 +92,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 999999,
                     ExcludeWord = null,
                     IgnoreCompany = null
                 },
@@ -84,6 +101,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = ""
                 },
@@ -92,6 +110,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 100,
+                    MaximumWage = 100,
                     ExcludeWord = "",
                     IgnoreCompany = ""
                 },
@@ -100,6 +119,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 999999,
                     ExcludeWord = "測試A,測試B,321",
                     IgnoreCompany = ""
                 },
@@ -108,6 +128,7 @@ namespace JobFilter.Models.Tests
                 {
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
+                    MaximumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = "測試A,測試B,321"
                 }

@@ -14,6 +14,10 @@ namespace JobFilter.Models
         [RegularExpression(@"^[0-9''-'\d]{3,6}$", ErrorMessage = "輸入內容必須為3~6個數字")]
         public int MinimumWage { get; set; }
 
+        [Required(ErrorMessage = "此欄位不能為空")]
+        [RegularExpression(@"^[0-9''-'\d]{3,7}$", ErrorMessage = "輸入內容必須為3~7個數字")]
+        public int MaximumWage { get; set; }
+
         [StringLength(100, ErrorMessage = "最多只能輸入100個字元!")]
         public string ExcludeWord { get; set; }
 

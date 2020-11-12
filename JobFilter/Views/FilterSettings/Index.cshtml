@@ -22,7 +22,10 @@
                 設定人員
             </th>
             <th style="white-space: nowrap;">
-                最低月薪
+                最低月薪(不能低於)
+            </th>
+            <th style="white-space: nowrap;">
+                最高月薪(不能低於)
             </th>
             <th style="white-space: nowrap;">
                 排除關鍵字
@@ -44,19 +47,22 @@
                     @Html.DisplayFor(modelItem => item.MinimumWage)
                 </td>
                 <td style="white-space: nowrap;">
+                    @Html.DisplayFor(modelItem => item.MaximumWage)
+                </td>
+                <td style="white-space: nowrap;">
                     @{
                         if (string.IsNullOrEmpty(item.ExcludeWord))
                         {
                             <span>無</span>
                         }
-                        else if (item.ExcludeWord.Length < 23)
+                        else if (item.ExcludeWord.Length < 18)
                         {
 
                             <span>@item.ExcludeWord</span>
                         }
                         else
                         {
-                            @item.ExcludeWord.Substring(0, 23)
+                            @item.ExcludeWord.Substring(0, 18)
                             <span>...</span>
                         }
                     }
@@ -67,14 +73,14 @@
                         {
                             <span>無</span>
                         }
-                        else if (item.IgnoreCompany.Length < 22)
+                        else if (item.IgnoreCompany.Length < 16)
                         {
 
                             <span>@item.IgnoreCompany</span>
                         }
                         else
                         {
-                            @item.IgnoreCompany.Substring(0, 22)
+                            @item.IgnoreCompany.Substring(0, 16)
                             <span>...</span>
                         }
                     }

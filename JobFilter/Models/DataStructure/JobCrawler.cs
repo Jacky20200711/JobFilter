@@ -54,8 +54,9 @@ namespace JobFilter.Models.DataStructure
             }
         }
 
-        public int GetLowestWage(string TargetSection)
+        public int GetFirstNum(string TargetSection)
         {
+            // 搜尋到第一個數字後開始擷取數字字元，直到出現非數字
             List<char> chars = new List<char>();
             bool HasFindDigit = false;
             foreach (char C in TargetSection)
@@ -74,16 +75,38 @@ namespace JobFilter.Models.DataStructure
                     if (HasFindDigit) break;
                 }
             }
+            // 沒寫數字代表待遇面議(以40000表示)
+            return chars.Count == 0 ? 40000 : int.Parse(string.Join("", chars));
+        }
 
-            // 沒寫數字代表待遇面議(即最低40000)
-            int result = chars.Count == 0 ? 40000 : int.Parse(string.Join("", chars));
+        public int GetMinWage(string TargetSection)
+        {
+            int result = GetFirstNum(TargetSection);
 
-            if (TargetSection.Contains("年薪"))
+            return TargetSection.Contains("年薪") ? result / 12 : result;
+        }
+
+        public int GetMaxWage(string TargetSection)
+        {
+            // 若面議則返回最大值，確保不會被過濾掉
+            if(TargetSection.Contains("面議"))
+                return 2147483647;
+
+            // 薪資範圍是以 '~' 做分割
+            int index = TargetSection.IndexOf('~');
+
+            // 但可能沒寫薪資範圍，而只有寫最低月薪或最低年薪
+            if (index < 0)
             {
-                return result / 12;
+                // 若只有一個數字，用 GetMinWage 處理即可
+                return GetMinWage(TargetSection);
             }
-
-            return result;
+            else
+            {
+                // 從 '~' 所在的索引擷取數字
+                int result = GetFirstNum(TargetSection.Substring(index));
+                return TargetSection.Contains("年薪") ? result / 12 : result;
+            }
         }
 
         public string GetValueBetweenTwoString(string TargetSection, string S1, string S2)
@@ -199,7 +222,8 @@ namespace JobFilter.Models.DataStructure
                     Education = Education,
                     PartialContent = PartialContent,
                     WageRange = JobWage,
-                    MinimumWage = GetLowestWage(JobWage)
+                    MinimumWage = GetMinWage(JobWage),
+                    MaximumWage = GetMaxWage(JobWage)
                 });
             }
         }

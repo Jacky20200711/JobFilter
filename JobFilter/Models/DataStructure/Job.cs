@@ -14,5 +14,6 @@ namespace JobFilter.Models.DataStructure
         public string PartialContent { get; set; }
         public string WageRange { get; set; }
         public int MinimumWage { get; set; }
+        public int MaximumWage { get; set; }
     }
 }
