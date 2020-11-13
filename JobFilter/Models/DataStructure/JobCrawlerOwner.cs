@@ -1,15 +1,15 @@
 ﻿namespace JobFilter.Models.DataStructure
 {
-    public class JobFilterThread
+    public class JobCrawlerOwner
     {
         readonly JobCrawler _jobCrawler;
 
-        public JobFilterThread(JobCrawler jobCrawler)
+        public JobCrawlerOwner(JobCrawler jobCrawler)
         {
             _jobCrawler = jobCrawler;
         }
 
-        public void DoFilter()
+        public void PutCrawlerInPlace()
         {
             // 爬取網頁 & 等待爬蟲的 IO 處理完畢
             _jobCrawler.LoadPage();

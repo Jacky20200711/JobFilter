@@ -30,12 +30,12 @@ namespace JobFilter.Controllers
         {
             page = page == null ? 1 : page;
 
-            if(HttpContext.Session.GetString("Jobs") == null)
+            if(HttpContext.Session.GetString("jobList") == null)
             {
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
 
-            var jobs = JsonConvert.DeserializeObject<Jobs>(HttpContext.Session.GetString("Jobs"));
+            var jobs = JsonConvert.DeserializeObject<JobList>(HttpContext.Session.GetString("jobList"));
             HttpContext.Session.SetString("JobNum", jobs.Count.ToString());
             return View(await jobs.ToPagedListAsync((int)page, 10));
         }
@@ -71,22 +71,22 @@ namespace JobFilter.Controllers
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=5"),
             };
 
-            // 令每個爬蟲各自對應到一個 Thread (令爬蟲就位XD)
-            List<JobFilterThread> JobFilterThreads = new List<JobFilterThread>();
+            // 創建多個爬蟲愛好者，每個人認養一隻爬蟲
+            List<JobCrawlerOwner> JobCrawlerOwners = new List<JobCrawlerOwner>();
             foreach(var jobCrawler in JobCrawlers)
             {
-                JobFilterThreads.Add(new JobFilterThread(jobCrawler));
+                JobCrawlerOwners.Add(new JobCrawlerOwner(jobCrawler));
             }
 
-            // 指定 Thread 要執行的 Function
-            List<Thread> Threads = new List<Thread>();
-            foreach (var jobFilterThread in JobFilterThreads)
+            // 指派任務給每一隻爬蟲，並令爬蟲們就位XD
+            List<Thread> JobCrawlerThreads = new List<Thread>();
+            foreach (var JobCrawlerOwner in JobCrawlerOwners)
             {
-                Threads.Add(new Thread(jobFilterThread.DoFilter));
+                JobCrawlerThreads.Add(new Thread(JobCrawlerOwner.PutCrawlerInPlace));
             }
             
-            // 執行所有的 Thread
-            foreach(Thread thread in Threads)
+            // 令所有爬蟲開始執行任務
+            foreach(Thread thread in JobCrawlerThreads)
             {
                 thread.Start();
             }
@@ -98,20 +98,20 @@ namespace JobFilter.Controllers
             }
 
             // 過濾掉不符合條件的工作
-            Jobs jobs = new Jobs();
+            JobList jobList = new JobList();
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
                 foreach (Job job in jobCrawler.GetJobs())
                 {
                     if (JobFilterManager.IsValidJob(filterSetting, job))
                     {
-                        jobs.Add(job);
+                        jobList.Add(job);
                     }
                 }
             }
 
             // 將過濾後的工作儲存到 Session
-            HttpContext.Session.SetString("Jobs", JsonConvert.SerializeObject(jobs));
+            HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
 
             return RedirectToAction("Index");
         }

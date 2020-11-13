@@ -1,15 +1,14 @@
-﻿using JobFilter.Models.DataStructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace JobFilter.Models.DataStructure
 {
     [Serializable]
-    public class Jobs : ICollection<Job>
+    public class JobList : ICollection<Job>
     {
         public List<Job> JobItems;
 
-        public Jobs()
+        public JobList()
         {
             JobItems = new List<Job>();
         }
