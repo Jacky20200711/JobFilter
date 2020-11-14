@@ -6,6 +6,27 @@ namespace JobFilter.Models
     {
         public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
 
+        public static bool IsValidString(string TestStr)
+        {
+            if (string.IsNullOrEmpty(TestStr))
+                return true;
+
+            foreach (char c in TestStr)
+            {
+                int CharCode = Convert.ToInt32(c);
+                if (!(c == ',' || c == '_' || c == '+' || c == ' ' ||
+                    CharCode > 47 && CharCode < 58 ||
+                    CharCode > 64 && CharCode < 91 ||
+                    CharCode > 96 && CharCode < 123 ||
+                    CharCode > 0x4E00 && CharCode < 0x9FA5))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool IsValidSetting(FilterSetting filterSetting)
         {
             // 檢查目標網址
@@ -22,38 +43,12 @@ namespace JobFilter.Models
                 return false;
 
             // 檢查欲排除的關鍵字
-            if (filterSetting.ExcludeWord != null)
-            {
-                foreach (char c in filterSetting.ExcludeWord)
-                {
-                    int CharCode = Convert.ToInt32(c);
-                    if (!(c == ',' || c == '_' || c == '+' ||
-                        CharCode > 47 && CharCode < 58 ||
-                        CharCode > 64 && CharCode < 91 ||
-                        CharCode > 96 && CharCode < 123 ||
-                        CharCode > 0x4E00 && CharCode < 0x9FA5))
-                    {
-                        return false;
-                    }
-                }
-            }
+            if (!IsValidString(filterSetting.ExcludeWord))
+                return false;
 
             // 檢查欲排除的公司名稱
-            if (filterSetting.IgnoreCompany != null)
-            {
-                foreach (char c in filterSetting.IgnoreCompany)
-                {
-                    int CharCode = Convert.ToInt32(c);
-                    if (!(c == ',' || c == '_' || c == '+' ||
-                        CharCode > 47 && CharCode < 58 ||
-                        CharCode > 64 && CharCode < 91 ||
-                        CharCode > 96 && CharCode < 123 ||
-                        CharCode > 0x4E00 && CharCode < 0x9FA5))
-                    {
-                        return false;
-                    }
-                }
-            }
+            if (!IsValidString(filterSetting.IgnoreCompany))
+                return false;
                 
             return true;
         }

@@ -7,6 +7,15 @@ namespace JobFilter.Models.Services.Tests
     public class FilterSettingManagerTests
     {
         [TestMethod()]
+        public void IsValidSetringTest()
+        {
+            Assert.AreEqual(true, FilterSettingManager.IsValidString(" ,_+測試"));
+            Assert.AreEqual(true, FilterSettingManager.IsValidString(""));
+            Assert.AreEqual(true, FilterSettingManager.IsValidString(null));
+            Assert.AreEqual(false, FilterSettingManager.IsValidString("!"));
+        }
+
+        [TestMethod()]
         public void IsValidSettingTest()
         {
             // 設計多個錯誤的設定
@@ -138,7 +147,7 @@ namespace JobFilter.Models.Services.Tests
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     MaximumWage = 999999,
-                    ExcludeWord = "_+",
+                    ExcludeWord = " _+",
                     IgnoreCompany = ""
                 },
 
@@ -148,7 +157,7 @@ namespace JobFilter.Models.Services.Tests
                     MinimumWage = 999999,
                     MaximumWage = 999999,
                     ExcludeWord = "",
-                    IgnoreCompany = "_+"
+                    IgnoreCompany = " _+"
                 },
             };
 
