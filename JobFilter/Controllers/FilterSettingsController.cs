@@ -105,7 +105,7 @@ namespace JobFilter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage")] FilterSetting filterSetting)
+        public async Task<IActionResult> Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
         {
             if (ModelState.IsValid)
             {
@@ -162,7 +162,7 @@ namespace JobFilter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage")] FilterSetting filterSetting)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
         {
             if (id != filterSetting.Id)
             {
@@ -193,6 +193,7 @@ namespace JobFilter.Controllers
                     Setting.MaximumWage = filterSetting.MaximumWage;
                     Setting.ExcludeWord = filterSetting.ExcludeWord;
                     Setting.IgnoreCompany = filterSetting.IgnoreCompany;
+                    Setting.Remarks = filterSetting.Remarks;
                     await _context.SaveChangesAsync();
 
                     // 返回之前的分頁
@@ -262,7 +263,7 @@ namespace JobFilter.Controllers
         {
             if (!FilterSettingManager.IsValidString(CompanyName))
             {
-                return NotFound();
+                return Content("封鎖失敗，此公司的名稱含有不支援的字元QQ");
             }
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

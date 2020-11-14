@@ -36,6 +36,11 @@
                 <span asp-validation-for="IgnoreCompany" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Remarks" class="control-label">備註</label>
+                <input asp-for="Remarks" class="form-control" id="Remarks" />
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="儲存" class="btn btn-primary" />
             </div>
         </form>
@@ -56,6 +61,20 @@
 
 <script src="/lib/jquery/dist/jquery.min.js"></script>
 <script>
+    function IsValidString(value) {
+        for (var i = 0; i < value.length; i++) {
+            var CharCode = value[i].charCodeAt();
+            if (!(value[i] == ',' || value[i] == '_' || value[i] == '+' || value[i] == ' ' ||
+                CharCode > 47 && CharCode < 58 ||
+                CharCode > 64 && CharCode < 91 ||
+                CharCode > 96 && CharCode < 123 ||
+                CharCode > 0x4E00 && CharCode < 0x9FA5)) {
+                alert("只能輸入中英文、數字、逗點、底線、加號、空白");
+                return false;
+            }
+        }
+        return true;
+    }
     function CheckValue() {
         // 檢查目標網址
         var CrawlUrl = document.getElementById("CrawlUrl");
@@ -72,32 +91,17 @@
             return false;
         }
         // 檢查想排除的關鍵字
-        var value = document.getElementById("ExcludeWord").value;
-        for (var i = 0; i < value.length; i++) {
-            var CharCode = value[i].charCodeAt();
-            if (!(value[i] == ',' || value[i] == '_' || value[i] == '+' || value[i] == ' ' ||
-                CharCode > 47 && CharCode < 58 ||
-                CharCode > 64 && CharCode < 91 ||
-                CharCode > 96 && CharCode < 123 ||
-                CharCode > 0x4E00 && CharCode < 0x9FA5)) {
-                alert("欲排除的關鍵字和公司，只能輸入中英文、數字、逗點、底線、加號、空白");
-                return false;
-            }
-        }
+        if (!IsValidString(document.getElementById("ExcludeWord").value))
+            return false;
+       
         // 檢查想排除的公司
-        var value = document.getElementById("IgnoreCompany").value;
-        for (var i = 0; i < value.length; i++) {
-            var CharCode = value[i].charCodeAt();
-            if (!(value[i] == ',' || value[i] == '_' || value[i] == '+' || value[i] == ' ' ||
-                CharCode > 47 && CharCode < 58 ||
-                CharCode > 64 && CharCode < 91 ||
-                CharCode > 96 && CharCode < 123 ||
-                CharCode > 0x4E00 && CharCode < 0x9FA5)) {
-                alert("欲排除的關鍵字和公司，只能輸入中英文、數字、逗點、底線、加號、空白");
-                return false;
-            }
-        }
-        // 全部通過則返回 true
+        if (!IsValidString(document.getElementById("IgnoreCompany").value))
+            return false;
+
+        // 檢查備註
+        if (!IsValidString(document.getElementById("Remarks").value))
+            return false;
+
         return true;
     }
     // 攔截最低月薪的輸入

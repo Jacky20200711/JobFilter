@@ -49,7 +49,11 @@ namespace JobFilter.Models
             // 檢查欲排除的公司名稱
             if (!IsValidString(filterSetting.IgnoreCompany))
                 return false;
-                
+
+            // 檢查備註
+            if (!IsValidString(filterSetting.Remarks))
+                return false;
+
             return true;
         }
     }
