@@ -263,7 +263,7 @@ namespace JobFilter.Controllers
         {
             if (!FilterSettingManager.IsValidString(CompanyName))
             {
-                return Content("<h2>封鎖失敗，此公司的名稱含有不支援的字元QQ</h2>");
+                return Content("封鎖失敗，此公司的名稱含有不支援的字元QQ");
             }
             
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
