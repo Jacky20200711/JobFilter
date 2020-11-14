@@ -14,11 +14,17 @@ namespace JobFilter.Models.DataStructure
         readonly List<Job> Jobs = new List<Job>();
         readonly string _url;
         bool MissionComplete = false;
+        bool EncounterError = false;
         string PageContent = null;
 
         public JobCrawler(string url)
         {
             _url = url;
+        }
+
+        public bool IsEncounterError()
+        {
+            return EncounterError;
         }
 
         public void SetMissionCompleteFlag(bool value)
@@ -38,18 +44,36 @@ namespace JobFilter.Models.DataStructure
 
         public void WaitingForFunctionIO(string FunctionName)
         {
+            int StopCount = 0;
+            int StopBound = 25;
             if (FunctionName == "LoadPage")
             {
                 while (PageContent == null)
                 {
-                    Thread.Sleep(300);
+                    Thread.Sleep(200);
+
+                    // 若等候太久則停止作業
+                    StopCount++;
+                    if (StopCount > StopBound)
+                    {
+                        EncounterError = true;
+                        return;
+                    }
                 }
             }
             else if (FunctionName == "ExtractTags")
             {
                 while (TagsContent.Count < 2 && !IsMissionComplete())
                 {
-                    Thread.Sleep(300);
+                    Thread.Sleep(200);
+
+                    // 若等候太久則停止作業
+                    StopCount++;
+                    if (StopCount > StopBound)
+                    {
+                        EncounterError = true;
+                        return;
+                    }
                 }
             }
         }

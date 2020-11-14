@@ -30,12 +30,13 @@ namespace JobFilter.Controllers
         {
             page = page == null ? 1 : page;
 
-            if(HttpContext.Session.GetString("jobList") == null)
+            string SessionValue = HttpContext.Session.GetString("jobList");
+            if (SessionValue == null || SessionValue == "Error")
             {
-                return RedirectToRoute(new { controller = "Home", action = "Index" });
+                return View("Error");
             }
 
-            var jobs = JsonConvert.DeserializeObject<JobList>(HttpContext.Session.GetString("jobList"));
+            var jobs = JsonConvert.DeserializeObject<JobList>(SessionValue);
             HttpContext.Session.SetString("JobNum", jobs.Count.ToString());
             return View(await jobs.ToPagedListAsync((int)page, 10));
         }
@@ -91,10 +92,20 @@ namespace JobFilter.Controllers
                 thread.Start();
             }
 
-            // 等待爬蟲們將各自頁面的工作資訊萃取完畢
+            // 等待爬蟲們完成並回報
             while (!JobCrawlers.All(jobCrawler => jobCrawler.IsMissionComplete() == true))
             {
                 Thread.Sleep(300);
+            }
+
+            // 詢問爬蟲們執行任務的過程是否順利
+            foreach (JobCrawler jobCrawler in JobCrawlers)
+            {
+                if (jobCrawler.IsEncounterError())
+                {
+                    HttpContext.Session.SetString("jobList", "Error");
+                    return RedirectToAction("Index");
+                }
             }
 
             // 過濾掉不符合條件的工作
