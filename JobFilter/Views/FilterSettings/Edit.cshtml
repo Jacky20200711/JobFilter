@@ -75,12 +75,12 @@
         var value = document.getElementById("ExcludeWord").value;
         for (var i = 0; i < value.length; i++) {
             var CharCode = value[i].charCodeAt();
-            if (!(value[i] == ',' ||
+            if (!(value[i] == ',' || value[i] == '_' || value[i] == '+' ||
                 CharCode > 47 && CharCode < 58 ||
                 CharCode > 64 && CharCode < 91 ||
                 CharCode > 96 && CharCode < 123 ||
                 CharCode > 0x4E00 && CharCode < 0x9FA5)) {
-                alert("欲排除的關鍵字和公司，只能輸入中英文、數字和逗點");
+                alert("欲排除的關鍵字和公司，只能輸入中英文、數字、逗點、底線、加號");
                 return false;
             }
         }
@@ -88,12 +88,12 @@
         var value = document.getElementById("IgnoreCompany").value;
         for (var i = 0; i < value.length; i++) {
             var CharCode = value[i].charCodeAt();
-            if (!(value[i] == ',' ||
+            if (!(value[i] == ',' || value[i] == '_' || value[i] == '+' ||
                 CharCode > 47 && CharCode < 58 ||
                 CharCode > 64 && CharCode < 91 ||
                 CharCode > 96 && CharCode < 123 ||
                 CharCode > 0x4E00 && CharCode < 0x9FA5)) {
-                alert("欲排除的關鍵字和公司，只能輸入中英文、數字和逗點");
+                alert("欲排除的關鍵字和公司，只能輸入中英文、數字、逗點、底線、加號");
                 return false;
             }
         }

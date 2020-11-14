@@ -27,7 +27,7 @@ namespace JobFilter.Models
                 foreach (char c in filterSetting.ExcludeWord)
                 {
                     int CharCode = Convert.ToInt32(c);
-                    if (!(c == ',' ||
+                    if (!(c == ',' || c == '_' || c == '+' ||
                         CharCode > 47 && CharCode < 58 ||
                         CharCode > 64 && CharCode < 91 ||
                         CharCode > 96 && CharCode < 123 ||
@@ -44,7 +44,7 @@ namespace JobFilter.Models
                 foreach (char c in filterSetting.IgnoreCompany)
                 {
                     int CharCode = Convert.ToInt32(c);
-                    if (!(c == ',' ||
+                    if (!(c == ',' || c == '_' || c == '+' ||
                         CharCode > 47 && CharCode < 58 ||
                         CharCode > 64 && CharCode < 91 ||
                         CharCode > 96 && CharCode < 123 ||
