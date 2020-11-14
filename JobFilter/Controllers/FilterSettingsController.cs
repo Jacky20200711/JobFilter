@@ -257,5 +257,30 @@ namespace JobFilter.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> AddBlockCompany(string CompanyName)
+        {
+            if (!FilterSettingManager.IsValidString(CompanyName))
+            {
+                return NotFound();
+            }
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var UserSettings = _context.FilterSetting.Where(m => m.UserId == userId);
+            if(UserSettings == null)
+            {
+                return NotFound();
+            }
+
+            // 將接收的排除公司添加到所有設定檔
+            foreach(var UserSetting in UserSettings)
+            {
+                UserSetting.IgnoreCompany += $",{CompanyName}";
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

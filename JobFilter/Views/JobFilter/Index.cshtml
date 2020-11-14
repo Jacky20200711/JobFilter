@@ -64,7 +64,6 @@
         display: inline-block;
         max-width: 100%;
         color: red;
-        background-color: #eee;
         margin-top: 1%;
         margin-left: 3%;
         margin-bottom: 2%;
@@ -90,7 +89,12 @@
         <br>
         <div class="PartialContent">@job.PartialContent</div>
         <br>
-        <div class="Wage">@job.WageRange</div>
+        <div class="Wage">
+            @job.WageRange &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>
+                @Html.ActionLink("封鎖此公司", "AddBlockCompany", "FilterSettings", new { CompanyName = job.Company })
+            </span>
+        </div>
         <br>
     </div>
     <br>
