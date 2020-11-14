@@ -263,9 +263,9 @@ namespace JobFilter.Controllers
         {
             if (!FilterSettingManager.IsValidString(CompanyName))
             {
-                return Content("封鎖失敗，此公司的名稱含有不支援的字元QQ");
+                return Content("<h2>封鎖失敗，此公司的名稱含有不支援的字元QQ</h2>");
             }
-
+            
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var UserSettings = _context.FilterSetting.Where(m => m.UserId == userId);
@@ -275,8 +275,13 @@ namespace JobFilter.Controllers
             }
 
             // 將接收的排除公司添加到所有設定檔
-            foreach(var UserSetting in UserSettings)
+            foreach (var UserSetting in UserSettings)
             {
+                if (UserSetting.IgnoreCompany.Length + $",{CompanyName}".Length > FilterSettingManager.Length_limit_IgnoreCompany)
+                {
+                    return Content("封鎖未完成，您某些設定檔的排除公司欄位已達字數上限!");
+                }
+
                 UserSetting.IgnoreCompany += $",{CompanyName}";
             }
 

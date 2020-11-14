@@ -4,6 +4,7 @@ namespace JobFilter.Models
 {
     public static class FilterSettingManager
     {
+        public static int Length_limit_IgnoreCompany = 600;
         public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
 
         public static bool IsValidString(string TestStr)
