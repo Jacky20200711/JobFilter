@@ -9,10 +9,13 @@ namespace JobFilter.Models.Services.Tests
         [TestMethod()]
         public void IsValidSetringTest()
         {
-            Assert.AreEqual(true, FilterSettingManager.IsValidString(" ,_+測試"));
+            Assert.AreEqual(true, FilterSettingManager.IsValidString(" ,_+.測試"));
             Assert.AreEqual(true, FilterSettingManager.IsValidString(""));
             Assert.AreEqual(true, FilterSettingManager.IsValidString(null));
             Assert.AreEqual(false, FilterSettingManager.IsValidString("!"));
+            Assert.AreEqual(false, FilterSettingManager.IsValidString("<"));
+            Assert.AreEqual(false, FilterSettingManager.IsValidString("'"));
+            Assert.AreEqual(false, FilterSettingManager.IsValidString("\""));
         }
 
         [TestMethod()]
@@ -36,7 +39,7 @@ namespace JobFilter.Models.Services.Tests
                     MinimumWage = -1,
                     MaximumWage = -1,
                     ExcludeWord = null,
-                    IgnoreCompany = ""
+                    IgnoreCompany = null
                 },
 
                 new FilterSetting
@@ -45,25 +48,7 @@ namespace JobFilter.Models.Services.Tests
                     MinimumWage = 1000000,
                     MaximumWage = 2000000,
                     ExcludeWord = "",
-                    IgnoreCompany = null
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = FilterSettingManager.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 2000000,
-                    ExcludeWord = "<",
                     IgnoreCompany = ""
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = FilterSettingManager.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 2000000,
-                    ExcludeWord = "",
-                    IgnoreCompany = "<"
                 },
 
                 new FilterSetting
@@ -81,7 +66,7 @@ namespace JobFilter.Models.Services.Tests
                     MinimumWage = 999999,
                     MaximumWage = 999999,
                     ExcludeWord = "",
-                    IgnoreCompany = null,
+                    IgnoreCompany = "",
                     Remarks = "0123456789X",
                 },
             };
@@ -94,24 +79,6 @@ namespace JobFilter.Models.Services.Tests
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     MaximumWage = 999999,
-                    ExcludeWord = "",
-                    IgnoreCompany = null
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = FilterSettingManager.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
-                    ExcludeWord = null,
-                    IgnoreCompany = ""
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = FilterSettingManager.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
                     ExcludeWord = null,
                     IgnoreCompany = null
                 },
@@ -121,15 +88,6 @@ namespace JobFilter.Models.Services.Tests
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     MaximumWage = 999999,
-                    ExcludeWord = "",
-                    IgnoreCompany = ""
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = FilterSettingManager.TargetUrlHead,
-                    MinimumWage = 100,
-                    MaximumWage = 100,
                     ExcludeWord = "",
                     IgnoreCompany = ""
                 },
@@ -157,26 +115,8 @@ namespace JobFilter.Models.Services.Tests
                     CrawlUrl = FilterSettingManager.TargetUrlHead,
                     MinimumWage = 999999,
                     MaximumWage = 999999,
-                    ExcludeWord = " _+",
-                    IgnoreCompany = ""
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = FilterSettingManager.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
                     ExcludeWord = "",
-                    IgnoreCompany = " _+"
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = FilterSettingManager.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
-                    ExcludeWord = "",
-                    IgnoreCompany = " _+",
+                    IgnoreCompany = "",
                     Remarks = "12345測測測測測",
                 },
             };

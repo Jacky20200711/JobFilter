@@ -23,7 +23,7 @@ namespace JobFilter.Models
             foreach (char c in TestStr)
             {
                 int CharCode = Convert.ToInt32(c);
-                if (!(c == ',' || c == '_' || c == '+' || c == ' ' ||
+                if (!(c == ',' || c == '_' || c == '+' || c == ' ' || c == '.' ||
                     CharCode > 47 && CharCode < 58 ||
                     CharCode > 64 && CharCode < 91 ||
                     CharCode > 96 && CharCode < 123 ||
