@@ -74,6 +74,16 @@ namespace JobFilter.Models.Services.Tests
                     ExcludeWord = "",
                     IgnoreCompany = ""
                 },
+
+                new FilterSetting
+                {
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
+                    MinimumWage = 999999,
+                    MaximumWage = 999999,
+                    ExcludeWord = "",
+                    IgnoreCompany = null,
+                    Remarks = "0123456789X",
+                },
             };
 
             // 設計多個正確的設定
@@ -158,6 +168,16 @@ namespace JobFilter.Models.Services.Tests
                     MaximumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = " _+"
+                },
+
+                new FilterSetting
+                {
+                    CrawlUrl = FilterSettingManager.TargetUrlHead,
+                    MinimumWage = 999999,
+                    MaximumWage = 999999,
+                    ExcludeWord = "",
+                    IgnoreCompany = " _+",
+                    Remarks = "12345測測測測測",
                 },
             };
 

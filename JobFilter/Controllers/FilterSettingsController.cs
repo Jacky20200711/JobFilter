@@ -261,9 +261,9 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> AddBlockCompany(string CompanyName)
         {
-            if (!FilterSettingManager.IsValidString(CompanyName))
+            if (!FilterSettingManager.IsValidString(CompanyName, 50))
             {
-                return Content("封鎖失敗，此公司的名稱含有不支援的字元QQ");
+                return Content("封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制QQ");
             }
             
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
