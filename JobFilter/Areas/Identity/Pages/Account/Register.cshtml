@@ -3,6 +3,21 @@
 
 <h1>您好</h1>
 
+<style>
+    .GoogleLoginButton {
+        width: 10%;
+        height: 10%;
+        background-color: yellow;
+        border-radius: 10px;
+        outline: none !important;
+    }
+    .GoogleLoginButton img {
+        width: 100%;
+        height: 100%;
+        outline: none;
+    }
+</style>
+
 <script>
     function AddGmail() {
         var InputOfEmail = document.getElementById("InputOfEmail");
@@ -52,7 +67,7 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h4>使用外部裝置登入</h4>
+            <h4>使用 Google 帳戶登入</h4>
             <hr />
             @{
                 if ((Model.ExternalLogins?.Count ?? 0) == 0)
@@ -70,7 +85,9 @@
                             <p>
                                 @foreach (var provider in Model.ExternalLogins)
                                 {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <button type="submit" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account" class="GoogleLoginButton">
+                                        <img src="https://icon-library.com/images/sign-in-with-google-icon/sign-in-with-google-icon-16.jpg">
+                                    </button>
                                 }
                             </p>
                         </div>
