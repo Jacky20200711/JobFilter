@@ -21,7 +21,7 @@ namespace JobFilter.Models
         [StringLength(200, ErrorMessage = "最多只能輸入200個字元!")]
         public string ExcludeWord { get; set; }
 
-        [StringLength(600, ErrorMessage = "最多只能輸入600個字元!")]
+        [StringLength(1000, ErrorMessage = "最多只能輸入1000個字元!")]
         public string IgnoreCompany { get; set; }
 
         [StringLength(10, ErrorMessage = "最多只能輸入10個字元!")]
