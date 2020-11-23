@@ -45,16 +45,16 @@ namespace JobFilter.Models.DataStructure
         public void WaitingForFunctionIO(string FunctionName)
         {
             int StopCount = 0;
-            int StopBound = 25;
+            int Max_StopBound = 30;
             if (FunctionName == "LoadPage")
             {
                 while (PageContent == null)
                 {
                     Thread.Sleep(200);
 
-                    // 若等候太久則停止作業
+                    // 若等候太久則停止任務
                     StopCount++;
-                    if (StopCount > StopBound)
+                    if (StopCount > Max_StopBound)
                     {
                         EncounterError = true;
                         return;
@@ -67,9 +67,9 @@ namespace JobFilter.Models.DataStructure
                 {
                     Thread.Sleep(200);
 
-                    // 若等候太久則停止作業
+                    // 若等候太久則停止任務
                     StopCount++;
-                    if (StopCount > StopBound)
+                    if (StopCount > Max_StopBound)
                     {
                         EncounterError = true;
                         return;

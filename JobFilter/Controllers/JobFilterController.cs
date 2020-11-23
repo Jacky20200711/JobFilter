@@ -70,6 +70,9 @@ namespace JobFilter.Controllers
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=3"),
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=4"),
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=5"),
+                new JobCrawler($"{TargetUrl}{ConnectionChar}page=6"),
+                new JobCrawler($"{TargetUrl}{ConnectionChar}page=7"),
+                new JobCrawler($"{TargetUrl}{ConnectionChar}page=8"),
             };
 
             // 創建多個爬蟲愛好者，每個人認養一隻爬蟲
@@ -92,31 +95,25 @@ namespace JobFilter.Controllers
                 thread.Start();
             }
 
-            // 等待爬蟲們完成並回報
+            // 等待爬蟲們完成任務
             while (!JobCrawlers.All(jobCrawler => jobCrawler.IsMissionComplete() == true))
             {
                 Thread.Sleep(300);
-            }
-
-            // 詢問爬蟲們執行任務的過程是否順利
-            foreach (JobCrawler jobCrawler in JobCrawlers)
-            {
-                if (jobCrawler.IsEncounterError())
-                {
-                    HttpContext.Session.SetString("jobList", "Error");
-                    return RedirectToAction("Index");
-                }
             }
 
             // 過濾掉不符合條件的工作
             JobList jobList = new JobList();
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
-                foreach (Job job in jobCrawler.GetJobs())
+                // 令無法順利完成任務的爬蟲提早回家休息，不需要回報任務細節XD
+                if (!jobCrawler.IsEncounterError())
                 {
-                    if (JobFilterManager.IsValidJob(filterSetting, job))
+                    foreach (Job job in jobCrawler.GetJobs())
                     {
-                        jobList.Add(job);
+                        if (JobFilterManager.IsValidJob(filterSetting, job))
+                        {
+                            jobList.Add(job);
+                        }
                     }
                 }
             }
