@@ -261,9 +261,10 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> AddBlockCompany(string CompanyName)
         {
+            // 檢查該公司的名稱與長度
             if (!FilterSettingManager.IsValidString(CompanyName, 50))
             {
-                return Content("封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制QQ");
+                return Content("封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制!");
             }
             
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -274,27 +275,21 @@ namespace JobFilter.Controllers
                 return NotFound();
             }
 
-            // 將接收的排除公司添加到所有設定檔
+            // 嘗試將新封鎖的公司添加到該 User 的所有設定檔
             foreach (var UserSetting in UserSettings)
             {
-                // 檢查 UserSetting.IgnoreCompany 是否為 NULL
+                // 檢查設定檔的欄位是否為 NULL
                 if (string.IsNullOrEmpty(UserSetting.IgnoreCompany))
                 {
-                    // 檢查傳入參數的長度
-                    if(CompanyName.Length > FilterSettingManager.Length_limit_IgnoreCompany)
-                    {
-                        return Content("封鎖未完成，您某些設定檔的排除公司欄位已達字數上限!");
-                    }
-
-                    // 若長度合法，則賦值給原本為 NULL 的 UserSetting.IgnoreCompany
+                    // 賦值給原本為 NULL 的欄位
                     UserSetting.IgnoreCompany = $"{CompanyName}";
                 }
                 else
                 {
-                    // 檢查 UserSetting.IgnoreCompany 在新增欲封鎖的公司後，其長度是否保持合法
+                    // 檢查該欄位的新長度是否保持合法
                     if (UserSetting.IgnoreCompany.Length + $",{CompanyName}".Length > FilterSettingManager.Length_limit_IgnoreCompany)
                     {
-                        return Content("封鎖未完成，您某些設定檔的排除公司欄位已達字數上限!");
+                        return Content("封鎖未完全，您某些設定檔的欄位字數已接近或已達上限!(上限為1000個字元)");
                     }
 
                     // 若長度合法則進行串接
