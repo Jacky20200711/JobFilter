@@ -32,11 +32,11 @@ namespace JobFilter.Controllers
         {
             page = page == null ? 1 : page;
 
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name))
-            {
-                string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string UserEmail = User.Identity.Name;
 
-                return View(await _context.FilterSetting.Where(m => m.UserId == UserId).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
+            if (!AuthorizeManager.InAdminGroup(UserEmail))
+            {
+                return View(await _context.FilterSetting.Where(m => m.UserEmail == UserEmail).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
             }
             else
             {
@@ -50,7 +50,7 @@ namespace JobFilter.Controllers
                     string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                     // 查看自己的設定
-                    return View(await _context.FilterSetting.Where(m => m.UserId == UserId).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
+                    return View(await _context.FilterSetting.Where(m => m.UserEmail == UserEmail).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
                 }
             }
         }
@@ -147,8 +147,8 @@ namespace JobFilter.Controllers
             }
 
             // 令管理員以外的用戶只能編輯自己的設定
-            string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserId != UserId) return NotFound();
+            string UserEmail = User.Identity.Name;
+            if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserEmail != UserEmail) return NotFound();
 
             // 紀錄之前所在的分頁號碼
             returnPage = returnPage == null ? 0 : returnPage;
@@ -180,9 +180,9 @@ namespace JobFilter.Controllers
                     }
 
                     // 令管理員以外的用戶只能編輯自己的設定
-                    string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    string UserEmail = User.Identity.Name;
                     FilterSetting Setting = _context.FilterSetting.FirstOrDefault(m => m.Id == id);
-                    if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && Setting.UserId != UserId)
+                    if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && Setting.UserEmail != UserEmail)
                     {
                         return NotFound();
                     }
@@ -225,8 +225,8 @@ namespace JobFilter.Controllers
             }
 
             // 令管理員以外的用戶只能刪除自己的設定
-            string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserId != UserId) return NotFound();
+            string UserEmail = User.Identity.Name;
+            if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserEmail != UserEmail) return NotFound();
 
             _context.FilterSetting.Remove(filterSetting);
             await _context.SaveChangesAsync();
@@ -266,10 +266,10 @@ namespace JobFilter.Controllers
             {
                 return Content("封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制!");
             }
-            
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var UserSettings = _context.FilterSetting.Where(m => m.UserId == userId);
+            string UserEmail = User.Identity.Name;
+
+            var UserSettings = _context.FilterSetting.Where(m => m.UserEmail == UserEmail);
             if(UserSettings == null)
             {
                 return NotFound();
