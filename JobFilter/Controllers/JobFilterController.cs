@@ -60,7 +60,7 @@ namespace JobFilter.Controllers
                 return NotFound();
             }
 
-            // 創建多個爬蟲 & 在目標網址尾端添加頁數的參數
+            // 創建多個爬蟲 & 設置欲爬取的目標網址
             string TargetUrl = filterSetting.CrawlUrl;
             char ConnectionChar = TargetUrl.Last() == '/' ? '?' : '&';
             List<JobCrawler> JobCrawlers = new List<JobCrawler>
@@ -74,38 +74,47 @@ namespace JobFilter.Controllers
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=7"),
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=8"),
             };
-
-            // 創建多個爬蟲愛好者，每個人認養一隻爬蟲
-            List<JobCrawlerOwner> JobCrawlerOwners = new List<JobCrawlerOwner>();
-            foreach(var jobCrawler in JobCrawlers)
-            {
-                JobCrawlerOwners.Add(new JobCrawlerOwner(jobCrawler));
-            }
-
-            // 指派任務給每一隻爬蟲，並令爬蟲們就位XD
-            List<Thread> JobCrawlerThreads = new List<Thread>();
-            foreach (var JobCrawlerOwner in JobCrawlerOwners)
-            {
-                JobCrawlerThreads.Add(new Thread(JobCrawlerOwner.PutCrawlerInPlace));
-            }
             
-            // 令所有爬蟲開始執行任務
-            foreach(Thread thread in JobCrawlerThreads)
+            // 令所有爬蟲開始爬取目標頁面
+            foreach(JobCrawler jobCrawler in JobCrawlers)
             {
-                thread.Start();
+                jobCrawler.LoadPage();
             }
 
-            // 等待爬蟲們完成任務
-            while (!JobCrawlers.All(jobCrawler => jobCrawler.IsMissionComplete() == true))
+            // 等待所有的爬蟲爬取完畢
+            while (JobCrawlers.Any(jobCrawler => !jobCrawler.IsCrawlFinished()))
             {
-                Thread.Sleep(300);
+                Thread.Sleep(200);
+            }
+
+            // 令成功取得頁面的爬蟲開始萃取包含工作的標籤區塊
+            foreach (JobCrawler jobCrawler in JobCrawlers)
+            {
+                if (!jobCrawler.IsEncounterError())
+                {
+                    jobCrawler.ExtractTags();
+                }
+            }
+
+            // 等待所有的爬蟲萃取完畢
+            while (JobCrawlers.Any(jobCrawler => !jobCrawler.IsEncounterError() && !jobCrawler.IsExtractFinished()))
+            {
+                Thread.Sleep(200);
+            }
+
+            // 令萃取成功的爬蟲再進一步解析各區塊的工作說明
+            foreach (JobCrawler jobCrawler in JobCrawlers)
+            {
+                if (!jobCrawler.IsEncounterError())
+                {
+                    jobCrawler.ExtractJobData();
+                }
             }
 
             // 過濾掉不符合條件的工作
             JobList jobList = new JobList();
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
-                // 令無法順利完成任務的爬蟲提早回家休息，不需要回報任務細節XD
                 if (!jobCrawler.IsEncounterError())
                 {
                     foreach (Job job in jobCrawler.GetJobs())

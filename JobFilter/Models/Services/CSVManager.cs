@@ -1,7 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using JobFilter.Data;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
