@@ -47,8 +47,6 @@ namespace JobFilter.Controllers
                 }
                 else
                 {
-                    string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
                     // 查看自己的設定
                     return View(await _context.FilterSetting.Where(m => m.UserEmail == UserEmail).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
                 }
@@ -109,23 +107,26 @@ namespace JobFilter.Controllers
         {
             if (ModelState.IsValid)
             {
-                string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                string UserEmail = User.Identity.Name;
 
                 // 查看設定檔的數量是否已達上限
-                List<FilterSetting> filterSettings = _context.FilterSetting.Where(m => m.UserId == UserId).ToList();
+                List<FilterSetting> filterSettings = _context.FilterSetting.Where(m => m.UserEmail == UserEmail).ToList();
 
-                if(filterSettings.Count > 9)
+                if(filterSettings.Count > 2)
                 {
                     TempData["CreateSettingError"] = "建立失敗，您的設定數量已達上限!";
                     return RedirectToAction(nameof(Index));
                 }
 
                 // 在後端進行表單驗證
-                if (!FilterSettingManager.IsValidSetting(filterSetting)) 
+                if (!FilterSettingManager.IsValidSetting(filterSetting))
+                {
                     return Content("表單資料錯誤，請檢查輸入的內容!");
+                }
 
-                filterSetting.UserEmail = User.Identity.Name;
-                filterSetting.UserId = UserId;
+                // 若通過驗證則儲存表單
+                filterSetting.UserEmail = UserEmail;
+                filterSetting.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 _context.Add(filterSetting);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");

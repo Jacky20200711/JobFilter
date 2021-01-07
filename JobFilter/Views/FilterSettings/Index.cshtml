@@ -5,7 +5,7 @@
 <span class="text-danger">@TempData["CreateSettingError"]</span>
 
 <p>
-    @Html.ActionLink("新增設定(最多10筆)", "Create", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
+    @Html.ActionLink("新增設定(最多3筆)", "Create", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
     @if (User.Identity.Name == AuthorizeManager.SuperAdmin)
     {
         @Html.ActionLink("所有設定", "SetSessionForCheckAllSettings", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
