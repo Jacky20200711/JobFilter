@@ -13,13 +13,11 @@ namespace JobFilter.Models.Services.Tests
             // 取得完整檔名
             string FilePath = CSVManager.GetFilePath(TableName);
 
-            // 切出檔案名稱 & 將檔案名稱再切成 {TableName, "YYYYMMDDHHMMSS.csv"}
-            string[] PathSplit = FilePath.Split("\\");
-            string[] FnameSplit = PathSplit[^1].Split("_");
+            // 切出檔案名稱
+            string Fname = FilePath.Split("\\")[^1];
 
-            // 檢查 TableName & 檢查 "YYYYMMDDHHMMSS.csv" 該有的長度 
-            Assert.AreEqual(TableName, FnameSplit[0]);
-            Assert.AreEqual(18, FnameSplit[1].Length);
+            // 檢查檔案名稱
+            Assert.AreEqual("FilterSetting.csv", Fname);
         }
     }
 }
