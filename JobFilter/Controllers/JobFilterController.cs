@@ -31,7 +31,7 @@ namespace JobFilter.Controllers
             page = page == null ? 1 : page;
 
             string SessionValue = HttpContext.Session.GetString("jobList");
-            if (SessionValue == null || SessionValue == "Error")
+            if (SessionValue == null)
             {
                 return View("Error");
             }
