@@ -30,13 +30,13 @@ namespace JobFilter.Controllers
         {
             page = page == null ? 1 : page;
 
-            string SessionValue = HttpContext.Session.GetString("jobList");
-            if (SessionValue == null)
+            string JobListStr = HttpContext.Session.GetString("jobList");
+            if (JobListStr == null)
             {
                 return View("Error");
             }
 
-            var jobs = JsonConvert.DeserializeObject<JobList>(SessionValue);
+            JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
             HttpContext.Session.SetString("JobNum", jobs.Count.ToString());
             return View(await jobs.ToPagedListAsync((int)page, 10));
         }
@@ -60,18 +60,26 @@ namespace JobFilter.Controllers
                 return NotFound();
             }
 
-            // 若這次爬的網址和上次一樣，則不需要重新爬取頁面，直接重新過濾之前儲存的 session 內容即可
-            //JobList jobList;
+            JobList jobList;
+
+            // 若這次爬的網址和上次一樣，則直接過濾之前儲存的 session 內容即可
             //string crawlUrlOfLastTime = HttpContext.Session.GetString("crawlUrlOfLastTime");
-            //if (crawlUrlOfLastTime != null)
+            //if (crawlUrlOfLastTime == filterSetting.CrawlUrl)
             //{
-            //    string SessionValue = HttpContext.Session.GetString("jobList");
-            //    jobList = JobFilterManager.GetValidJobs(JobCrawlers, filterSetting);
-            //    return RedirectToAction("Index");
+            //    // 確認之前儲存的 session 內容仍然存在
+            //    string JobListStr = HttpContext.Session.GetString("jobList");
+            //    if (JobListStr != null)
+            //    {
+            //        // 過濾之前儲存的 session 內容並更新
+            //        JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
+            //        jobList = JobFilterManager.GetValidJobList(filterSetting);
+            //        HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
+            //        return RedirectToAction("Index");
+            //    }
             //}
 
             // 取得過濾後的工作
-            JobList jobList = JobFilterManager.GetValidJobList(filterSetting);
+            jobList = JobFilterManager.GetValidJobList(filterSetting);
 
             // 將過濾後的工作儲存到 Session
             HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));

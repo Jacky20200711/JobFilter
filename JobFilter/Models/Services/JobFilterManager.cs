@@ -169,27 +169,5 @@ namespace JobFilter.Models.Services
 
             return validJobList;
         }
-
-        //// overload
-        //public static JobList GetValidJobs(List<JobCrawler> JobCrawlers, FilterSetting filterSetting)
-        //{
-        //    JobList jobList = new JobList();
-
-        //    foreach (JobCrawler jobCrawler in JobCrawlers)
-        //    {
-        //        if (!jobCrawler.IsEncounterError())
-        //        {
-        //            foreach (Job job in jobCrawler.GetJobs())
-        //            {
-        //                if (IsValidJob(filterSetting, job))
-        //                {
-        //                    jobList.Add(job);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return jobList;
-        //}
     }
 }
