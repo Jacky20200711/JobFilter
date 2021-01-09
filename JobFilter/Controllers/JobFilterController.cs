@@ -60,75 +60,24 @@ namespace JobFilter.Controllers
                 return NotFound();
             }
 
-            // 創建多個爬蟲 & 設置欲爬取的目標網址
-            string TargetUrl = filterSetting.CrawlUrl;
-            char ConnectionChar = TargetUrl.Last() == '/' ? '?' : '&';
-            List<JobCrawler> JobCrawlers = new List<JobCrawler>
-            {
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=1"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=2"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=3"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=4"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=5"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=6"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=7"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=8"),
-            };
-            
-            // 令所有爬蟲開始爬取目標頁面
-            foreach(JobCrawler jobCrawler in JobCrawlers)
-            {
-                jobCrawler.LoadPage();
-            }
+            // 若這次爬的網址和上次一樣，則不需要重新爬取頁面，直接重新過濾之前儲存的 session 內容即可
+            //JobList jobList;
+            //string crawlUrlOfLastTime = HttpContext.Session.GetString("crawlUrlOfLastTime");
+            //if (crawlUrlOfLastTime != null)
+            //{
+            //    string SessionValue = HttpContext.Session.GetString("jobList");
+            //    jobList = JobFilterManager.GetValidJobs(JobCrawlers, filterSetting);
+            //    return RedirectToAction("Index");
+            //}
 
-            // 等待所有的爬蟲爬取完畢
-            while (JobCrawlers.Any(jobCrawler => !jobCrawler.IsCrawlFinished()))
-            {
-                Thread.Sleep(200);
-            }
-
-            // 令成功取得頁面的爬蟲開始萃取包含工作的標籤區塊
-            foreach (JobCrawler jobCrawler in JobCrawlers)
-            {
-                if (!jobCrawler.IsEncounterError())
-                {
-                    jobCrawler.ExtractTags();
-                }
-            }
-
-            // 等待所有的爬蟲萃取完畢
-            while (JobCrawlers.Any(jobCrawler => !jobCrawler.IsEncounterError() && !jobCrawler.IsExtractFinished()))
-            {
-                Thread.Sleep(200);
-            }
-
-            // 令萃取成功的爬蟲再進一步解析各區塊的工作說明
-            foreach (JobCrawler jobCrawler in JobCrawlers)
-            {
-                if (!jobCrawler.IsEncounterError())
-                {
-                    jobCrawler.ExtractJobData();
-                }
-            }
-
-            // 過濾掉不符合條件的工作
-            JobList jobList = new JobList();
-            foreach (JobCrawler jobCrawler in JobCrawlers)
-            {
-                if (!jobCrawler.IsEncounterError())
-                {
-                    foreach (Job job in jobCrawler.GetJobs())
-                    {
-                        if (JobFilterManager.IsValidJob(filterSetting, job))
-                        {
-                            jobList.Add(job);
-                        }
-                    }
-                }
-            }
+            // 根據設定檔來過濾不想要的工作
+            JobList jobList = JobFilterManager.GetValidJobList(filterSetting);
 
             // 將過濾後的工作儲存到 Session
             HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
+
+            // 儲存這次爬取的網址
+            HttpContext.Session.SetString("crawlUrlOfLastTime", filterSetting.CrawlUrl);
 
             return RedirectToAction("Index");
         }
