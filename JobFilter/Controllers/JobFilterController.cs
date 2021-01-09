@@ -63,20 +63,20 @@ namespace JobFilter.Controllers
             JobList jobList;
 
             // 若這次爬的網址和上次一樣，則直接過濾之前儲存的 session 內容即可
-            //string crawlUrlOfLastTime = HttpContext.Session.GetString("crawlUrlOfLastTime");
-            //if (crawlUrlOfLastTime == filterSetting.CrawlUrl)
-            //{
-            //    // 確認之前儲存的 session 內容仍然存在
-            //    string JobListStr = HttpContext.Session.GetString("jobList");
-            //    if (JobListStr != null)
-            //    {
-            //        // 過濾之前儲存的 session 內容並更新
-            //        JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
-            //        jobList = JobFilterManager.GetValidJobList(filterSetting);
-            //        HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
-            //        return RedirectToAction("Index");
-            //    }
-            //}
+            string crawlUrlOfLastTime = HttpContext.Session.GetString("crawlUrlOfLastTime");
+            if (crawlUrlOfLastTime == filterSetting.CrawlUrl)
+            {
+                // 確認之前儲存的 session 內容仍然存在
+                string JobListStr = HttpContext.Session.GetString("jobList");
+                if (JobListStr != null)
+                {
+                    // 過濾之前儲存的 session 內容並更新
+                    JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
+                    jobList = JobFilterManager.GetValidJobList(filterSetting);
+                    HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
+                    return RedirectToAction("Index");
+                }
+            }
 
             // 取得過濾後的工作
             jobList = JobFilterManager.GetValidJobList(filterSetting);
