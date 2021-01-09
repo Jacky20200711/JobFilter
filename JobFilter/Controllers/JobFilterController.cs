@@ -70,13 +70,13 @@ namespace JobFilter.Controllers
             //    return RedirectToAction("Index");
             //}
 
-            // 根據設定檔來過濾不想要的工作
+            // 取得過濾後的工作
             JobList jobList = JobFilterManager.GetValidJobList(filterSetting);
 
             // 將過濾後的工作儲存到 Session
             HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
 
-            // 儲存這次爬取的網址
+            // 將這次爬取的網址存到 Session
             HttpContext.Session.SetString("crawlUrlOfLastTime", filterSetting.CrawlUrl);
 
             return RedirectToAction("Index");
