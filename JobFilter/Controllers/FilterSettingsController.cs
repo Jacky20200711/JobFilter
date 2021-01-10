@@ -37,9 +37,7 @@ namespace JobFilter.Controllers
             try
             {
                 page = page == null ? 1 : page;
-
                 string UserEmail = User.Identity.Name;
-
                 if (HttpContext.Session.GetString("CheckAllSettings") != null && AuthorizeManager.InAdminGroup(UserEmail))
                 {
                     // 查看所有的設定
@@ -62,18 +60,14 @@ namespace JobFilter.Controllers
         public IActionResult SetSessionForCheckAllSettings()
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
-
             HttpContext.Session.SetString("CheckAllSettings", "1");
-
             return RedirectToAction("Index", new { page = 1 });
         }
 
         public IActionResult RemoveSessionOfCheckAllSettings()
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
-
             HttpContext.Session.Remove("CheckAllSettings");
-
             return RedirectToAction("Index", new { page = 1 });
         }
 
@@ -191,10 +185,8 @@ namespace JobFilter.Controllers
         public async Task<IActionResult> DeleteAll()
         {
             if (User.Identity.Name != AuthorizeManager.SuperAdmin) return NotFound();
-
             _context.RemoveRange(_context.FilterSetting);
             await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
 

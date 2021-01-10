@@ -30,7 +30,6 @@ namespace JobFilter.Controllers
             try
             {
                 page = page == null ? 1 : page;
-
                 string JobListStr = HttpContext.Session.GetString("jobList");
                 if (JobListStr == null)
                 {

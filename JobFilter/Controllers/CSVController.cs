@@ -25,9 +25,7 @@ namespace JobFilter.Controllers
             try
             {
                 if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
-
                 CSVManager.ExportFilterSetting(_context);
-
                 return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
             }
             catch(Exception ex)
@@ -43,9 +41,7 @@ namespace JobFilter.Controllers
             try
             {
                 if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
-
                 CSVManager.ImportFilterSetting(_context);
-
                 return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
             }
             catch (Exception ex)

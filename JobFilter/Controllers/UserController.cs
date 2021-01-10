@@ -68,7 +68,6 @@ namespace JobFilter.Controllers
 
             // _userManager 會自動幫你檢查該郵件是否已被註冊，若是...則不會進行動作
             await _userManager.CreateAsync(user, identityUser.PasswordHash);
-
             _logger.LogInformation($"[{User.Identity.Name}]新增了用戶[{user.Email}]");
 
             // 返回之前的分頁
@@ -156,10 +155,8 @@ namespace JobFilter.Controllers
         public async Task<IActionResult> DeleteAll()
         {
             if (User.Identity.Name != AuthorizeManager.SuperAdmin) return NotFound();
-
             _context.RemoveRange(_context.Users.Where(m => m.Email != AuthorizeManager.SuperAdmin));
             await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
     }
