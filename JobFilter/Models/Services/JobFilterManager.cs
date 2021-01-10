@@ -73,7 +73,7 @@ namespace JobFilter.Models.Services
             return true;
         }
 
-        public static void GetTargetPages(List<JobCrawler> JobCrawlers)
+        private static void GetTargetPages(List<JobCrawler> JobCrawlers)
         {
             // 令所有爬蟲開始爬取目標頁面
             foreach (JobCrawler jobCrawler in JobCrawlers)
@@ -88,7 +88,7 @@ namespace JobFilter.Models.Services
             }
         }
 
-        public static void GetJobSections(List<JobCrawler> JobCrawlers)
+        private static void GetJobSections(List<JobCrawler> JobCrawlers)
         {
             // 令成功取得頁面的爬蟲開始萃取包含工作的標籤區塊
             foreach (JobCrawler jobCrawler in JobCrawlers)
@@ -115,7 +115,7 @@ namespace JobFilter.Models.Services
             }
         }
 
-        public static JobList GetJobList(List<JobCrawler> JobCrawlers)
+        private static JobList GetJobList(List<JobCrawler> JobCrawlers)
         {
             JobList jobList = new JobList();
 
@@ -162,6 +162,20 @@ namespace JobFilter.Models.Services
             foreach (Job job in jobList)
             {
                 if (IsValidJob(filterSetting, job))
+                {
+                    validJobList.Add(job);
+                }
+            }
+
+            return validJobList;
+        }
+
+        public static JobList GetValidJobList(JobList jobList, string blockCompany = null)
+        {
+            JobList validJobList = new JobList();
+            foreach (Job job in jobList)
+            {
+                if (job.Company != blockCompany)
                 {
                     validJobList.Add(job);
                 }

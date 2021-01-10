@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using X.PagedList;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using JobFilter.Models.DataStructure;
+using JobFilter.Models.Services;
 
 namespace JobFilter.Controllers
 {
@@ -265,7 +268,8 @@ namespace JobFilter.Controllers
             // 檢查該公司的名稱與長度
             if (!FilterSettingManager.IsValidString(CompanyName, 50))
             {
-                return Content("封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制!");
+                ViewBag.Error = "封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制(50字)!";
+                return View("~/Views/Shared/ErrorPage.cshtml");
             }
 
             string UserEmail = User.Identity.Name;
@@ -299,8 +303,23 @@ namespace JobFilter.Controllers
                 }
             }
 
+            // 儲存變更
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            // 檢查之前儲存的工作內容是否包含這家公司
+            string JobListStr = HttpContext.Session.GetString("jobList");
+            if (JobListStr == null)
+            {
+                ViewBag.Error = "發生錯誤，可能是系統忙碌中，或是104的網站發生問題QQ";
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
+
+            JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
+            jobList = JobFilterManager.GetValidJobList(jobList, CompanyName);
+            HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
+
+            // 刷新呈現的工作列表
+            return RedirectToRoute(new { controller = "JobFilter", action = "Index" });
         }
     }
 }

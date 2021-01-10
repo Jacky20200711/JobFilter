@@ -37,9 +37,9 @@ namespace JobFilter.Controllers
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
 
-            JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
-            HttpContext.Session.SetString("JobNum", jobs.Count.ToString());
-            return View(await jobs.ToPagedListAsync((int)page, 10));
+            JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
+            HttpContext.Session.SetString("JobNum", jobList.Count.ToString());
+            return View(await jobList.ToPagedListAsync((int)page, 10));
         }
 
         public IActionResult DoCrawl(int? id)
