@@ -268,6 +268,14 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 優先確認 session 儲存的工作列表不為空 
+                string JobListStr = HttpContext.Session.GetString("jobList");
+                if (JobListStr == null)
+                {
+                    ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
+                    return View("~/Views/Shared/ErrorPage.cshtml");
+                }
+
                 // 檢查該公司的名稱與長度
                 if (!FilterSettingManager.IsValidString(CompanyName, 50))
                 {
@@ -306,18 +314,10 @@ namespace JobFilter.Controllers
                     }
                 }
 
-                // 儲存變更
+                // 寫入變更到設定檔
                 await _context.SaveChangesAsync();
 
-                // 取得之前儲存的工作內容
-                string JobListStr = HttpContext.Session.GetString("jobList");
-                if (JobListStr == null)
-                {
-                    ViewBag.Error = "發生錯誤，可能是系統忙碌中，或是104的網站發生問題QQ";
-                    return View("~/Views/Shared/ErrorPage.cshtml");
-                }
-
-                // 檢查是否包含這家公司並進行過濾
+                // 檢查之前儲存的工作中是否包含這家公司，若有則過濾
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 jobList = JobFilterManager.GetValidJobList(jobList, CompanyName);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
