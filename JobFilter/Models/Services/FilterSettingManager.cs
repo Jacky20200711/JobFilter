@@ -18,10 +18,14 @@ namespace JobFilter.Models
         public static bool IsValidString(string TestStr, int LengthLimit = 1000)
         {
             if (string.IsNullOrEmpty(TestStr))
+            {
                 return true;
+            }
 
             if (TestStr.Length > LengthLimit)
+            {
                 return false;
+            }
 
             foreach (char c in TestStr)
             {
@@ -44,28 +48,40 @@ namespace JobFilter.Models
             // 檢查目標網址(不允許NULL)
             if (filterSetting.CrawlUrl == null ||
                 filterSetting.CrawlUrl.Length > Length_limit_CrawlUrl ||
-                !filterSetting.CrawlUrl.StartsWith(TargetUrlHead)) 
+                !filterSetting.CrawlUrl.StartsWith(TargetUrlHead))
+            {
                 return false;
+            }
 
             // 檢查最低薪資
-            if (filterSetting.MinimumWage < 100 || filterSetting.MinimumWage > 999999) 
+            if (filterSetting.MinimumWage < 100 || filterSetting.MinimumWage > 999999)
+            {
                 return false;
+            }
 
             // 檢查最高薪資
-            if (filterSetting.MaximumWage < filterSetting.MinimumWage) 
+            if (filterSetting.MaximumWage < filterSetting.MinimumWage)
+            {
                 return false;
+            }
 
             // 檢查欲排除的關鍵字
             if (!IsValidString(filterSetting.ExcludeWord, Length_limit_ExcludeWord))
+            {
                 return false;
+            }
 
             // 檢查欲排除的公司名稱
             if (!IsValidString(filterSetting.IgnoreCompany, Length_limit_IgnoreCompany))
+            {
                 return false;
+            }
 
             // 檢查備註
             if (!IsValidString(filterSetting.Remarks, Length_limit_Remarks))
+            {
                 return false;
+            }
 
             return true;
         }
