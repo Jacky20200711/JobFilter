@@ -6,15 +6,7 @@
 <link href="~/css/JobFilter.css" rel="stylesheet">
 <h1>工作列表</h1>
 <hr />
-
-@{
-    string JobNum = HttpContextAccessor.HttpContext.Session.GetString("JobNum");
-    if (JobNum == null)
-    {
-        JobNum = "0";
-    }
-}
-<p class="text-danger" style="font-size: x-large;">符合的工作數量 : @JobNum</p>
+<p class="text-danger" style="font-size: x-large;">符合的工作數量 : @ViewBag.numOfJob</p>
 
 @foreach (var job in Model)
 {

@@ -38,7 +38,7 @@ namespace JobFilter.Controllers
                 }
 
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
-                HttpContext.Session.SetString("JobNum", jobList.Count.ToString());
+                ViewBag.numOfJob = jobList.Count;
                 return View(await jobList.ToPagedListAsync((int)page, 10));
             }
             catch(Exception)
