@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobFilter", "JobFilter\JobFilter.csproj", "{1BAD164C-5180-4A1C-B26F-3CC437486463}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobFilterTests", "JobFilterTests\JobFilterTests.csproj", "{B95E46D3-826D-4E8F-9ECA-1B6F160947B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobFilterTests", "JobFilterTests\JobFilterTests.csproj", "{B95E46D3-826D-4E8F-9ECA-1B6F160947B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
