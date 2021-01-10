@@ -1,0 +1,13 @@
+﻿a.my-class {
+    color: black;
+}
+
+a.my-class:hover {
+    color: #FF00FF;
+    text-decoration: none;
+}
+
+li {
+    margin-right: 10px;
+    cursor: pointer;
+}

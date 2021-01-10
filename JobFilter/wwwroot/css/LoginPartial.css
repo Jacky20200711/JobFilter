@@ -1,0 +1,10 @@
+﻿#HoverColor:hover {
+    color: #FF00FF !important;
+}
+
+.MyButton {
+    color: black;
+    font-size: large;
+    border: none;
+    background-color: white;
+}

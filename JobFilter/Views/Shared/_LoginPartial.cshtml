@@ -2,17 +2,7 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<style>
-    #HoverColor:hover {
-        color: #FF00FF !important;
-    }
-    .MyButton {
-        color: black;
-        font-size: large;
-        border: none;
-        background-color: white;
-    }
-</style>
+<link href="~/css/LoginPartial.css" rel="stylesheet">
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))

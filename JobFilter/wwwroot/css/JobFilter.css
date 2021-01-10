@@ -1,0 +1,65 @@
+﻿.Row {
+    width: 100%;
+    white-space: nowrap;
+    background-color: #fffaf2;
+    border: 2px solid #ff9100;
+    border-radius: 16px;
+    height: auto;
+}
+
+a.MyLink {
+    position: relative;
+    color: #008dff;
+    text-decoration: none;
+    margin-left: 2.7%;
+    top: 14px;
+    font-size: xx-large;
+}
+
+a.MyLink:hover {
+    color: #008dff;
+    text-decoration: none;
+}
+
+a.MyLink:visited {
+    color: mediumpurple;
+    text-decoration: none;
+}
+
+.Company {
+    position: relative;
+    top: 16px;
+    margin-left: 3%;
+    font-size: large;
+}
+
+.AreaAndLimit {
+    position: relative;
+    top: 22px;
+    margin-left: 3%;
+    font-size: large;
+}
+
+.PartialContent {
+    display: inline-block;
+    max-width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+    font-size: 14px;
+    color: #7e7e7e;
+    margin-top: 2.6%;
+    margin-left: 3%;
+    margin-right: 2.1%;
+    font-size: x-large;
+}
+
+.Wage {
+    display: inline-block;
+    max-width: 100%;
+    color: red;
+    margin-top: 1%;
+    margin-left: 3%;
+    margin-bottom: 2%;
+    font-size: large;
+}
