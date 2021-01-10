@@ -33,7 +33,7 @@ namespace JobFilter.Controllers
                 string JobListStr = HttpContext.Session.GetString("jobList");
                 if (JobListStr == null)
                 {
-                    ViewBag.Error = "發生錯誤，可能是系統忙碌中，或是104的網站發生問題QQ";
+                    ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
@@ -60,13 +60,9 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                // 取得過濾後的工作
+                // 取得過濾後的工作並存到Session
                 JobList jobList = JobFilterManager.GetValidJobList(filterSetting);
-
-                // 將過濾後的工作儲存到 Session
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
-
-                // 跳轉到顯示工作列表的頁面
                 return RedirectToAction("Index");
             }
             catch (Exception)
