@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using JobFilter.Data;
 using JobFilter.Models;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using X.PagedList;
@@ -49,9 +46,8 @@ namespace JobFilter.Controllers
                     return View(await _context.FilterSetting.Where(m => m.UserEmail == UserEmail).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex.ToString());
                 ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
@@ -98,9 +94,8 @@ namespace JobFilter.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex.ToString());
                 ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
@@ -108,13 +103,8 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> Edit(int? id, int? returnPage = 0)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var filterSetting = await _context.FilterSetting.FindAsync(id);
-            if (filterSetting == null)
+            if (id == null || filterSetting == null)
             {
                 return NotFound();
             }
@@ -151,9 +141,8 @@ namespace JobFilter.Controllers
                 int page = TryGetPage != null ? (int)TryGetPage : 1;
                 return RedirectToAction("Index", new { page });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex.ToString());
                 ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
@@ -174,9 +163,8 @@ namespace JobFilter.Controllers
                 int page = returnPage != null ? (int)returnPage : 1;
                 return RedirectToAction("Index", new { page });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex.ToString());
                 ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
@@ -218,9 +206,8 @@ namespace JobFilter.Controllers
                 // 刷新呈現的工作列表
                 return RedirectToRoute(new { controller = "JobFilter", action = "Index" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex.ToString());
                 ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }

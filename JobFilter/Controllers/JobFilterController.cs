@@ -41,9 +41,8 @@ namespace JobFilter.Controllers
                 HttpContext.Session.SetString("JobNum", jobList.Count.ToString());
                 return View(await jobList.ToPagedListAsync((int)page, 10));
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                _logger.LogError(ex.ToString());
                 ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
@@ -53,21 +52,12 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var filterSetting = _context.FilterSetting.FirstOrDefault(x => x.Id == id);
-                if (filterSetting == null)
-                {
-                    return NotFound();
-                }
-
                 // 令用戶只能執行自己的設定
-                if (filterSetting.UserEmail != User.Identity.Name)
+                var filterSetting = _context.FilterSetting.FirstOrDefault(x => x.Id == id);
+                if (filterSetting == null || filterSetting.UserEmail != User.Identity.Name)
                 {
-                    return NotFound();
+                    ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
+                    return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
                 // 取得過濾後的工作
@@ -79,9 +69,8 @@ namespace JobFilter.Controllers
                 // 跳轉到顯示工作列表的頁面
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex.ToString());
                 ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
