@@ -1,4 +1,7 @@
-﻿using System;
+﻿using JobFilter.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JobFilter.Models
 {
@@ -65,6 +68,126 @@ namespace JobFilter.Models
                 return false;
 
             return true;
+        }
+
+        public static string CreateNewSetting(ApplicationDbContext _context, FilterSetting filterSetting, string UserEmail)
+        {
+            // 查看設定檔的數量是否已達上限
+            List<FilterSetting> filterSettings = _context.FilterSetting.Where(m => m.UserEmail == UserEmail).ToList();
+
+            if (filterSettings.Count > 2)
+            {
+                return "建立失敗，您的設定數量已達上限!";
+            }
+
+            // 在後端進行表單驗證
+            if (!IsValidSetting(filterSetting))
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            // 若通過驗證則儲存表單
+            filterSetting.UserEmail = UserEmail;
+            _context.Add(filterSetting);
+            _context.SaveChanges();
+            return null;
+        }
+
+        public static string EditSetting(ApplicationDbContext _context, FilterSetting filterSetting, string UserEmail, int id)
+        {
+            if (id != filterSetting.Id)
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            FilterSetting TargetSetting = _context.FilterSetting.FirstOrDefault(m => m.Id == id);
+
+            // 令管理員以外的用戶只能編輯自己的設定
+            if (!AuthorizeManager.InAdminGroup(UserEmail) && TargetSetting.UserEmail != UserEmail)
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            // 在後端進行表單驗證
+            if (!IsValidSetting(filterSetting))
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            // 若通過驗證則更新資料
+            TargetSetting.CrawlUrl = filterSetting.CrawlUrl;
+            TargetSetting.MinimumWage = filterSetting.MinimumWage;
+            TargetSetting.MaximumWage = filterSetting.MaximumWage;
+            TargetSetting.ExcludeWord = filterSetting.ExcludeWord;
+            TargetSetting.IgnoreCompany = filterSetting.IgnoreCompany;
+            TargetSetting.Remarks = filterSetting.Remarks;
+            _context.SaveChanges();
+            return null;
+        }
+
+        public static string DeleteSetting(ApplicationDbContext _context, string UserEmail, int? id)
+        {
+            if (id == null)
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            FilterSetting TargetSetting = _context.FilterSetting.FirstOrDefault(m => m.Id == id);
+            if (TargetSetting == null)
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            // 令管理員以外的用戶只能刪除自己的設定
+            if (!AuthorizeManager.InAdminGroup(UserEmail) && TargetSetting.UserEmail != UserEmail)
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            _context.FilterSetting.Remove(TargetSetting);
+            _context.SaveChanges();
+            return null;
+        }
+
+        public static string AddBlockCompany(ApplicationDbContext _context, string UserEmail, string BlockCompany = null)
+        {
+            
+            // 檢查該公司的名稱與長度
+            if (!IsValidString(BlockCompany, 50))
+            {
+               return "封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制(50字)!";
+            }
+
+            var TargetSetting = _context.FilterSetting.Where(m => m.UserEmail == UserEmail);
+            if (TargetSetting == null)
+            {
+                return "系統忙碌中，請稍後再試 >___<";
+            }
+
+            // 嘗試將新封鎖的公司添加到該 User 的所有設定檔
+            foreach (var UserSetting in TargetSetting)
+            {
+                // 檢查設定檔的欄位是否為 NULL
+                if (string.IsNullOrEmpty(UserSetting.IgnoreCompany))
+                {
+                    // 賦值給原本為 NULL 的欄位
+                    UserSetting.IgnoreCompany = $"{BlockCompany}";
+                }
+                else
+                {
+                    // 檢查該欄位的新長度是否保持合法
+                    if (UserSetting.IgnoreCompany.Length + $",{BlockCompany}".Length > Length_limit_IgnoreCompany)
+                    {
+                        return "封鎖未完全，請確認您所有的設定檔在封鎖此公司後，字數不會超過上限(1000字)!";
+                    }
+
+                    // 若長度合法則進行串接
+                    UserSetting.IgnoreCompany += $",{BlockCompany}";
+                }
+            }
+
+            _context.SaveChanges();
+            return null;
         }
     }
 }

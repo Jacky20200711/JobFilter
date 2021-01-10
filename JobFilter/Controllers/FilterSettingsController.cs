@@ -85,43 +85,24 @@ namespace JobFilter.Controllers
             {
                 HttpContext.Session.SetInt32("returnPage", (int)returnPage);
             }
+
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
+        public IActionResult Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
         {
             try
             {
-                if (ModelState.IsValid)
+                string ErrorMessage = FilterSettingManager.CreateNewSetting(_context, filterSetting, User.Identity.Name);
+                if (ErrorMessage != null)
                 {
-                    string UserEmail = User.Identity.Name;
-
-                    // 查看設定檔的數量是否已達上限
-                    List<FilterSetting> filterSettings = _context.FilterSetting.Where(m => m.UserEmail == UserEmail).ToList();
-
-                    if (filterSettings.Count > 2)
-                    {
-                        ViewBag.Error = "建立失敗，您的設定數量已達上限!";
-                        return View("~/Views/Shared/ErrorPage.cshtml");
-                    }
-
-                    // 在後端進行表單驗證
-                    if (!FilterSettingManager.IsValidSetting(filterSetting))
-                    {
-                        ViewBag.Error = "資料錯誤，請檢查表單的內容!";
-                        return View("~/Views/Shared/ErrorPage.cshtml");
-                    }
-
-                    // 若通過驗證則儲存表單
-                    filterSetting.UserEmail = UserEmail;
-                    filterSetting.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    _context.Add(filterSetting);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    ViewBag.Error = ErrorMessage;
+                    return View("~/Views/Shared/ErrorPage.cshtml");
                 }
-                return View(filterSetting);
+
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
@@ -160,48 +141,21 @@ namespace JobFilter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
+        public IActionResult Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
         {
             try
             {
-                if (id != filterSetting.Id)
+                string ErrorMessage = FilterSettingManager.EditSetting(_context, filterSetting, User.Identity.Name, id);
+                if (ErrorMessage != null)
                 {
-                    return NotFound();
+                    ViewBag.Error = ErrorMessage;
+                    return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                if (ModelState.IsValid)
-                {
-                    // 在後端進行表單驗證
-                    if (!FilterSettingManager.IsValidSetting(filterSetting))
-                    {
-                        ViewBag.Error = "資料錯誤，請檢查表單的內容!";
-                        return View("~/Views/Shared/ErrorPage.cshtml");
-                    }
-
-                    // 令管理員以外的用戶只能編輯自己的設定
-                    string UserEmail = User.Identity.Name;
-                    FilterSetting Setting = _context.FilterSetting.FirstOrDefault(m => m.Id == id);
-                    if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && Setting.UserEmail != UserEmail)
-                    {
-                        return NotFound();
-                    }
-
-                    // 更新設定
-                    Setting.CrawlUrl = filterSetting.CrawlUrl;
-                    Setting.MinimumWage = filterSetting.MinimumWage;
-                    Setting.MaximumWage = filterSetting.MaximumWage;
-                    Setting.ExcludeWord = filterSetting.ExcludeWord;
-                    Setting.IgnoreCompany = filterSetting.IgnoreCompany;
-                    Setting.Remarks = filterSetting.Remarks;
-                    await _context.SaveChangesAsync();
-
-                    // 返回之前的分頁
-                    int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
-                    int page = TryGetPage != null ? (int)TryGetPage : 1;
-                    return RedirectToAction("Index", new { page });
-                }
-
-                return View(filterSetting);
+                // 返回之前的分頁
+                int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
+                int page = TryGetPage != null ? (int)TryGetPage : 1;
+                return RedirectToAction("Index", new { page });
             }
             catch (Exception ex)
             {
@@ -211,39 +165,19 @@ namespace JobFilter.Controllers
             }
         }
 
-        public async Task<IActionResult> Delete(int? id, int? returnPage = 0)
+        public IActionResult Delete(int? id, int? returnPage = 1)
         {
             try
             {
-                if (id == null)
+                string ErrorMessage = FilterSettingManager.DeleteSetting(_context, User.Identity.Name, id);
+                if (ErrorMessage != null)
                 {
-                    return NotFound();
-                }
-
-                var filterSetting = await _context.FilterSetting
-                    .FirstOrDefaultAsync(m => m.Id == id);
-                if (filterSetting == null)
-                {
-                    return NotFound();
-                }
-
-                // 令管理員以外的用戶只能刪除自己的設定
-                string UserEmail = User.Identity.Name;
-                if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserEmail != UserEmail) return NotFound();
-
-                _context.FilterSetting.Remove(filterSetting);
-                await _context.SaveChangesAsync();
-
-                // 紀錄之前所在的分頁號碼
-                returnPage = returnPage == null ? 0 : returnPage;
-                if (returnPage != 0)
-                {
-                    HttpContext.Session.SetInt32("returnPage", (int)returnPage);
+                    ViewBag.Error = ErrorMessage;
+                    return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
                 // 返回之前的分頁
-                int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
-                int page = TryGetPage != null ? (int)TryGetPage : 1;
+                int page = returnPage != null ? (int)returnPage : 1;
                 return RedirectToAction("Index", new { page });
             }
             catch (Exception ex)
@@ -264,7 +198,7 @@ namespace JobFilter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> AddBlockCompany(string CompanyName)
+        public IActionResult AddBlockCompany(string CompanyName)
         {
             try
             {
@@ -276,48 +210,15 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                // 檢查該公司的名稱與長度
-                if (!FilterSettingManager.IsValidString(CompanyName, 50))
+                // 將封鎖的公司添加到該使用者的所有設定檔
+                string ErrorMessage = FilterSettingManager.AddBlockCompany(_context, User.Identity.Name, CompanyName);
+                if (ErrorMessage != null)
                 {
-                    ViewBag.Error = "封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制(50字)!";
+                    ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                string UserEmail = User.Identity.Name;
-
-                var UserSettings = _context.FilterSetting.Where(m => m.UserEmail == UserEmail);
-                if (UserSettings == null)
-                {
-                    return NotFound();
-                }
-
-                // 嘗試將新封鎖的公司添加到該 User 的所有設定檔
-                foreach (var UserSetting in UserSettings)
-                {
-                    // 檢查設定檔的欄位是否為 NULL
-                    if (string.IsNullOrEmpty(UserSetting.IgnoreCompany))
-                    {
-                        // 賦值給原本為 NULL 的欄位
-                        UserSetting.IgnoreCompany = $"{CompanyName}";
-                    }
-                    else
-                    {
-                        // 檢查該欄位的新長度是否保持合法
-                        if (UserSetting.IgnoreCompany.Length + $",{CompanyName}".Length > FilterSettingManager.Length_limit_IgnoreCompany)
-                        {
-                            ViewBag.Error = "封鎖未完全，請確認封鎖此公司後字數沒有超過上限(1000字)!";
-                            return View("~/Views/Shared/ErrorPage.cshtml");
-                        }
-
-                        // 若長度合法則進行串接
-                        UserSetting.IgnoreCompany += $",{CompanyName}";
-                    }
-                }
-
-                // 寫入變更到設定檔
-                await _context.SaveChangesAsync();
-
-                // 檢查之前儲存的工作中是否包含這家公司，若有則過濾
+                // 過濾 session 儲存的工作列表
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 jobList = JobFilterManager.GetValidJobList(jobList, CompanyName);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
