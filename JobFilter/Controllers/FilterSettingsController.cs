@@ -290,7 +290,8 @@ namespace JobFilter.Controllers
                     // 檢查該欄位的新長度是否保持合法
                     if (UserSetting.IgnoreCompany.Length + $",{CompanyName}".Length > FilterSettingManager.Length_limit_IgnoreCompany)
                     {
-                        return Content("封鎖未完全，您某些設定檔的欄位字數已接近或已達上限!(上限為1000個字元)");
+                        ViewBag.Error = "封鎖未完全，請確認封鎖此公司後字數沒有超過上限(1000字)!";
+                        return View("~/Views/Shared/ErrorPage.cshtml");
                     }
 
                     // 若長度合法則進行串接

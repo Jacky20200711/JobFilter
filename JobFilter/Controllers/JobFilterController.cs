@@ -32,7 +32,7 @@ namespace JobFilter.Controllers
             string JobListStr = HttpContext.Session.GetString("jobList");
             if (JobListStr == null)
             {
-                ViewBag.Error = "發生錯誤，可能是伺服器忙碌中，或是104的網站發生問題QQ";
+                ViewBag.Error = "發生錯誤，可能是系統忙碌中，或是104的網站發生問題QQ";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
 
