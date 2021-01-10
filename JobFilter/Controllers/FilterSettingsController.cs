@@ -103,8 +103,8 @@ namespace JobFilter.Controllers
 
                     if (filterSettings.Count > 2)
                     {
-                        TempData["CreateSettingError"] = "建立失敗，您的設定數量已達上限!";
-                        return RedirectToAction(nameof(Index));
+                        ViewBag.Error = "建立失敗，您的設定數量已達上限!";
+                        return View("~/Views/Shared/ErrorPage.cshtml");
                     }
 
                     // 在後端進行表單驗證

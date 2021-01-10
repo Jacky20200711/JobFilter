@@ -2,8 +2,6 @@
 @model X.PagedList.IPagedList<FilterSetting>
 
 <h1>設定列表</h1>
-<span class="text-danger">@TempData["CreateSettingError"]</span>
-
 <p>
     @Html.ActionLink("新增設定(最多3筆)", "Create", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
     @if (User.Identity.Name == AuthorizeManager.SuperAdmin)
