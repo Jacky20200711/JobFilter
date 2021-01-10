@@ -9,7 +9,7 @@ namespace JobFilter.Models.Services.Tests
         [TestMethod()]
         public void IsValidSetringTest()
         {
-            Assert.AreEqual(true, FilterSettingManager.IsValidString(" ,_+.測試"));
+            Assert.AreEqual(true, FilterSettingManager.IsValidString(" ,_+測試"));
             Assert.AreEqual(true, FilterSettingManager.IsValidString(""));
             Assert.AreEqual(true, FilterSettingManager.IsValidString(null));
             Assert.AreEqual(false, FilterSettingManager.IsValidString("!"));
