@@ -1,4 +1,5 @@
 ﻿using JobFilter.Data;
+using JobFilter.Models;
 using JobFilter.Models.DataStructure;
 using JobFilter.Models.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -71,8 +72,7 @@ namespace JobFilter.Controllers
                 if (JobListStr != null)
                 {
                     // 過濾之前儲存的 session 內容並更新
-                    JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
-                    jobList = JobFilterManager.GetValidJobList(filterSetting);
+                    jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                     HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
                     return RedirectToAction("Index");
                 }
@@ -89,5 +89,18 @@ namespace JobFilter.Controllers
 
             return RedirectToAction("Index");
         }
+
+        //public IActionResult FilterOldDataInSession(FilterSetting filterSetting)
+        //{
+        //    string JobListStr = HttpContext.Session.GetString("jobList");
+        //    if (JobListStr != null)
+        //    {
+        //        // 過濾之前儲存的 session 內容並更新
+        //        JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
+        //        JobList jobList = JobFilterManager.GetValidJobList(filterSetting);
+        //        HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
+        //        return RedirectToAction("Index");
+        //    }
+        //}
     }
 }
