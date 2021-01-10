@@ -6,7 +6,7 @@ namespace JobFilter.Models
     {
         // 這裡的長度限制是參照 Models\DataStructure\FilterSetting.cs
         public static int Length_limit_CrawlUrl = 800;
-        public static int Length_limit_ExcludeWord = 200;
+        public static int Length_limit_ExcludeWord = 50;
         public static int Length_limit_IgnoreCompany = 1000;
         public static int Length_limit_Remarks = 10;
 
