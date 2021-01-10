@@ -83,7 +83,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                string ErrorMessage = FilterSettingManager.CreateNewSetting(_context, filterSetting, User.Identity.Name);
+                string ErrorMessage = FilterSettingManager.CreateSetting(_context, filterSetting, User.Identity.Name);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;

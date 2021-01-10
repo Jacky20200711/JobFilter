@@ -12,7 +12,6 @@ namespace JobFilter.Models
         public static int Length_limit_ExcludeWord = 50;
         public static int Length_limit_IgnoreCompany = 1000;
         public static int Length_limit_Remarks = 10;
-
         public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
 
         public static bool IsValidString(string TestStr, int LengthLimit = 1000)
@@ -86,7 +85,7 @@ namespace JobFilter.Models
             return true;
         }
 
-        public static string CreateNewSetting(ApplicationDbContext _context, FilterSetting filterSetting, string UserEmail)
+        public static string CreateSetting(ApplicationDbContext _context, FilterSetting filterSetting, string UserEmail)
         {
             // 查看設定檔的數量是否已達上限
             List<FilterSetting> filterSettings = _context.FilterSetting.Where(m => m.UserEmail == UserEmail).ToList();
