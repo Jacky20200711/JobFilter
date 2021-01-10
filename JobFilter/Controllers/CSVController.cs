@@ -4,6 +4,7 @@ using JobFilter.Models.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace JobFilter.Controllers
 {
@@ -21,20 +22,38 @@ namespace JobFilter.Controllers
 
         public IActionResult ExportFilterSetting()
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            try
+            {
+                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
-            CSVManager.ExportFilterSetting(_context);
+                CSVManager.ExportFilterSetting(_context);
 
-            return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
+                return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                ViewBag.Error = "匯出資料時發生錯誤，請查看LOG...";
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
         }
 
         public IActionResult ImportFilterSetting()
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            try
+            {
+                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
-            CSVManager.ImportFilterSetting(_context);
+                CSVManager.ImportFilterSetting(_context);
 
-            return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
+                return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                ViewBag.Error = "匯入資料時發生錯誤，請查看LOG...";
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
         }
     }
 }
