@@ -124,7 +124,8 @@ namespace JobFilter.Controllers
                 // 在後端進行表單驗證
                 if (!FilterSettingManager.IsValidSetting(filterSetting))
                 {
-                    return Content("表單資料錯誤，請檢查輸入的內容!");
+                    ViewBag.Error = "資料錯誤，請檢查表單的內容!";
+                    return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
                 // 若通過驗證則儲存表單
@@ -180,7 +181,8 @@ namespace JobFilter.Controllers
                     // 在後端進行表單驗證
                     if (!FilterSettingManager.IsValidSetting(filterSetting))
                     {
-                        return Content("表單資料錯誤，請檢查輸入的內容!");
+                        ViewBag.Error = "資料錯誤，請檢查表單的內容!";
+                        return View("~/Views/Shared/ErrorPage.cshtml");
                     }
 
                     // 令管理員以外的用戶只能編輯自己的設定

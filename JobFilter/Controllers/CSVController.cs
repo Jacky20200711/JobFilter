@@ -3,6 +3,7 @@ using JobFilter.Models;
 using JobFilter.Models.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JobFilter.Controllers
 {
@@ -10,10 +11,12 @@ namespace JobFilter.Controllers
     public class CSVController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger _logger;
 
-        public CSVController(ApplicationDbContext context)
+        public CSVController(ApplicationDbContext context, ILogger<UserController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult ExportFilterSetting()
