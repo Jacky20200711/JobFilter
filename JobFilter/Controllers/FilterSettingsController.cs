@@ -37,12 +37,10 @@ namespace JobFilter.Controllers
                 string UserEmail = User.Identity.Name;
                 if (HttpContext.Session.GetString("CheckAllSettings") != null && AuthorizeManager.InAdminGroup(UserEmail))
                 {
-                    // 查看所有的設定
                     return View(await _context.FilterSetting.OrderByDescending(m => m.Id).ToPagedListAsync(page, 10));
                 }
                 else
                 {
-                    // 查看自己的設定
                     return View(await _context.FilterSetting.Where(m => m.UserEmail == UserEmail).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
                 }
             }
@@ -202,8 +200,6 @@ namespace JobFilter.Controllers
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 jobList = JobFilterManager.GetValidJobList(jobList, CompanyName);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
-
-                // 刷新呈現的工作列表
                 return RedirectToRoute(new { controller = "JobFilter", action = "Index" });
             }
             catch (Exception)
