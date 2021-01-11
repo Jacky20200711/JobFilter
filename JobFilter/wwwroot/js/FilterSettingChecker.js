@@ -23,22 +23,22 @@ function CheckValue() {
     // 檢查最高月薪是否大於等於最低月薪
     var MaxWage = document.getElementById("MaximumWage").value;
     var MinWage = document.getElementById("MinimumWage").value;
-    if (MaxWage < MinWage) {
+    if (parseInt(MaxWage) < parseInt(MinWage)) {
         alert("最高月薪必須大於或等於最低月薪!");
         return false;
     }
     // 檢查想排除的關鍵字
-    if (!IsValidString(document.getElementById("ExcludeWord").value))
+    if (!IsValidString(document.getElementById("ExcludeWord").value)) {
         return false;
-
+    }
     // 檢查想排除的公司
-    if (!IsValidString(document.getElementById("IgnoreCompany").value))
+    if (!IsValidString(document.getElementById("IgnoreCompany").value)) {
         return false;
-
+    }
     // 檢查備註
-    if (!IsValidString(document.getElementById("Remarks").value))
+    if (!IsValidString(document.getElementById("Remarks").value)) {
         return false;
-
+    }
     return true;
 }
 // 攔截最低月薪的輸入
