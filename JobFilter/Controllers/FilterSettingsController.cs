@@ -79,7 +79,7 @@ namespace JobFilter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
+        public async Task<IActionResult> Create([Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace JobFilter.Controllers
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
-
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             catch (Exception)
@@ -123,7 +123,7 @@ namespace JobFilter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CrawlUrl,ExcludeWord,IgnoreCompany,MinimumWage,MaximumWage,Remarks")] FilterSetting filterSetting)
         {
             try
             {
@@ -133,6 +133,7 @@ namespace JobFilter.Controllers
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
+                await _context.SaveChangesAsync();
 
                 // 返回之前的分頁
                 int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
@@ -146,7 +147,7 @@ namespace JobFilter.Controllers
             }
         }
 
-        public IActionResult Delete(int? id, int? returnPage = 1)
+        public async Task<IActionResult> Delete(int? id, int? returnPage = 1)
         {
             try
             {
@@ -156,6 +157,7 @@ namespace JobFilter.Controllers
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
+                await _context.SaveChangesAsync();
 
                 // 返回之前的分頁
                 int page = returnPage != null ? (int)returnPage : 1;
@@ -176,7 +178,7 @@ namespace JobFilter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult AddBlockCompany(string CompanyName)
+        public async Task<IActionResult> AddBlockCompany(string CompanyName)
         {
             try
             {
@@ -195,6 +197,7 @@ namespace JobFilter.Controllers
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
+                await _context.SaveChangesAsync();
 
                 // 過濾 session 儲存的工作列表
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);

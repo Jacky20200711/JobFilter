@@ -101,10 +101,9 @@ namespace JobFilter.Models
                 return "系統忙碌中，請稍後再試 >___<";
             }
 
-            // 若通過驗證則儲存表單
+            // 若通過驗證則創建表單
             filterSetting.UserEmail = UserEmail;
             _context.Add(filterSetting);
-            _context.SaveChanges();
             return null;
         }
 
@@ -136,7 +135,6 @@ namespace JobFilter.Models
             TargetSetting.ExcludeWord = filterSetting.ExcludeWord;
             TargetSetting.IgnoreCompany = filterSetting.IgnoreCompany;
             TargetSetting.Remarks = filterSetting.Remarks;
-            _context.SaveChanges();
             return null;
         }
 
@@ -160,7 +158,6 @@ namespace JobFilter.Models
             }
 
             _context.FilterSetting.Remove(TargetSetting);
-            _context.SaveChanges();
             return null;
         }
 
@@ -200,8 +197,6 @@ namespace JobFilter.Models
                     UserSetting.IgnoreCompany += $",{BlockCompany}";
                 }
             }
-
-            _context.SaveChanges();
             return null;
         }
     }
