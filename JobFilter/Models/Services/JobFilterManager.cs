@@ -105,7 +105,7 @@ namespace JobFilter.Models.Services
                 Thread.Sleep(200);
             }
 
-            // 令萃取成功的爬蟲再進一步解析各區塊的工作說明
+            // 令萃取成功的爬蟲再進一步萃取各項工作的細節
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
                 if (!jobCrawler.IsEncounterError())
@@ -115,10 +115,11 @@ namespace JobFilter.Models.Services
             }
         }
 
-        private static JobList GetJobList(List<JobCrawler> JobCrawlers)
+        private static JobList GetJobListFromCrawlers(List<JobCrawler> JobCrawlers)
         {
             JobList jobList = new JobList();
 
+            // 向爬蟲們拿取各項工作的細節
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
                 if (!jobCrawler.IsEncounterError())
@@ -135,11 +136,9 @@ namespace JobFilter.Models.Services
 
         public static JobList GetValidJobList(FilterSetting filterSetting)
         {
-            // 取得多個爬蟲
+            // 創建多個爬蟲
             string TargetUrl = filterSetting.CrawlUrl;
-
             char ConnectionChar = TargetUrl.Last() == '/' ? '?' : '&';
-
             List<JobCrawler> JobCrawlers = new List<JobCrawler>
             {
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=1"),
@@ -152,12 +151,12 @@ namespace JobFilter.Models.Services
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=8"),
             };
 
-            // 令爬蟲們抓取頁面 & 解析頁面並取得所有工作
+            // 令爬蟲們抓取頁面 & 解析頁面
             GetTargetPages(JobCrawlers);
             GetJobSections(JobCrawlers);
-            JobList jobList = GetJobList(JobCrawlers);
 
-            // 根據設定檔來過濾不想要的工作
+            // 向爬蟲們索取工作列表，並根據設定檔來過濾掉不喜歡的工作
+            JobList jobList = GetJobListFromCrawlers(JobCrawlers);
             JobList validJobList = new JobList();
             foreach (Job job in jobList)
             {
@@ -172,6 +171,7 @@ namespace JobFilter.Models.Services
 
         public static JobList GetValidJobList(JobList jobList, string blockCompany = null)
         {
+            // 過濾掉不喜歡的公司
             JobList validJobList = new JobList();
             foreach (Job job in jobList)
             {

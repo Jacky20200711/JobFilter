@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using JobFilter.Models.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using JobFilter.Models.DataStructure;
 
@@ -35,7 +36,7 @@ namespace JobFilter.Models.Services.Tests
             {
                 return _valid;
             }
-        } 
+        }
 
         [TestMethod()]
         public void IsValidJobTest()
@@ -92,10 +93,49 @@ namespace JobFilter.Models.Services.Tests
                     ),
             };
 
-            foreach(var verifier in VerifyGroups)
+            foreach (var verifier in VerifyGroups)
             {
                 Assert.AreEqual(verifier.GetValid(), JobFilterManager.IsValidJob(verifier.GetFilterSetting(), verifier.GetJob()));
             }
+        }
+
+        [TestMethod()]
+        public void GetValidJobListTest()
+        {
+            bool PassTest;
+            List<Job> validJobList;
+            JobList jobList = new JobList
+            {
+                new Job { Company = "A公司" },
+                new Job { Company = "B公司" },
+            };
+
+            // 不封鎖任何公司
+            PassTest = false;
+            validJobList = JobFilterManager.GetValidJobList(jobList, null).JobItems;
+            if (validJobList.Count == 2 && validJobList[0].Company == "A公司" && validJobList[1].Company == "B公司")
+            {
+                PassTest = true;
+            }
+            Assert.AreEqual(true, PassTest);
+
+            // 封鎖A公司
+            PassTest = false;
+            validJobList = JobFilterManager.GetValidJobList(jobList, "A公司").JobItems;
+            if (validJobList.Count == 1 && validJobList[0].Company == "B公司")
+            {
+                PassTest = true;
+            }
+            Assert.AreEqual(true, PassTest);
+
+            // 封鎖B公司
+            PassTest = false;
+            validJobList = JobFilterManager.GetValidJobList(jobList, "B公司").JobItems;
+            if (validJobList.Count == 1 && validJobList[0].Company == "A公司")
+            {
+                PassTest = true;
+            }
+            Assert.AreEqual(true, PassTest);
         }
     }
 }
