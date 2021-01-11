@@ -52,13 +52,13 @@ namespace JobFilter.Models
                 return false;
             }
 
-            // 檢查最低薪資
+            // 薪資範圍必須為3~6位數
             if (filterSetting.MinimumWage < 100 || filterSetting.MinimumWage > 999999)
             {
                 return false;
             }
 
-            // 檢查最高薪資
+            // 最高月薪必須大於最低月薪
             if (filterSetting.MaximumWage < filterSetting.MinimumWage)
             {
                 return false;
