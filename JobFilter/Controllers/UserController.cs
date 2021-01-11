@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JobFilter.Data;
 using JobFilter.Models;
@@ -25,21 +24,22 @@ namespace JobFilter.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int? page = 1)
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
-
-            // 隱藏超級管理員
-            return View(await _context.Users.Where(m => m.Email != AuthorizeManager.SuperAdmin).ToPagedListAsync(page, 10));
+            page = page == null ? 1 : page;
+            return View(await _context.Users.Where(m => m.Email != AuthorizeManager.SuperAdmin).ToPagedListAsync(page, 10)); // 隱藏超級管理員
         }
 
-        public IActionResult Create(int returnPage = 0)
+        public IActionResult Create(int? returnPage = 0)
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
+            // 紀錄之前所在的分頁
+            returnPage = returnPage == null ? 0 : returnPage;
             if (returnPage != 0)
             {
-                HttpContext.Session.SetInt32("returnPage", returnPage);
+                HttpContext.Session.SetInt32("returnPage", (int)returnPage);
             }
 
             return View();
@@ -70,13 +70,15 @@ namespace JobFilter.Controllers
             return RedirectToAction("Index", new { page });
         }
 
-        public ActionResult Delete(string id, int returnPage = 0)
+        public ActionResult Delete(string id, int? returnPage = 0)
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
+            // 紀錄之前所在的分頁
+            returnPage = returnPage == null ? 0 : returnPage;
             if (returnPage != 0)
             {
-                HttpContext.Session.SetInt32("returnPage", returnPage);
+                HttpContext.Session.SetInt32("returnPage", (int)returnPage);
             }
 
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
@@ -98,13 +100,15 @@ namespace JobFilter.Controllers
             return RedirectToAction("Index", new { page });
         }
 
-        public ActionResult Edit(string id, int returnPage = 0)
+        public ActionResult Edit(string id, int? returnPage = 0)
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
+            // 紀錄之前所在的分頁
+            returnPage = returnPage == null ? 0 : returnPage;
             if (returnPage != 0)
             {
-                HttpContext.Session.SetInt32("returnPage", returnPage);
+                HttpContext.Session.SetInt32("returnPage", (int)returnPage);
             }
 
             var user = _context.Users.FirstOrDefault(u => u.Id == id);

@@ -9,7 +9,7 @@ namespace JobFilter.Models.Services
 {
     public static class IdentityUserManager
     {
-        public static string IsValidUser(Microsoft.AspNetCore.Identity.IdentityUser identityUser)
+        public static string IsValidUser(IdentityUser identityUser)
         {
             if (string.IsNullOrEmpty(identityUser.Email) ||
                 string.IsNullOrEmpty(identityUser.PasswordHash) ||
