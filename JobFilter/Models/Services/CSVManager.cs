@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using JobFilter.Data;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -56,6 +57,36 @@ namespace JobFilter.Models.Services
                     csvReader.Configuration.RegisterClassMap<FilterSettingtMap>();
                     var DataList = csvReader.GetRecords<FilterSetting>().ToList();
                     _context.FilterSetting.AddRange(DataList);
+                    _context.SaveChanges();
+                }
+            }
+        }
+
+        public static void ExportUser(ApplicationDbContext _context)
+        {
+            string SuperAdmin = AuthorizeManager.SuperAdmin;
+            List<IdentityUser> DataList = _context.Users.Where(u => u.Email != SuperAdmin).ToList();
+            using var writer = new StreamWriter(GetFilePath("User"), false, Encoding.UTF8);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            csvWriter.WriteRecords(DataList);
+        }
+
+        public static void ImportUser(ApplicationDbContext _context)
+        {
+            // 從設定檔取得匯入檔的路徑
+            string ImportPath = ConfigManager.GetValueByKey("ImportPath");
+
+            // 找到目標檔案並匯入
+            foreach (string FilePath in Directory.GetFileSystemEntries(ImportPath, "*.csv"))
+            {
+                string fname = Path.GetFileNameWithoutExtension(FilePath);
+
+                if (fname.StartsWith("User"))
+                {
+                    using var reader = new StreamReader(FilePath, Encoding.UTF8);
+                    var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+                    var DataList = csvReader.GetRecords<IdentityUser>().ToList();
+                    _context.Users.AddRange(DataList);
                     _context.SaveChanges();
                 }
             }

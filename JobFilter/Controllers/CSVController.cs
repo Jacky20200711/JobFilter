@@ -31,7 +31,7 @@ namespace JobFilter.Controllers
             catch(Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                ViewBag.Error = "匯出資料時發生錯誤，請查看LOG...";
+                ViewBag.Error = "匯出設定時發生錯誤，請查看LOG!";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
         }
@@ -47,7 +47,39 @@ namespace JobFilter.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                ViewBag.Error = "匯入資料時發生錯誤，請查看LOG...";
+                ViewBag.Error = "匯入設定時發生錯誤，請查看LOG!";
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
+        }
+
+        public IActionResult ExportUser()
+        {
+            try
+            {
+                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+                CSVManager.ExportUser(_context);
+                return RedirectToRoute(new { controller = "User", action = "Index" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                ViewBag.Error = "匯出用戶時發生錯誤，請查看LOG!";
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
+        }
+
+        public IActionResult ImportUser()
+        {
+            try
+            {
+                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+                CSVManager.ImportUser(_context);
+                return RedirectToRoute(new { controller = "User", action = "Index" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                ViewBag.Error = "匯入用戶時發生錯誤，請查看LOG!";
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
         }
