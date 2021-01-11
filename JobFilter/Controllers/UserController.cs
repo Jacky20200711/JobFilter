@@ -59,7 +59,7 @@ namespace JobFilter.Controllers
                 return View();
             }
 
-            // _userManager 會自動幫你檢查該郵件是否已被註冊，若是...則不會進行動作
+            // _userManager 會自動幫你檢查該郵件是否已被註冊，若已被註冊則不會進行動作
             var user = new IdentityUser { UserName = identityUser.Email, Email = identityUser.Email };
             await _userManager.CreateAsync(user, identityUser.PasswordHash);
             _logger.LogInformation($"[{User.Identity.Name}]新增了用戶[{user.Email}]");
@@ -81,10 +81,9 @@ namespace JobFilter.Controllers
                 HttpContext.Session.SetInt32("returnPage", (int)returnPage);
             }
 
+            // 檢查id是否有效，並且令超級管理員不能被刪除
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
-
-            // 令超級管理員不能被刪除
-            if (user.Email == AuthorizeManager.SuperAdmin)
+            if (user == null || user.Email == AuthorizeManager.SuperAdmin)
             {
                 return NotFound();
             }
@@ -111,10 +110,9 @@ namespace JobFilter.Controllers
                 HttpContext.Session.SetInt32("returnPage", (int)returnPage);
             }
 
+            // 檢查id是否有效
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
-
-            // 令超級管理員不能被編輯
-            if (user.Email == AuthorizeManager.SuperAdmin)
+            if (user == null)
             {
                 return NotFound();
             }
@@ -127,9 +125,8 @@ namespace JobFilter.Controllers
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
-            var user = _context.Users.FirstOrDefault(u => u.Id == identityUser.Id);
-
             // 令超級管理員不能被編輯
+            var user = _context.Users.FirstOrDefault(u => u.Email == identityUser.Email);
             if (user.Email == AuthorizeManager.SuperAdmin)
             {
                 return NotFound();
