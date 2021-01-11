@@ -14,10 +14,6 @@ namespace JobFilter.Controllers
 {
     public class UserController : Controller
     {
-        // 每個分頁最多顯示10筆
-        private readonly int pageSize = 10;
-
-        // 注入會用到的工具
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger _logger;
@@ -34,7 +30,7 @@ namespace JobFilter.Controllers
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
             // 隱藏超級管理員
-            return View(await _context.Users.Where(m => m.Email != AuthorizeManager.SuperAdmin).ToPagedListAsync(page, pageSize));
+            return View(await _context.Users.Where(m => m.Email != AuthorizeManager.SuperAdmin).ToPagedListAsync(page, 10));
         }
 
         public IActionResult Create(int returnPage = 0)
