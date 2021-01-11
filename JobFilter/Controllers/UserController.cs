@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JobFilter.Data;
 using JobFilter.Models;
+using JobFilter.Models.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,19 +55,16 @@ namespace JobFilter.Controllers
         {
             if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
 
-            // 這並不是用 Entity Framework 產生的 CRUD，所以要自行檢查欄位
-            if (string.IsNullOrEmpty(identityUser.Email) ||
-                string.IsNullOrEmpty(identityUser.PasswordHash) ||
-                !Regex.IsMatch(identityUser.Email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$") ||
-                identityUser.PasswordHash.Length < 6)
+            // 檢查郵件格式和密碼長度
+            string ErrorMessage = IdentityUserManager.IsValidUser(identityUser);
+            if (ErrorMessage != null)
             {
-                ViewData["CreateUserError"] = "輸入資料錯誤!";
+                ViewData["CreateUserError"] = ErrorMessage;
                 return View();
             }
 
-            var user = new IdentityUser { UserName = identityUser.Email, Email = identityUser.Email };
-
             // _userManager 會自動幫你檢查該郵件是否已被註冊，若是...則不會進行動作
+            var user = new IdentityUser { UserName = identityUser.Email, Email = identityUser.Email };
             await _userManager.CreateAsync(user, identityUser.PasswordHash);
             _logger.LogInformation($"[{User.Identity.Name}]新增了用戶[{user.Email}]");
 
