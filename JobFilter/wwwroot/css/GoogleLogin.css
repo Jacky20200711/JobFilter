@@ -1,0 +1,11 @@
+﻿.GoogleLoginButton {
+    width: 50px;
+    height: 50px;
+    color: white;
+    background-color: red;
+    border-radius: 50%;
+    border: none;
+    outline: none !important;
+    font-weight: bold;
+    font-size: 26px;
+}

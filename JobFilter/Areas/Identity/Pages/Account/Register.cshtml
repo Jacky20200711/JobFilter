@@ -1,40 +1,10 @@
 ﻿@page
 @model RegisterModel
 
+<link href="~/css/GoogleLogin.css" rel="stylesheet">
+<script src="~/js/InputHelper.js"></script>
+
 <h1>您好</h1>
-
-<style>
-    .GoogleLoginButton {
-        width: 10%;
-        height: 10%;
-        background-color: yellow;
-        border-radius: 10px;
-        outline: none !important;
-    }
-    .GoogleLoginButton img {
-        width: 100%;
-        height: 100%;
-        outline: none;
-    }
-</style>
-
-<script>
-    function AddGmail() {
-        var InputOfEmail = document.getElementById("InputOfEmail");
-        // 若 Input 沒有 gmail 則幫忙補上
-        if (InputOfEmail.value.indexOf("@@gmail") < 0) {
-            InputOfEmail.value = InputOfEmail.value + "@@gmail.com";
-        }
-    }
-    function AddYahoo() {
-        var InputOfEmail = document.getElementById("InputOfEmail");
-        // 若 Input 沒有 yahoo 則幫忙補上
-        if (InputOfEmail.value.indexOf("@@yahoo") < 0) {
-            InputOfEmail.value = InputOfEmail.value + "@@yahoo.com.tw";
-        }
-    }
-</script>
-
 <div class="row">
     <div class="col-md-4">
         <h4>歡迎註冊(^___^)</h4>
@@ -74,7 +44,7 @@
                 {
                     <div>
                         <p>
-                            此功能暫不開放!
+                            發生錯誤，請刷新頁面後再試!
                         </p>
                     </div>
                 }
@@ -85,9 +55,7 @@
                             <p>
                                 @foreach (var provider in Model.ExternalLogins)
                                 {
-                                    <button type="submit" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account" class="GoogleLoginButton">
-                                        <img src="https://icon-library.com/images/sign-in-with-google-icon/sign-in-with-google-icon-16.jpg">
-                                    </button>
+                                    <button type="submit" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account" class="GoogleLoginButton">G</button>
                                 }
                             </p>
                         </div>
