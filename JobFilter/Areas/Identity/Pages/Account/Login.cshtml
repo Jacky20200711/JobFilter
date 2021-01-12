@@ -1,9 +1,6 @@
 ﻿@page
 @model LoginModel
-
 <link href="~/css/GoogleLogin.css" rel="stylesheet">
-<script src="~/js/InputHelper.js"></script>
-
 <h1>您好</h1>
 <div class="row">
     <div class="col-md-4">
@@ -13,11 +10,8 @@
                 <hr />
                 <div class="text-danger">@TempData["LoginFail"]</div><br>
                 <div class="form-group">
-                    <label asp-for="Input.Email">請輸入您的郵件&nbsp;&nbsp;
-                        <a href="javascript:void(0)" onclick="AddGmail();">接Gmail</a>&nbsp;&nbsp;
-                        <a href="javascript:void(0)" onclick="AddYahoo();">接Yahoo</a>
-                    </label>
-                    <input asp-for="Input.Email" class="form-control" id="InputOfEmail"/>
+                    <label asp-for="Input.Email">請輸入您的郵件</label>
+                    <input asp-for="Input.Email" class="form-control" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -30,7 +24,7 @@
                 </div>
                 <div class="form-group">
                     <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">註冊新帳戶</a>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">註冊新帳號</a>
                     </p>
                 </div>
             </form>
@@ -38,19 +32,11 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h4>使用 Google 帳戶登入</h4>
-            <hr />
             @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                if ((Model.ExternalLogins?.Count ?? 0) != 0)
                 {
-                    <div>
-                        <p>
-                            發生錯誤，請刷新頁面後再試!
-                        </p>
-                    </div>
-                }
-                else
-                {
+                    <h4>使用 Google 帳戶登入</h4>
+                    <hr />
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                         <div>
                             <p>

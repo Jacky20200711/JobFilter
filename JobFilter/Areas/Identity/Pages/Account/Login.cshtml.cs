@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 
 namespace JobFilter.Areas.Identity.Pages.Account
@@ -91,12 +90,12 @@ namespace JobFilter.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     TempData["LoginFail"] = "登入失敗，請檢查輸入的內容!";
-                    return Page();
+                    return RedirectToPage("./Login");
                 }
             }
 
             TempData["LoginFail"] = "登入失敗，請檢查輸入的內容!";
-            return Page();
+            return RedirectToPage("./Login");
         }
     }
 }
