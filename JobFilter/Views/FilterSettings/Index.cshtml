@@ -1,6 +1,23 @@
 ﻿@using X.PagedList.Mvc.Core
 @model X.PagedList.IPagedList<FilterSetting>
+@functions{
+    public string PrintContent(string content, int length)
+    {
+        if (string.IsNullOrEmpty(content))
+        {
+            return "無";
+        }
+        else if (content.Length < length)
+        {
 
+            return content;
+        }
+        else
+        {
+            return content.Substring(0, length) + "...";
+        }
+    }
+}
 <h1>設定列表</h1>
 <p>
     @Html.ActionLink("新增設定(最多3筆)", "Create", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
@@ -51,52 +68,13 @@
                     @Html.DisplayFor(modelItem => item.MaximumWage)
                 </td>
                 <td style="white-space: nowrap;">
-                    @{
-                        if (string.IsNullOrEmpty(item.ExcludeWord))
-                        {
-                            <span>無</span>
-                        }
-                        else if (item.ExcludeWord.Length < 16)
-                        {
-
-                            <span>@item.ExcludeWord</span>
-                        }
-                        else
-                        {
-                            @item.ExcludeWord.Substring(0, 16)
-                            <span>...</span>
-                        }
-                    }
+                    <span>@PrintContent(item.ExcludeWord, 4)</span>
                 </td>
                 <td style="white-space: nowrap;">
-                    @{
-                        if (string.IsNullOrEmpty(item.IgnoreCompany))
-                        {
-                            <span>無</span>
-                        }
-                        else if (item.IgnoreCompany.Length < 12)
-                        {
-
-                            <span>@item.IgnoreCompany</span>
-                        }
-                        else
-                        {
-                            @item.IgnoreCompany.Substring(0, 12)
-                            <span>...</span>
-                        }
-                    }
+                    <span>@PrintContent(item.IgnoreCompany, 4)</span>
                 </td>
                 <td style="white-space: nowrap;">
-                    @{
-                        if (string.IsNullOrEmpty(item.Remarks))
-                        {
-                            <span>無</span>
-                        }
-                        else
-                        {
-                            <span>@item.Remarks</span>
-                        }
-                    }
+                    <span>@PrintContent(item.Remarks, 5)</span>
                 </td>
                 <td style="white-space: nowrap;">
                     @Html.ActionLink("執行 |", "DoCrawl", "JobFilter", new { id = item.Id })
