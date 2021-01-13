@@ -40,6 +40,53 @@ namespace JobFilter.Models.Services
             csvWriter.WriteRecords(DataList);
         }
 
+        public static List<FilterSetting> CheckBeforeImport(List<FilterSetting> DataList)
+        {
+            List<FilterSetting> validDataList = new List<FilterSetting>();
+            int Length_limit_CrawlUrl = 800;
+            int Length_limit_ExcludeWord = 50;
+            int Length_limit_IgnoreCompany = 1000;
+            int Length_limit_Remarks = 5;
+
+            // 匯入前先檢查所有的設定
+            foreach(FilterSetting f in DataList)
+            {
+                // 若資料有誤，可能是因為最近有變更欄位長度，所以先檢查並修正長度
+                if (!FilterSettingManager.IsValidSetting(f))
+                {
+                    // 檢查並修正長度
+                    if (f.CrawlUrl.Length > Length_limit_CrawlUrl)
+                    {
+                        f.CrawlUrl = f.CrawlUrl.Substring(0, Length_limit_CrawlUrl);
+                    }
+                    if (f.ExcludeWord.Length > Length_limit_ExcludeWord)
+                    {
+                        f.ExcludeWord = f.ExcludeWord.Substring(0, Length_limit_ExcludeWord);
+                    }
+                    if (f.IgnoreCompany.Length > Length_limit_IgnoreCompany)
+                    {
+                        f.IgnoreCompany = f.IgnoreCompany.Substring(0, Length_limit_IgnoreCompany);
+                    }
+                    if (f.Remarks.Length > Length_limit_Remarks)
+                    {
+                        f.Remarks = f.Remarks.Substring(0, Length_limit_Remarks);
+                    }
+
+                    // 若修正長度後合法，則添加這筆資料
+                    if (FilterSettingManager.IsValidSetting(f))
+                    {
+                        validDataList.Add(f);
+                    }
+                }
+                // 若資料無誤則添加
+                else
+                {
+                    validDataList.Add(f);
+                }
+            }
+            return validDataList;
+        }
+
         public static void ImportFilterSetting(ApplicationDbContext _context)
         {
             // 從設定檔取得匯入檔的路徑
@@ -56,6 +103,7 @@ namespace JobFilter.Models.Services
                     var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
                     csvReader.Configuration.RegisterClassMap<FilterSettingtMap>();
                     var DataList = csvReader.GetRecords<FilterSetting>().ToList();
+                    DataList = CheckBeforeImport(DataList);
                     _context.FilterSetting.AddRange(DataList);
                     _context.SaveChanges();
                 }
