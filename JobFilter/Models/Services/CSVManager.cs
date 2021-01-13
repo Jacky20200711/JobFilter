@@ -40,7 +40,7 @@ namespace JobFilter.Models.Services
             csvWriter.WriteRecords(DataList);
         }
 
-        public static List<FilterSetting> CheckBeforeImport(List<FilterSetting> DataList)
+        public static List<FilterSetting> GetValidDataBeforeImport(List<FilterSetting> DataList)
         {
             List<FilterSetting> validDataList = new List<FilterSetting>();
             int Length_limit_CrawlUrl = 800;
@@ -103,8 +103,7 @@ namespace JobFilter.Models.Services
                     var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
                     csvReader.Configuration.RegisterClassMap<FilterSettingtMap>();
                     var DataList = csvReader.GetRecords<FilterSetting>().ToList();
-                    DataList = CheckBeforeImport(DataList);
-                    _context.FilterSetting.AddRange(DataList);
+                    _context.FilterSetting.AddRange(GetValidDataBeforeImport(DataList));
                     _context.SaveChanges();
                 }
             }
