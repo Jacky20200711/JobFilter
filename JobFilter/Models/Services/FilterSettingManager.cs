@@ -11,7 +11,7 @@ namespace JobFilter.Models
         public static int Length_limit_CrawlUrl = 800;
         public static int Length_limit_ExcludeWord = 50;
         public static int Length_limit_IgnoreCompany = 1000;
-        public static int Length_limit_Remarks = 10;
+        public static int Length_limit_Remarks = 5;
         public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
 
         public static bool IsValidString(string TestStr, int LengthLimit = 1000)
