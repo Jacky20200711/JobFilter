@@ -3,6 +3,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace JobFilter.Models.DataStructure
 {
@@ -225,19 +226,26 @@ namespace JobFilter.Models.DataStructure
             return CrawlResult != null;
         }
 
-        public async void LoadPage()
+        public async Task LoadPage()
         {
             HttpClient httpClient = new HttpClient();
-
             var responseMessage = await httpClient.GetAsync(_url);
-
-            if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            try
             {
-                PageContent = responseMessage.Content.ReadAsStringAsync().Result;
-                CrawlResult = "OK";
+                if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    PageContent = responseMessage.Content.ReadAsStringAsync().Result;
+                    CrawlResult = "OK";
+                }
+                else
+                {
+                    EncounterError = true;
+                    CrawlResult = "NO";
+                }
             }
-            else
+            catch (Exception ex)
             {
+                _logger.Error(ex.ToString());
                 EncounterError = true;
                 CrawlResult = "NO";
             }
@@ -248,7 +256,7 @@ namespace JobFilter.Models.DataStructure
             return ExtractResult != null;
         }
 
-        public async void ExtractTags()
+        public async Task ExtractTags()
         {
             try
             {
