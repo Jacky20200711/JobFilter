@@ -67,7 +67,7 @@ namespace JobFilter.Models.Services.Tests
                     MaximumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = "",
-                    Remarks = "0123456789X",
+                    Remarks = "123456",
                 },
             };
 
@@ -117,7 +117,7 @@ namespace JobFilter.Models.Services.Tests
                     MaximumWage = 999999,
                     ExcludeWord = "",
                     IgnoreCompany = "",
-                    Remarks = "12345測測測測測",
+                    Remarks = "12測測測",
                 },
             };
 
