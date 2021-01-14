@@ -1,8 +1,8 @@
 # 專案說明  
-令使用者可以設定薪資的低標和最低高標、多個欲排除的關鍵字、多個欲排除的公司名稱，  
-來進一步過濾從104返回的頁面內容，令顯示的工作項目更加符合期望。  
+令使用者可以設定目標網址、薪資水準、多個欲排除的關鍵字、多個欲排除的公司名稱，  
+來進一步過濾從104返回的工作列表，令顯示的工作列表更加符合期望。  
 ※目標網址的開頭必須是 https://www.104.com.tw/jobs/search/  
-※若查詢的結果有多個分頁，則程式會嘗試取得並解析前8頁的內容。  
+※若查詢的結果有多個分頁，則程式會嘗試解析前8頁的內容。  
 &emsp;  
 # 使用技術  
 01.使用 MVC 架構  
@@ -33,6 +33,6 @@ Win10(64bit) + Visual Studio 2019 + .NET Core 3.1 MVC + IIS 10 + MSTestv2
 # 過濾後的工作列表  
 ![image](https://github.com/Jacky20200711/JobFilter/blob/master/DEMO_04.PNG?raw=true)  
 &emsp;  
-# 點擊工作的 Title 可以連結到 104 的應徵頁面  
+# 點擊工作的 title 可以連結到 104 的應徵頁面  
 ![image](https://github.com/Jacky20200711/JobFilter/blob/master/DEMO_05.PNG?raw=true)  
 &emsp;  
