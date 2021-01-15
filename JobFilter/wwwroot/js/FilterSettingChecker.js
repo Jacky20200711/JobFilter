@@ -6,7 +6,7 @@
             CharCode > 64 && CharCode < 91 ||
             CharCode > 96 && CharCode < 123 ||
             CharCode > 0x4E00 && CharCode < 0x9FA5)) {
-            alert("只能輸入中英文、數字、逗點、底線、加號、空白");
+            alert("只能在欲排除的關鍵字和公司欄位輸入中英文、\n數字、逗點、底線、加號、空白");
             return false;
         }
     }

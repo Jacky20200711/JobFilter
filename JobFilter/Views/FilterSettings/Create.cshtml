@@ -1,62 +1,72 @@
 ﻿@model JobFilter.Models.FilterSetting
 @using Microsoft.AspNetCore.Http
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
 <script src="/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/FilterSettingChecker.js"></script>
-
 <h1>新增設定</h1>
-<h5>★ 欲排除的關鍵字和公司名稱若有多個，請以逗點做分隔</h5>
+<h6 style="color:blue;">★ 欲排除的關鍵字和公司若有多個，請以逗點做分隔</h6>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" onsubmit="return CheckValue()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CrawlUrl" class="control-label">目標網址</label>
+            <div class="form-group" style="width:650px;height:60px;">
+                <label asp-for="CrawlUrl" class="control-label">
+                    目標網址&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span asp-validation-for="CrawlUrl" class="text-danger"></span>
+                </label>
                 <input asp-for="CrawlUrl" class="form-control" id="CrawlUrl" />
-                <span asp-validation-for="CrawlUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MinimumWage" class="control-label">最低月薪(不能低於)</label>
-                <input type="text" asp-for="MinimumWage" class="form-control" id="MinimumWage" />
-                <span asp-validation-for="MinimumWage" class="text-danger"></span>
+            <div style="width: 1000px; height:60px; margin-top:26px;">
+                <div class="form-group" style="float:left; width:300px;">
+                    <label asp-for="MinimumWage" class="control-label">
+                        最低月薪(不能低於)&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span asp-validation-for="MinimumWage" class="text-danger"></span>
+                    </label>
+                    <input type="text" asp-for="MinimumWage" class="form-control" id="MinimumWage" />
+                </div>
+                <div class="form-group" style="float:left; width:300px; margin-left:50px;">
+                    <label asp-for="MaximumWage" class="control-label">
+                        最高月薪(不能低於)&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span asp-validation-for="MaximumWage" class="text-danger"></span>
+                    </label>
+                    <input type="text" asp-for="MaximumWage" class="form-control" id="MaximumWage" />
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="MaximumWage" class="control-label">最高月薪(不能低於)</label>
-                <input type="text" asp-for="MaximumWage" class="form-control" id="MaximumWage" />
-                <span asp-validation-for="MaximumWage" class="text-danger"></span>
+            <div style="clear:both;"></div>
+            <div style="width: 1000px; height:60px;">
+                <div class="form-group" style="float:left; width:300px;">
+                    <label asp-for="ExcludeWord" class="control-label">欲排除的關鍵字</label>
+                    <input asp-for="ExcludeWord" class="form-control" id="ExcludeWord" />
+                    <span asp-validation-for="ExcludeWord" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="float:left; width:300px; margin-left:50px;">
+                    <label asp-for="IgnoreCompany" class="control-label">欲排除的公司</label>
+                    <input asp-for="IgnoreCompany" class="form-control" id="IgnoreCompany" />
+                    <span asp-validation-for="IgnoreCompany" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ExcludeWord" class="control-label">排除關鍵字</label>
-                <input asp-for="ExcludeWord" class="form-control" id="ExcludeWord" />
-                <span asp-validation-for="ExcludeWord" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IgnoreCompany" class="control-label">排除公司</label>
-                <input asp-for="IgnoreCompany" class="form-control" id="IgnoreCompany" />
-                <span asp-validation-for="IgnoreCompany" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Remarks" class="control-label">備註</label>
-                <input asp-for="Remarks" class="form-control" id="Remarks" />
-                <span asp-validation-for="Remarks" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="建立" class="btn btn-primary" />
+            <div style="clear:both;"></div>
+            <div style="width: 1000px; height:60px;">
+                <div class="form-group" style="float:left; width:300px;">
+                    <label asp-for="Remarks" class="control-label">備註</label>
+                    <input asp-for="Remarks" class="form-control" id="Remarks" />
+                    <span asp-validation-for="Remarks" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="float:left; width:300px; margin-left:50px; margin-top:32px;">
+                    <input type="submit" value="建立" class="btn btn-primary" />
+                </div>
+                <div style="float:left; width:100px; margin-left:-210px; margin-top:40px;">
+                    @{
+                        int? TryGetPage = HttpContextAccessor.HttpContext.Session.GetInt32("returnPage");
+                        int page = TryGetPage != null ? (int)TryGetPage : 1;
+                    }
+                    @Html.ActionLink("返回列表", "Index", "FilterSettings", new { page = @page })
+                </div>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    @{
-        int? TryGetPage = HttpContextAccessor.HttpContext.Session.GetInt32("returnPage");
-        int page = TryGetPage != null ? (int)TryGetPage : 1;
-    }
-    @Html.ActionLink("返回列表", "Index", "FilterSettings", new { page = @page })
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
