@@ -27,12 +27,15 @@ Win10(64bit) + Visual Studio 2019 + .NET Core 3.1 MVC + IIS 10 + MSTestv2
 # 登入  
 ![image](https://github.com/Jacky20200711/JobFilter/blob/master/DEMO_02.PNG?raw=true)  
 &emsp;  
-# 設定列表  
+# 新增設定  
 ![image](https://github.com/Jacky20200711/JobFilter/blob/master/DEMO_03.PNG?raw=true)  
 &emsp;  
-# 過濾後的工作列表  
+# 設定列表  
 ![image](https://github.com/Jacky20200711/JobFilter/blob/master/DEMO_04.PNG?raw=true)  
 &emsp;  
-# 點擊工作的 title 可以連結到 104 的應徵頁面  
+# 過濾後的工作列表  
 ![image](https://github.com/Jacky20200711/JobFilter/blob/master/DEMO_05.PNG?raw=true)  
+&emsp;  
+# 點擊工作的 title 可以連結到 104 的應徵頁面  
+![image](https://github.com/Jacky20200711/JobFilter/blob/master/DEMO_06.PNG?raw=true)  
 &emsp;  
