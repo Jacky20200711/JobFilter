@@ -1,13 +1,12 @@
 ﻿@page
 @model LoginModel
 <link href="~/css/GoogleLoginButton.css" rel="stylesheet">
-<h1>您好</h1>
 <div class="row">
     <div class="col-md-4">
         <h4>歡迎登入(^___^)</h4>
         <section>
-            <form id="account" method="post">
-                <hr />
+            <hr />
+            <form id="account" method="post" style="margin-top:-24px;">
                 <div class="text-danger">@TempData["LoginFail"]</div><br>
                 <div class="form-group">
                     <label asp-for="Input.Email">請輸入您的郵件</label>
@@ -22,11 +21,6 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">登入</button>
                 </div>
-                <div class="form-group">
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">註冊新帳號</a>
-                    </p>
-                </div>
             </form>
         </section>
     </div>
@@ -37,6 +31,9 @@
                 {
                     <h4>使用 Google 帳戶登入</h4>
                     <hr />
+                    <div>
+                        <label>請點擊下方的圖示</label>
+                    </div>
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                         <div>
                             <p>
