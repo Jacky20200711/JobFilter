@@ -36,22 +36,28 @@
             <div style="clear:both;"></div>
             <div style="width: 1000px; height:60px;">
                 <div class="form-group" style="float:left; width:300px;">
-                    <label asp-for="ExcludeWord" class="control-label">欲排除的關鍵字</label>
+                    <label asp-for="ExcludeWord" class="control-label">
+                        欲排除的關鍵字&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span asp-validation-for="ExcludeWord" class="text-danger"></span>
+                    </label>
                     <input asp-for="ExcludeWord" class="form-control" id="ExcludeWord" />
-                    <span asp-validation-for="ExcludeWord" class="text-danger"></span>
                 </div>
                 <div class="form-group" style="float:left; width:300px; margin-left:50px;">
-                    <label asp-for="IgnoreCompany" class="control-label">欲排除的公司</label>
+                    <label asp-for="IgnoreCompany" class="control-label">
+                        欲排除的公司&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span asp-validation-for="IgnoreCompany" class="text-danger"></span>
+                    </label>
                     <input asp-for="IgnoreCompany" class="form-control" id="IgnoreCompany" />
-                    <span asp-validation-for="IgnoreCompany" class="text-danger"></span>
                 </div>
             </div>
             <div style="clear:both;"></div>
             <div style="width: 1000px; height:60px;">
                 <div class="form-group" style="float:left; width:300px;">
-                    <label asp-for="Remarks" class="control-label">備註</label>
+                    <label asp-for="Remarks" class="control-label">
+                        備註&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </label>
                     <input asp-for="Remarks" class="form-control" id="Remarks" />
-                    <span asp-validation-for="Remarks" class="text-danger"></span>
                 </div>
                 <div class="form-group" style="float:left; width:300px; margin-left:50px; margin-top:32px;">
                     <input type="submit" value="儲存" class="btn btn-primary" />
