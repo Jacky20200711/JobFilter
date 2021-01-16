@@ -115,23 +115,25 @@ namespace JobFilter.Models.Services
             }
         }
 
-        private static JobList GetJobListFromCrawlers(List<JobCrawler> JobCrawlers)
+        private static JobList GetValidJobs(List<JobCrawler> JobCrawlers, FilterSetting filterSetting)
         {
-            JobList jobList = new JobList();
+            JobList jobs = new JobList();
 
-            // 向爬蟲們拿取各項工作的細節
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
                 if (!jobCrawler.IsEncounterError())
                 {
                     foreach (Job job in jobCrawler.GetJobs())
                     {
-                        jobList.Add(job);
+                        if (IsValidJob(filterSetting, job))
+                        {
+                            jobs.Add(job);
+                        }
                     }
                 }
             }
 
-            return jobList;
+            return jobs;
         }
 
         public static JobList GetValidJobList(FilterSetting filterSetting)
@@ -151,22 +153,12 @@ namespace JobFilter.Models.Services
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=8"),
             };
 
-            // 令爬蟲們抓取頁面 & 解析頁面
+            // 令爬蟲們抓取頁面 & 取得工作列表
             GetTargetPages(JobCrawlers);
             GetJobSections(JobCrawlers);
 
-            // 向爬蟲們索取工作列表，並根據設定檔來過濾掉不喜歡的工作
-            JobList jobList = GetJobListFromCrawlers(JobCrawlers);
-            JobList validJobList = new JobList();
-            foreach (Job job in jobList)
-            {
-                if (IsValidJob(filterSetting, job))
-                {
-                    validJobList.Add(job);
-                }
-            }
-
-            return validJobList;
+            // 根據設定檔來過濾工作列表
+            return GetValidJobs(JobCrawlers, filterSetting);
         }
 
         public static JobList GetValidJobList(JobList jobList, string blockCompany = null)
