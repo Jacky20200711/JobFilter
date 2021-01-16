@@ -45,19 +45,16 @@ namespace JobFilter.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required(ErrorMessage = "此欄位不能為空")]
-            [EmailAddress(ErrorMessage = "請務必確認郵件格式")]
-            [Display(Name = "郵件")]
+            [EmailAddress(ErrorMessage = "請確認郵件格式")]
             public string Email { get; set; }
 
             [Required(ErrorMessage = "此欄位不能為空")]
             [StringLength(30, ErrorMessage = "長度必須為6~30", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "密碼")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "確認密碼")]
-            [Compare("Password", ErrorMessage = "您輸入的密碼和確認密碼不相同!")]
+            [Compare("Password", ErrorMessage = "和上個密碼不同")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -106,7 +103,7 @@ namespace JobFilter.Areas.Identity.Pages.Account
                 }
             }
 
-            ViewData["RegistFail"] = "註冊失敗，此郵件已被註冊!";
+            TempData["RegistFail"] = "此郵件已被註冊";
             return Page();
         }
     }

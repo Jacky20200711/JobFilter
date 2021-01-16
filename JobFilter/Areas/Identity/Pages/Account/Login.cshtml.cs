@@ -34,7 +34,7 @@ namespace JobFilter.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required(ErrorMessage = "此欄位不能為空")]
-            [EmailAddress(ErrorMessage = "請務必確認郵件格式")]
+            [EmailAddress(ErrorMessage = "請確認郵件格式")]
             public string Email { get; set; }
 
             [Required(ErrorMessage = "此欄位不能為空")]
@@ -83,18 +83,18 @@ namespace JobFilter.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    TempData["LoginFail"] = "失敗次數過多，此帳號暫時無法使用!";
+                    TempData["LoginFail"] = "此帳號暫時無法使用";
                     return Page();
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    TempData["LoginFail"] = "登入失敗，請檢查輸入的內容!";
+                    TempData["LoginFail"] = "登入失敗!";
                     return RedirectToPage("./Login");
                 }
             }
 
-            TempData["LoginFail"] = "登入失敗，請檢查輸入的內容!";
+            TempData["LoginFail"] = "登入失敗!";
             return RedirectToPage("./Login");
         }
     }
