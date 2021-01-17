@@ -7,7 +7,7 @@ namespace JobFilter.Models.Services.Tests
     public class SettingServiceTests
     {
         [TestMethod()]
-        public void IsValidSetringTest()
+        public void IsValidStringTest()
         {
             Assert.AreEqual(true, SettingService.IsValidString(",_+測試"));
             Assert.AreEqual(true, SettingService.IsValidString(""));
@@ -68,6 +68,15 @@ namespace JobFilter.Models.Services.Tests
                     ExcludeWord = "",
                     IgnoreCompany = "",
                     Remarks = "123456",
+                },
+
+                new FilterSetting
+                {
+                    CrawlUrl = SettingService.TargetUrlHead,
+                    MinimumWage = 50000,
+                    MaximumWage = 1000000,
+                    ExcludeWord = "",
+                    IgnoreCompany = "",
                 },
             };
 
