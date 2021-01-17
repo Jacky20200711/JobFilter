@@ -56,7 +56,7 @@ namespace JobFilter.Models
             }
 
             // 薪資範圍必須為3~6位數
-            if (filterSetting.MinimumWage < 100 || filterSetting.MinimumWage > 999999)
+            if (filterSetting.MinimumWage < 100 || filterSetting.MaximumWage > 999999)
             {
                 return false;
             }
