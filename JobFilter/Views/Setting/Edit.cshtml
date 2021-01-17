@@ -1,8 +1,6 @@
 ﻿@model JobFilter.Models.FilterSetting
 @using Microsoft.AspNetCore.Http
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-<script src="/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/SettingChecker.js"></script>
 <h3>編輯設定</h3>
 <hr />
 <div class="row">
@@ -76,3 +74,5 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/SettingChecker.js"></script>

@@ -69,7 +69,7 @@ $('#MaximumWage').on("input", function (e) {
     }
     document.getElementById("MaximumWage").value = InputModify;
     // 限制輸入長度
-    if (value.length > 7) {
-        document.getElementById("MaximumWage").value = value.substr(0, 7);
+    if (value.length > 6) {
+        document.getElementById("MaximumWage").value = value.substr(0, 6);
     }
 });
