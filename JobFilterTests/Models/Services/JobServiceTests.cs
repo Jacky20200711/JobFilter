@@ -1,12 +1,11 @@
-﻿using JobFilter.Models.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using JobFilter.Models.DataStructure;
 
 namespace JobFilter.Models.Services.Tests
 {
     [TestClass()]
-    public class JobFilterManagerTests
+    public class JobServiceTests
     {
         // 將要比對的資料封裝到一個類別
         public class Verifier
@@ -95,7 +94,7 @@ namespace JobFilter.Models.Services.Tests
 
             foreach (var verifier in VerifyGroups)
             {
-                Assert.AreEqual(verifier.GetValid(), JobFilterManager.IsValidJob(verifier.GetFilterSetting(), verifier.GetJob()));
+                Assert.AreEqual(verifier.GetValid(), JobService.IsValidJob(verifier.GetFilterSetting(), verifier.GetJob()));
             }
         }
 
@@ -112,7 +111,7 @@ namespace JobFilter.Models.Services.Tests
 
             // 不封鎖任何公司
             PassTest = false;
-            validJobList = JobFilterManager.GetValidJobList(jobList, null).JobItems;
+            validJobList = JobService.GetValidJobList(jobList, null).JobItems;
             if (validJobList.Count == 2 && validJobList[0].Company == "A公司" && validJobList[1].Company == "B公司")
             {
                 PassTest = true;
@@ -121,7 +120,7 @@ namespace JobFilter.Models.Services.Tests
 
             // 封鎖A公司
             PassTest = false;
-            validJobList = JobFilterManager.GetValidJobList(jobList, "A公司").JobItems;
+            validJobList = JobService.GetValidJobList(jobList, "A公司").JobItems;
             if (validJobList.Count == 1 && validJobList[0].Company == "B公司")
             {
                 PassTest = true;
@@ -130,7 +129,7 @@ namespace JobFilter.Models.Services.Tests
 
             // 封鎖B公司
             PassTest = false;
-            validJobList = JobFilterManager.GetValidJobList(jobList, "B公司").JobItems;
+            validJobList = JobService.GetValidJobList(jobList, "B公司").JobItems;
             if (validJobList.Count == 1 && validJobList[0].Company == "A公司")
             {
                 PassTest = true;

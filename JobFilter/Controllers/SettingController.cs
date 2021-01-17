@@ -201,7 +201,7 @@ namespace JobFilter.Controllers
 
                 // 過濾 session 儲存的工作列表
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
-                jobList = JobFilterManager.GetValidJobList(jobList, CompanyName);
+                jobList = JobService.GetValidJobList(jobList, CompanyName);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
                 return RedirectToRoute(new { controller = "JobFilter", action = "Index" });
             }

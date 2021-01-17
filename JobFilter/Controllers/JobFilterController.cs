@@ -61,7 +61,7 @@ namespace JobFilter.Controllers
                 }
 
                 // 取得過濾後的工作並存到Session
-                JobList jobList = JobFilterManager.GetValidJobList(filterSetting);
+                JobList jobList = JobService.GetValidJobList(filterSetting);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
                 return RedirectToAction("Index");
             }

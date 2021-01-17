@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace JobFilter.Models.Services
 {
-    public static class JobFilterManager
+    public static class JobService
     {
         public static HashSet<string> GetExcludeWordSet(string ExcludeWord)
         {
@@ -75,13 +75,13 @@ namespace JobFilter.Models.Services
 
         private static void GetTargetPages(List<JobCrawler> JobCrawlers)
         {
-            // 令所有爬蟲開始爬取目標頁面
+            // 令所有爬蟲開始任務
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
-                jobCrawler.LoadPage();
+                _ = jobCrawler.LoadPage();
             }
 
-            // 等待所有的爬蟲爬取完畢
+            // 等待爬蟲們結束任務
             while (JobCrawlers.Any(jobCrawler => !jobCrawler.IsCrawlFinished()))
             {
                 Thread.Sleep(200);
@@ -95,17 +95,17 @@ namespace JobFilter.Models.Services
             {
                 if (!jobCrawler.IsEncounterError())
                 {
-                    jobCrawler.ExtractTags();
+                    _ = jobCrawler.ExtractTags();
                 }
             }
 
-            // 等待所有的爬蟲萃取完畢
+            // 等待爬蟲們結束任務
             while (JobCrawlers.Any(jobCrawler => !jobCrawler.IsEncounterError() && !jobCrawler.IsExtractFinished()))
             {
                 Thread.Sleep(200);
             }
 
-            // 令萃取成功的爬蟲再進一步萃取各項工作的細節
+            // 令萃取成功的爬蟲再進一步萃取出各項工作
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {
                 if (!jobCrawler.IsEncounterError())
