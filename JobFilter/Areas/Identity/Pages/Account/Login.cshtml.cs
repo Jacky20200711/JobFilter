@@ -75,7 +75,7 @@ namespace JobFilter.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
+                    return RedirectToRoute(new { controller = "Setting", action = "Index" });
                 }
                 if (result.RequiresTwoFactor)
                 {

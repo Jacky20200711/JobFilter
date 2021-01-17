@@ -16,13 +16,13 @@ using System;
 namespace JobFilter.Controllers
 {
     [Authorize]
-    public class FilterSettingsController : Controller
+    public class SettingController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger _logger;
 
-        public FilterSettingsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
+        public SettingController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
         {
             _context = context;
             _userManager = userManager;

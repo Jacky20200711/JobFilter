@@ -3,13 +3,13 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 <script src="/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/FilterSettingChecker.js"></script>
-<h3>編輯設定</h3>
+<h3>新增設定</h3>
+<h6 style="color:blue;">★ 欲排除的關鍵字和公司若有多個，請以逗點做分隔</h6>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" onsubmit="return CheckValue()">
+        <form asp-action="Create" onsubmit="return CheckValue()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group" style="width:650px;height:60px;">
                 <label asp-for="CrawlUrl" class="control-label">
                     目標網址&nbsp;&nbsp;&nbsp;&nbsp;
@@ -60,14 +60,14 @@
                     <input asp-for="Remarks" class="form-control" id="Remarks" />
                 </div>
                 <div class="form-group" style="float:left; width:300px; margin-left:50px; margin-top:32px;">
-                    <input type="submit" value="儲存" class="btn btn-primary" />
+                    <input type="submit" value="建立" class="btn btn-primary" />
                 </div>
                 <div style="float:left; width:100px; margin-left:-210px; margin-top:40px;">
                     @{
                         int? TryGetPage = HttpContextAccessor.HttpContext.Session.GetInt32("returnPage");
                         int page = TryGetPage != null ? (int)TryGetPage : 1;
                     }
-                    @Html.ActionLink("返回列表", "Index", "FilterSettings", new { page = @page })
+                    @Html.ActionLink("返回列表", "Index", "Setting", new { page = @page })
                 </div>
             </div>
         </form>

@@ -25,7 +25,7 @@
                         <li>@Html.ActionLink("首頁", "Index", "Home", null, new { @class = "my-class" })</li>
                         @if (!string.IsNullOrEmpty(User.Identity.Name))
                         {
-                            <li>@Html.ActionLink("設定", "Index", "FilterSettings", null, new { @class = "my-class" })</li>
+                            <li>@Html.ActionLink("設定", "Index", "Setting", null, new { @class = "my-class" })</li>
                         }
                         @if (UserService.InAdminGroup(User.Identity.Name))
                         {

@@ -21,7 +21,7 @@
         <div class="Wage">
             @job.WageRange &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <span>
-                @Html.ActionLink("封鎖此公司", "AddBlockCompany", "FilterSettings", new { CompanyName = job.Company })
+                @Html.ActionLink("封鎖此公司", "AddBlockCompany", "Setting", new { CompanyName = job.Company })
             </span>
         </div>
         <br>
