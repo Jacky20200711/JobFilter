@@ -203,7 +203,7 @@ namespace JobFilter.Controllers
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 jobList = JobService.GetValidJobList(jobList, CompanyName);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
-                return RedirectToRoute(new { controller = "JobFilter", action = "Index" });
+                return RedirectToRoute(new { controller = "Job", action = "Index" });
             }
             catch (Exception)
             {

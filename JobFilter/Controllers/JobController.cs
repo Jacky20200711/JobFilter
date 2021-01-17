@@ -14,12 +14,12 @@ using X.PagedList;
 namespace JobFilter.Controllers
 {
     [Authorize]
-    public class JobFilterController : Controller
+    public class JobController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger _logger;
 
-        public JobFilterController(ApplicationDbContext context, ILogger<JobFilterController> logger)
+        public JobController(ApplicationDbContext context, ILogger<JobController> logger)
         {
             _context = context;
             _logger = logger;
@@ -48,7 +48,7 @@ namespace JobFilter.Controllers
             }
         }
 
-        public IActionResult DoCrawl(int? id)
+        public IActionResult GetValidJobs(int? id)
         {
             try
             {
