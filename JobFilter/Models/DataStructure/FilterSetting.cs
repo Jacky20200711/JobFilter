@@ -27,8 +27,6 @@ namespace JobFilter.Models
         [MaxLength(5, ErrorMessage = "最多5個字")]
         public string Remarks { get; set; }
 
-        public string UserId { get; set; }
-
         public string UserEmail { get; set; }
     }
 }
