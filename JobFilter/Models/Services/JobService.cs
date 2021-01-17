@@ -8,61 +8,41 @@ namespace JobFilter.Models.Services
 {
     public static class JobService
     {
-        public static HashSet<string> GetExcludeWordSet(string ExcludeWord)
+        public static HashSet<string> GetSplitedDataSet(string DataStr)
         {
-            HashSet<string> ExcludeWordSet = new HashSet<string>();
+            HashSet<string> DataSet = new HashSet<string>();
 
-            if (string.IsNullOrEmpty(ExcludeWord))
+            if (string.IsNullOrEmpty(DataStr))
             {
-                return ExcludeWordSet;
+                return DataSet;
             }
 
-            foreach (string excludeWord in ExcludeWord.Split(','))
+            foreach (string data in DataStr.Split(','))
             {
-                if (!string.IsNullOrEmpty(excludeWord))
+                if (!string.IsNullOrEmpty(data))
                 {
-                    ExcludeWordSet.Add(excludeWord);
+                    DataSet.Add(data);
                 }
             }
 
-            return ExcludeWordSet;
-        }
-
-        public static HashSet<string> GetIgnoreCompanySet(string IgnoreCompany)
-        {
-            HashSet<string> IgnoreCompanySet = new HashSet<string>();
-
-            if (string.IsNullOrEmpty(IgnoreCompany))
-            {
-                return IgnoreCompanySet;
-            }
-
-            foreach (string ignoreCompany in IgnoreCompany.Split(','))
-            {
-                if (!string.IsNullOrEmpty(ignoreCompany))
-                {
-                    IgnoreCompanySet.Add(ignoreCompany);
-                }
-            }
-
-            return IgnoreCompanySet;
+            return DataSet;
         }
 
         public static bool IsValidJob(FilterSetting filterSetting, Job job)
         {
-            HashSet<string> ExcludeWordSet = GetExcludeWordSet(filterSetting.ExcludeWord);
-            HashSet<string> IgnoreCompanySet = GetIgnoreCompanySet(filterSetting.IgnoreCompany);
+            HashSet<string> IgnoreKeywords = GetSplitedDataSet(filterSetting.ExcludeWord);
+            HashSet<string> IgnoreCompanys = GetSplitedDataSet(filterSetting.IgnoreCompany);
 
             // 檢查這一份工作的薪資範圍和公司名稱
             if (job.MinimumWage < filterSetting.MinimumWage ||
                 job.MaximumWage < filterSetting.MaximumWage ||
-                IgnoreCompanySet.Contains(job.Company))
+                IgnoreCompanys.Contains(job.Company))
             {
                 return false;
             }
 
-            // 檢查這一份工作的 Title 是否包含欲排除的關鍵字
-            foreach (string word in ExcludeWordSet)
+            // 檢查這一份工作的 title 是否包含欲排除的關鍵字
+            foreach (string word in IgnoreKeywords)
             {
                 // 比對時忽略大小寫
                 if (job.Title.IndexOf(word, StringComparison.OrdinalIgnoreCase) > -1)
