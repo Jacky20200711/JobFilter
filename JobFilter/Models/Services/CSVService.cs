@@ -10,7 +10,7 @@ using System.Text;
 
 namespace JobFilter.Models.Services
 {
-    public static class CSVManager
+    public static class CSVService
     {
         // 讀取的時候忽略ID屬性
         private class FilterSettingtMap : ClassMap<FilterSetting>
@@ -25,7 +25,7 @@ namespace JobFilter.Models.Services
         public static string GetFilePath(string TableName)
         {
             // 從設定檔取得匯出路徑
-            string ExportPath = ConfigManager.GetValueByKey("ExportPath");
+            string ExportPath = ConfigService.GetValueByKey("ExportPath");
 
             // 串成完整的檔案路徑
             string[] PathSplit = { ExportPath, TableName, ".csv" };
@@ -90,7 +90,7 @@ namespace JobFilter.Models.Services
         public static void ImportFilterSetting(ApplicationDbContext _context)
         {
             // 從設定檔取得匯入檔的路徑
-            string ImportPath = ConfigManager.GetValueByKey("ImportPath");
+            string ImportPath = ConfigService.GetValueByKey("ImportPath");
 
             // 找到目標檔案並匯入
             foreach (string FilePath in Directory.GetFileSystemEntries(ImportPath, "*.csv"))
@@ -121,7 +121,7 @@ namespace JobFilter.Models.Services
         public static void ImportUser(ApplicationDbContext _context)
         {
             // 從設定檔取得匯入檔的路徑
-            string ImportPath = ConfigManager.GetValueByKey("ImportPath");
+            string ImportPath = ConfigService.GetValueByKey("ImportPath");
 
             // 找到目標檔案並匯入
             foreach (string FilePath in Directory.GetFileSystemEntries(ImportPath, "*.csv"))

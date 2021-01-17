@@ -25,7 +25,7 @@ namespace JobFilter.Controllers
             try
             {
                 if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
-                CSVManager.ExportFilterSetting(_context);
+                CSVService.ExportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
             }
             catch(Exception ex)
@@ -41,7 +41,7 @@ namespace JobFilter.Controllers
             try
             {
                 if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
-                CSVManager.ImportFilterSetting(_context);
+                CSVService.ImportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace JobFilter.Controllers
             try
             {
                 if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
-                CSVManager.ExportUser(_context);
+                CSVService.ExportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace JobFilter.Controllers
             try
             {
                 if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
-                CSVManager.ImportUser(_context);
+                CSVService.ImportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }
             catch (Exception ex)

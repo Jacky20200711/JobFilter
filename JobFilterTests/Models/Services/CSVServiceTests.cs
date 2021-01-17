@@ -3,7 +3,7 @@
 namespace JobFilter.Models.Services.Tests
 {
     [TestClass()]
-    public class CSVManagerTests
+    public class CSVServiceTests
     {
         [TestMethod()]
         public void GetFilePathTest()
@@ -11,7 +11,7 @@ namespace JobFilter.Models.Services.Tests
             string TableName = "FilterSetting";
 
             // 取得完整檔名
-            string FilePath = CSVManager.GetFilePath(TableName);
+            string FilePath = CSVService.GetFilePath(TableName);
 
             // 切出檔案名稱
             string Fname = FilePath.Split("\\")[^1];
