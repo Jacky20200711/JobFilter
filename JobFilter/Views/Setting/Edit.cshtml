@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group" style="float:left; width:300px; margin-left:50px;">
                     <label asp-for="MaximumWage" class="control-label">
-                        最高月薪(不能低於)&nbsp;&nbsp;&nbsp;&nbsp;
+                        最高月薪&nbsp;&nbsp;&nbsp;&nbsp;
                         <span asp-validation-for="MaximumWage" class="text-danger"></span>
                     </label>
                     <input type="text" asp-for="MaximumWage" class="form-control" id="MaximumWage" />
@@ -35,14 +35,14 @@
             <div style="width: 1000px; height:60px;">
                 <div class="form-group" style="float:left; width:300px;">
                     <label asp-for="ExcludeWord" class="control-label">
-                        欲排除的關鍵字&nbsp;&nbsp;&nbsp;&nbsp;
+                        排除關鍵字&nbsp;&nbsp;&nbsp;&nbsp;
                         <span asp-validation-for="ExcludeWord" class="text-danger"></span>
                     </label>
                     <input asp-for="ExcludeWord" class="form-control" id="ExcludeWord" />
                 </div>
                 <div class="form-group" style="float:left; width:300px; margin-left:50px;">
                     <label asp-for="IgnoreCompany" class="control-label">
-                        欲排除的公司&nbsp;&nbsp;&nbsp;&nbsp;
+                        排除公司&nbsp;&nbsp;&nbsp;&nbsp;
                         <span asp-validation-for="IgnoreCompany" class="text-danger"></span>
                     </label>
                     <input asp-for="IgnoreCompany" class="form-control" id="IgnoreCompany" />
