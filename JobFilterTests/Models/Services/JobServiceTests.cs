@@ -44,52 +44,52 @@ namespace JobFilter.Models.Services.Tests
             {
                 // 測試是否排除過低的薪資
                 new Verifier(
-                        new FilterSetting()
-                        {
-                            MinimumWage = 40000,
-                            ExcludeWord = "",
-                            IgnoreCompany = ""
-                        },
-                        new Job()
-                        {
-                            MinimumWage = 39999,
-                            Title = "123",
-                            Company = "測試股份有限公司"
-                        },
-                        false
-                    ),
+                    new FilterSetting()
+                    {
+                        MinimumWage = 40000,
+                        ExcludeWord = "",
+                        IgnoreCompany = ""
+                    },
+                    new Job()
+                    {
+                        MinimumWage = 39999,
+                        Title = "123",
+                        Company = "測試股份有限公司"
+                    },
+                    false
+                ),
                 // 測試是否排除該關鍵字(不論大小寫)
                 new Verifier(
-                        new FilterSetting()
-                        {
-                            MinimumWage = 40000,
-                            ExcludeWord = "Java,PHP,JavaScript",
-                            IgnoreCompany = "測試有限公司,測試股份有限公司"
-                        },
-                        new Job()
-                        {
-                            MinimumWage = 40000,
-                            Title = "javascript",
-                            Company = "123股份有限公司"
-                        },
-                        false
-                    ),
+                    new FilterSetting()
+                    {
+                        MinimumWage = 40000,
+                        ExcludeWord = "Java,PHP,JavaScript",
+                        IgnoreCompany = "測試有限公司,測試股份有限公司"
+                    },
+                    new Job()
+                    {
+                        MinimumWage = 40000,
+                        Title = "javascript",
+                        Company = "123股份有限公司"
+                    },
+                    false
+                ),
                 // 測試是否排除該公司
                 new Verifier(
-                        new FilterSetting()
-                        {
-                            MinimumWage = 40000,
-                            ExcludeWord = "",
-                            IgnoreCompany = "測試有限公司,測試股份有限公司"
-                        },
-                        new Job()
-                        {
-                            MinimumWage = 40000,
-                            Title = "java",
-                            Company = "測試股份有限公司"
-                        },
-                        false
-                    ),
+                    new FilterSetting()
+                    {
+                        MinimumWage = 40000,
+                        ExcludeWord = "",
+                        IgnoreCompany = "測試有限公司,測試股份有限公司"
+                    },
+                    new Job()
+                    {
+                        MinimumWage = 40000,
+                        Title = "java",
+                        Company = "測試股份有限公司"
+                    },
+                    false
+                ),
             };
 
             foreach (var verifier in VerifyGroups)
@@ -101,7 +101,6 @@ namespace JobFilter.Models.Services.Tests
         [TestMethod()]
         public void GetValidJobListTest()
         {
-            bool PassTest;
             List<Job> validJobList;
             JobList jobList = new JobList
             {
@@ -109,32 +108,17 @@ namespace JobFilter.Models.Services.Tests
                 new Job { Company = "B公司" },
             };
 
-            // 不封鎖任何公司
-            PassTest = false;
+            // 不做封鎖
             validJobList = JobService.GetValidJobList(jobList, null).JobItems;
-            if (validJobList.Count == 2 && validJobList[0].Company == "A公司" && validJobList[1].Company == "B公司")
-            {
-                PassTest = true;
-            }
-            Assert.AreEqual(true, PassTest);
+            Assert.AreEqual(true, validJobList.Count == 2 && validJobList[0].Company == "A公司" && validJobList[1].Company == "B公司");
 
             // 封鎖A公司
-            PassTest = false;
             validJobList = JobService.GetValidJobList(jobList, "A公司").JobItems;
-            if (validJobList.Count == 1 && validJobList[0].Company == "B公司")
-            {
-                PassTest = true;
-            }
-            Assert.AreEqual(true, PassTest);
+            Assert.AreEqual(true, validJobList.Count == 1 && validJobList[0].Company == "B公司");
 
             // 封鎖B公司
-            PassTest = false;
             validJobList = JobService.GetValidJobList(jobList, "B公司").JobItems;
-            if (validJobList.Count == 1 && validJobList[0].Company == "A公司")
-            {
-                PassTest = true;
-            }
-            Assert.AreEqual(true, PassTest);
+            Assert.AreEqual(true, validJobList.Count == 1 && validJobList[0].Company == "A公司");
         }
     }
 }
