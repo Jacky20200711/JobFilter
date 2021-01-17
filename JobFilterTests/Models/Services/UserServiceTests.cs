@@ -1,5 +1,4 @@
-﻿using JobFilter.Models.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.AspNetCore.Identity;
 
 namespace JobFilter.Models.Services.Tests

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace JobFilter.Models.Services
 {
-    public static class ConfigManager
+    public static class ConfigService
     {
         // 從設定檔取得特定 KEY 的 Value
         public static string GetValueByKey(string Key)

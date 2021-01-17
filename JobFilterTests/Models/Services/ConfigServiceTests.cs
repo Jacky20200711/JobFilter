@@ -1,13 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JobFilter.Models.Services;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace JobFilter.Models.Services.Tests
 {
     [TestClass()]
-    public class ConfigManagerTests
+    public class ConfigServiceTests
     {
         [TestMethod()]
         public void GetValueByKeyTest()
@@ -15,8 +12,8 @@ namespace JobFilter.Models.Services.Tests
             // 傳入單個KEY(先手動到設定檔確認這些KEY存在)
             List<string> ConfigValues = new List<string>
             {
-                ConfigManager.GetValueByKey("ExportPath"),
-                ConfigManager.GetValueByKey("ImportPath")
+                ConfigService.GetValueByKey("ExportPath"),
+                ConfigService.GetValueByKey("ImportPath")
             };
 
             // 測試取得的值是否皆有效
@@ -29,7 +26,7 @@ namespace JobFilter.Models.Services.Tests
             }
 
             // 傳入多個KEY(先手動到設定檔確認這些KEY存在)
-            Dictionary<string, string> ConfigDict = ConfigManager.GetValueByKey(new List<string>
+            Dictionary<string, string> ConfigDict = ConfigService.GetValueByKey(new List<string>
             {
                 "ExportPath",
                 "ImportPath"
@@ -59,7 +56,7 @@ namespace JobFilter.Models.Services.Tests
 
             // 比對這些 KEY 是否存在於設定檔
             List<bool> ValidChecker = new List<bool>();
-            var config = ConfigManager.GetAllPair();
+            var config = ConfigService.GetAllPair();
             foreach (KeyValuePair<string, string> pair in config)
             {
                 if (ConfigKeys.Contains(pair.Key))
