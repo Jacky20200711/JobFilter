@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using JobFilter.Models.Services
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -9,7 +10,7 @@
     <link rel="stylesheet" href="~/css/ToolBar.css" />
 </head>
 <body style="width:76%; margin-left:11%;">
-    <br><br><br>@*固定頂端工具列後，會影響到所有頁面的顯示，所以加一些空行將顯示內容往下*@
+    <br><br><br>@*固定頂端工具列後，有些內容可能會被工具列擋住，所以加一些空行將頁面的內容往下*@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
             <!-- .navbar-toggler 漢堡式選單按鈕，讓手機瀏覽時可以折疊工具列 -->
@@ -26,7 +27,7 @@
                         {
                             <li>@Html.ActionLink("設定", "Index", "FilterSettings", null, new { @class = "my-class" })</li>
                         }
-                        @if (AuthorizeManager.InAdminGroup(User.Identity.Name))
+                        @if (UserService.InAdminGroup(User.Identity.Name))
                         {
                             <li>@Html.ActionLink("會員", "Index", "User", null, new { @class = "my-class" })</li>
                         }

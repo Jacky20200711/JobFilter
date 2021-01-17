@@ -24,7 +24,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVManager.ExportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
             }
@@ -40,7 +40,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVManager.ImportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "FilterSettings", action = "Index" });
             }
@@ -56,7 +56,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVManager.ExportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }
@@ -72,7 +72,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVManager.ImportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }

@@ -1,4 +1,5 @@
 ﻿@using X.PagedList.Mvc.Core
+@using JobFilter.Models.Services
 @model X.PagedList.IPagedList<FilterSetting>
 @functions{
     public string PrintContent(string content, int length)
@@ -21,7 +22,7 @@
 <h3>設定列表</h3>
 <p>
     @Html.ActionLink("新增設定(最多3筆)", "Create", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
-    @if (User.Identity.Name == AuthorizeManager.SuperAdmin)
+    @if (User.Identity.Name == UserService.SuperAdmin)
     {
         @Html.ActionLink("所有設定", "SetSessionForCheckAllSettings", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>
         @Html.ActionLink("個人設定", "RemoveSessionOfCheckAllSettings", new { returnPage = Model.PageNumber })<span>&nbsp; &nbsp; &nbsp;</span>

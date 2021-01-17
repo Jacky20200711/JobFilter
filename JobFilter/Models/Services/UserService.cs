@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace JobFilter.Models.Services
 {
-    public static class IdentityUserManager
+    public static class UserService
     {
         public static string IsValidUser(IdentityUser identityUser)
         {
@@ -19,6 +16,17 @@ namespace JobFilter.Models.Services
                 return "輸入資料錯誤!";
             }
             return null;
+        }
+
+        // 可以控制所有用戶和資料的超級管理員
+        public static string SuperAdmin = "fewer135@gmail.com";
+
+        // 將管理員的資訊存入到記憶體(HashTable)以方便做權限比對
+        private static readonly HashSet<string> AdminGroup = new HashSet<string> { SuperAdmin };
+
+        public static bool InAdminGroup(string email)
+        {
+            return AdminGroup.Contains(email);
         }
     }
 }

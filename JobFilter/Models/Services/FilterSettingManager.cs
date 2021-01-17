@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JobFilter.Models.Services;
 
 namespace JobFilter.Models
 {
@@ -117,7 +118,7 @@ namespace JobFilter.Models
             FilterSetting TargetSetting = _context.FilterSetting.FirstOrDefault(m => m.Id == id);
 
             // 令管理員以外的用戶只能編輯自己的設定
-            if (!AuthorizeManager.InAdminGroup(UserEmail) && TargetSetting.UserEmail != UserEmail)
+            if (!UserService.InAdminGroup(UserEmail) && TargetSetting.UserEmail != UserEmail)
             {
                 return "系統忙碌中，請稍後再試 >___<";
             }
@@ -152,7 +153,7 @@ namespace JobFilter.Models
             }
 
             // 令管理員以外的用戶只能刪除自己的設定
-            if (!AuthorizeManager.InAdminGroup(UserEmail) && TargetSetting.UserEmail != UserEmail)
+            if (!UserService.InAdminGroup(UserEmail) && TargetSetting.UserEmail != UserEmail)
             {
                 return "系統忙碌中，請稍後再試 >___<";
             }

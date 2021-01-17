@@ -35,7 +35,7 @@ namespace JobFilter.Controllers
             {
                 page = page == null ? 1 : page;
                 string UserEmail = User.Identity.Name;
-                if (HttpContext.Session.GetString("CheckAllSettings") != null && AuthorizeManager.InAdminGroup(UserEmail))
+                if (HttpContext.Session.GetString("CheckAllSettings") != null && UserService.InAdminGroup(UserEmail))
                 {
                     return View(await _context.FilterSetting.OrderByDescending(m => m.Id).ToPagedListAsync(page, 10));
                 }
@@ -53,14 +53,14 @@ namespace JobFilter.Controllers
 
         public IActionResult SetSessionForCheckAllSettings()
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
             HttpContext.Session.SetString("CheckAllSettings", "1");
             return RedirectToAction("Index", new { page = 1 });
         }
 
         public IActionResult RemoveSessionOfCheckAllSettings()
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
             HttpContext.Session.Remove("CheckAllSettings");
             return RedirectToAction("Index", new { page = 1 });
         }
@@ -109,7 +109,7 @@ namespace JobFilter.Controllers
 
             // 令管理員以外的用戶只能編輯自己的設定
             string UserEmail = User.Identity.Name;
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name) && filterSetting.UserEmail != UserEmail) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name) && filterSetting.UserEmail != UserEmail) return NotFound();
 
             // 紀錄之前所在的分頁號碼
             returnPage = returnPage == null ? 0 : returnPage;
@@ -172,7 +172,7 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> DeleteAll()
         {
-            if (User.Identity.Name != AuthorizeManager.SuperAdmin) return NotFound();
+            if (User.Identity.Name != UserService.SuperAdmin) return NotFound();
             _context.RemoveRange(_context.FilterSetting);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

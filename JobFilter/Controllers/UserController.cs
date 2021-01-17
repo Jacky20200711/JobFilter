@@ -26,14 +26,14 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> Index(int? page = 1)
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
             page = page == null ? 1 : page;
-            return View(await _context.Users.Where(m => m.Email != AuthorizeManager.SuperAdmin).ToPagedListAsync(page, 10)); // 隱藏超級管理員
+            return View(await _context.Users.Where(m => m.Email != UserService.SuperAdmin).ToPagedListAsync(page, 10)); // 隱藏超級管理員
         }
 
         public IActionResult Create(int? returnPage = 0)
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
 
             // 紀錄之前所在的分頁
             returnPage = returnPage == null ? 0 : returnPage;
@@ -49,10 +49,10 @@ namespace JobFilter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Email,PasswordHash")] IdentityUser identityUser)
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
 
             // 檢查郵件格式和密碼長度
-            string ErrorMessage = IdentityUserManager.IsValidUser(identityUser);
+            string ErrorMessage = UserService.IsValidUser(identityUser);
             if (ErrorMessage != null)
             {
                 ViewData["CreateUserError"] = ErrorMessage;
@@ -72,7 +72,7 @@ namespace JobFilter.Controllers
 
         public ActionResult Delete(string id, int? returnPage = 0)
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
 
             // 紀錄之前所在的分頁
             returnPage = returnPage == null ? 0 : returnPage;
@@ -83,7 +83,7 @@ namespace JobFilter.Controllers
 
             // 檢查id是否有效，並且令超級管理員不能被刪除
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
-            if (user == null || user.Email == AuthorizeManager.SuperAdmin)
+            if (user == null || user.Email == UserService.SuperAdmin)
             {
                 return NotFound();
             }
@@ -101,7 +101,7 @@ namespace JobFilter.Controllers
 
         public ActionResult Edit(string id, int? returnPage = 0)
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
 
             // 紀錄之前所在的分頁
             returnPage = returnPage == null ? 0 : returnPage;
@@ -123,11 +123,11 @@ namespace JobFilter.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(IdentityUser identityUser)
         {
-            if (!AuthorizeManager.InAdminGroup(User.Identity.Name)) return NotFound();
+            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
 
             // 令超級管理員不能被編輯
             var user = _context.Users.FirstOrDefault(u => u.Email == identityUser.Email);
-            if (user.Email == AuthorizeManager.SuperAdmin)
+            if (user.Email == UserService.SuperAdmin)
             {
                 return NotFound();
             }
@@ -149,8 +149,8 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> DeleteAll()
         {
-            if (User.Identity.Name != AuthorizeManager.SuperAdmin) return NotFound();
-            _context.RemoveRange(_context.Users.Where(m => m.Email != AuthorizeManager.SuperAdmin));
+            if (User.Identity.Name != UserService.SuperAdmin) return NotFound();
+            _context.RemoveRange(_context.Users.Where(m => m.Email != UserService.SuperAdmin));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

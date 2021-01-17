@@ -111,7 +111,7 @@ namespace JobFilter.Models.Services
 
         public static void ExportUser(ApplicationDbContext _context)
         {
-            string SuperAdmin = AuthorizeManager.SuperAdmin;
+            string SuperAdmin = UserService.SuperAdmin;
             List<IdentityUser> DataList = _context.Users.Where(u => u.Email != SuperAdmin).ToList();
             using var writer = new StreamWriter(GetFilePath("User"), false, Encoding.UTF8);
             using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
