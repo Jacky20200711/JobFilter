@@ -98,9 +98,15 @@ namespace JobFilter.Models.DataStructure
             int IndexOfS1 = TargetSection.IndexOf(S1);
             int IndexOfS2 = TargetSection.IndexOf(S2, IndexOfS1 + S1.Length);
 
-            if (IndexOfS1 < 0 || IndexOfS2 < 0 || IndexOfS1 > IndexOfS2)
+            if (IndexOfS1 < 0)
             {
                 return "";
+            }
+
+            // 若工作內容字數過多導致 TargetSection 抓不到右界，則固定顯示80個字
+            if (IndexOfS2 < 0)
+            {
+                return TargetSection.Substring(IndexOfS1 + S1.Length, 80);
             }
 
             return TargetSection.Substring(IndexOfS1 + S1.Length, IndexOfS2 - IndexOfS1 - S1.Length);
@@ -187,10 +193,6 @@ namespace JobFilter.Models.DataStructure
                     if (PartialContent.Length > AllowLength)
                     {
                         PartialContent = PartialContent.Substring(0, AllowLength) + "...";
-                    }
-                    else if (string.IsNullOrEmpty(PartialContent))
-                    {
-                        PartialContent = "工作內容字數過多，懶得處理XD";
                     }
 
                     // 擷取工作薪資
