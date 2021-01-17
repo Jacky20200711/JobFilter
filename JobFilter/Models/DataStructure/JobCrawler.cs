@@ -106,10 +106,10 @@ namespace JobFilter.Models.DataStructure
             return TargetSection.Substring(IndexOfS1 + S1.Length, IndexOfS2 - IndexOfS1 - S1.Length);
         }
 
-        public string GetSubString(string orginStr, int index, int charNum, int len_orginStr)
+        public string GetSubString(string orginStr, int index, int charNum)
         {
             // 檢查剩下的字元數量，若足夠則擷取指定的數量
-            if(len_orginStr - index - 1 >= charNum)
+            if(orginStr.Length - index - 1 >= charNum)
             {
                 return orginStr.Substring(index, charNum);
             }
@@ -130,13 +130,14 @@ namespace JobFilter.Models.DataStructure
 
                 foreach (string tag in TagsContent)
                 {
+                    // 確保擷取的對象為有效的字串
                     if (tag == null) continue;
 
                     // 擷取工作名稱
                     int AllowLength = 26;
                     string TargetStr = "data-job-name";
                     int Index = tag.IndexOf(TargetStr) + TargetStr.Length;
-                    string JobTitle = GetSubString(tag, Index, 200, tag.Length);
+                    string JobTitle = GetSubString(tag, Index, 200);
                     JobTitle = GetValueBetweenTwoString(JobTitle, "\"", "\"");
                     if (JobTitle.Length > AllowLength)
                     {
@@ -147,7 +148,7 @@ namespace JobFilter.Models.DataStructure
                     AllowLength = 30;
                     TargetStr = "data-cust-name";
                     Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                    string Company = GetSubString(tag, Index, 50, tag.Length);
+                    string Company = GetSubString(tag, Index, 50);
                     Company = GetValueBetweenTwoString(Company, "\"", "\"");
                     if (Company.Length > AllowLength)
                     {
@@ -157,29 +158,29 @@ namespace JobFilter.Models.DataStructure
                     // 擷取工作網址
                     TargetStr = "<a";
                     Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                    string JobLink = GetSubString(tag, Index, 80, tag.Length);
+                    string JobLink = GetSubString(tag, Index, 80);
                     JobLink = "https:" + GetValueBetweenTwoString(JobLink, "\"", "\"");
 
                     // 擷取地區 & 經歷 & 學歷
                     TargetStr = "b-list-inline b-clearfix job-list-intro b-content";
                     Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
                     Index = tag.IndexOf("<li", Index) + 2; // 從ul移動到li
-                    string JobArea = GetSubString(tag, Index, 20, tag.Length);
+                    string JobArea = GetSubString(tag, Index, 20);
                     JobArea = GetValueBetweenTwoString(JobArea, ">", "<");
 
                     Index = tag.IndexOf("<li", Index) + 2; // 移動到下一個li
-                    string JobExperience = GetSubString(tag, Index, 20, tag.Length);
+                    string JobExperience = GetSubString(tag, Index, 20);
                     JobExperience = GetValueBetweenTwoString(JobExperience, ">", "<");
 
                     Index = tag.IndexOf("<li", Index) + 2; // 移動到下一個li
-                    string Education = GetSubString(tag, Index, 20, tag.Length);
+                    string Education = GetSubString(tag, Index, 20);
                     Education = GetValueBetweenTwoString(Education, ">", "<");
 
                     // 擷取工作說明
                     AllowLength = 80;
                     TargetStr = "job-list-item__info b-clearfix b-content";
                     Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                    string PartialContent = GetSubString(tag, Index, 1000, tag.Length);
+                    string PartialContent = GetSubString(tag, Index, 500);
                     PartialContent = PartialContent.Replace("<em class=\"b-txt--highlight\">", "");
                     PartialContent = PartialContent.Replace("</em>", "").TrimEnd();
                     PartialContent = GetValueBetweenTwoString(PartialContent, ">", "</").Replace("\n", " ");
@@ -195,7 +196,7 @@ namespace JobFilter.Models.DataStructure
                     // 擷取工作薪資
                     TargetStr = "b-tag--default";
                     Index = tag.IndexOf(TargetStr, Index) + TargetStr.Length;
-                    string JobWage = GetSubString(tag, Index, 30, tag.Length);
+                    string JobWage = GetSubString(tag, Index, 30);
                     JobWage = GetValueBetweenTwoString(JobWage, ">", "<");
 
                     // 儲存工作資料 & 計算最低月薪
