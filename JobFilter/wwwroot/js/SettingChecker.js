@@ -1,12 +1,12 @@
 ﻿function IsValidString(value) {
     for (var i = 0; i < value.length; i++) {
         var CharCode = value[i].charCodeAt();
-        if (!(value[i] == ',' || value[i] == '_' || value[i] == '+' || value[i] == ' ' ||
+        if (!(value[i] == ',' || value[i] == '_' || value[i] == '+' ||
             CharCode > 47 && CharCode < 58 ||
             CharCode > 64 && CharCode < 91 ||
             CharCode > 96 && CharCode < 123 ||
             CharCode > 0x4E00 && CharCode < 0x9FA5)) {
-            alert("只能在欲排除的關鍵字和公司欄位輸入中英文、\n數字、逗點、底線、加號、空白");
+            alert("排除內容和備註只能輸入中英數、逗點、底線、加號");
             return false;
         }
     }
