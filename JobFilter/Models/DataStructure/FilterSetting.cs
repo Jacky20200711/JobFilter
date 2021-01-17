@@ -11,11 +11,11 @@ namespace JobFilter.Models
         public string CrawlUrl { get; set; }
 
         [Required(ErrorMessage = "此欄位不能為空")]
-        [RegularExpression(@"^[0-9''-'\d]{3,6}$", ErrorMessage = "必須為3~6個數字")]
+        [RegularExpression(@"^[0-9''-'\d]{5,6}$", ErrorMessage = "必須為5~6個數字")]
         public int MinimumWage { get; set; }
 
         [Required(ErrorMessage = "此欄位不能為空")]
-        [RegularExpression(@"^[0-9''-'\d]{3,6}$", ErrorMessage = "必須為3~6個數字")]
+        [RegularExpression(@"^[0-9''-'\d]{5,6}$", ErrorMessage = "必須為5~6個數字")]
         public int MaximumWage { get; set; }
 
         [MaxLength(50, ErrorMessage = "最多50個字")]

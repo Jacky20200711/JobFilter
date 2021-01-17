@@ -24,108 +24,68 @@ namespace JobFilter.Models.Services.Tests
             // 設計多個錯誤的設定
             List<FilterSetting> InValidfilterSettings = new List<FilterSetting>
             {
+                // 爬取頁面不能為null
                 new FilterSetting
                 {
                     CrawlUrl = null,
-                    MinimumWage = -1,
-                    MaximumWage = -1,
-                    ExcludeWord = null,
-                    IgnoreCompany = null
+                    MinimumWage = 30000,
+                    MaximumWage = 40000,
                 },
-
+                // 爬取頁面不能為空字串
                 new FilterSetting
                 {
                     CrawlUrl = "",
-                    MinimumWage = -1,
-                    MaximumWage = -1,
-                    ExcludeWord = null,
-                    IgnoreCompany = null
+                    MinimumWage = 30000,
+                    MaximumWage = 40000,
                 },
-
+                // 最低月薪必須大於9999
                 new FilterSetting
                 {
                     CrawlUrl = SettingService.TargetUrlHead,
-                    MinimumWage = 1000000,
-                    MaximumWage = 2000000,
-                    ExcludeWord = "",
-                    IgnoreCompany = ""
+                    MinimumWage = 9999,
+                    MaximumWage = 40000,
                 },
-
+                // 最高月薪必須小於999999
                 new FilterSetting
                 {
                     CrawlUrl = SettingService.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999998,
-                    ExcludeWord = "",
-                    IgnoreCompany = ""
+                    MinimumWage = 30000,
+                    MaximumWage = 1000000,
                 },
-
+                // 備註長度必須小於等於5
                 new FilterSetting
                 {
                     CrawlUrl = SettingService.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
-                    ExcludeWord = "",
-                    IgnoreCompany = "",
+                    MinimumWage = 30000,
+                    MaximumWage = 40000,
                     Remarks = "123456",
                 },
-
+                // 最高月薪必須大於等於最低月薪
                 new FilterSetting
                 {
                     CrawlUrl = SettingService.TargetUrlHead,
                     MinimumWage = 50000,
-                    MaximumWage = 1000000,
-                    ExcludeWord = "",
-                    IgnoreCompany = "",
+                    MaximumWage = 40000,
                 },
             };
 
             // 設計多個正確的設定
             List<FilterSetting> ValidfilterSettings = new List<FilterSetting>
             {
+                // 欲排除的關鍵字或公司、備註可為null
                 new FilterSetting
                 {
                     CrawlUrl = SettingService.TargetUrlHead,
                     MinimumWage = 999999,
                     MaximumWage = 999999,
-                    ExcludeWord = null,
-                    IgnoreCompany = null
                 },
 
+                // 備註長度必須小於等於5
                 new FilterSetting
                 {
                     CrawlUrl = SettingService.TargetUrlHead,
-                    MinimumWage = 999999,
+                    MinimumWage = 10000,
                     MaximumWage = 999999,
-                    ExcludeWord = "",
-                    IgnoreCompany = ""
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = SettingService.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
-                    ExcludeWord = "測試A,測試B,321",
-                    IgnoreCompany = ""
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = SettingService.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
-                    ExcludeWord = "",
-                    IgnoreCompany = "測試A,測試B,321"
-                },
-
-                new FilterSetting
-                {
-                    CrawlUrl = SettingService.TargetUrlHead,
-                    MinimumWage = 999999,
-                    MaximumWage = 999999,
-                    ExcludeWord = "",
-                    IgnoreCompany = "",
                     Remarks = "12測測測",
                 },
             };

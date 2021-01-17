@@ -24,7 +24,7 @@ function CheckValue() {
     var MaxWage = document.getElementById("MaximumWage").value;
     var MinWage = document.getElementById("MinimumWage").value;
     if (parseInt(MaxWage) < parseInt(MinWage)) {
-        alert("最高月薪必須大於或等於最低月薪!");
+        alert("最高月薪必須大於或等於最低月薪");
         return false;
     }
     // 檢查想排除的關鍵字
