@@ -52,7 +52,7 @@ namespace JobFilter.Models.Services
             foreach(FilterSetting f in DataList)
             {
                 // 若資料有誤，可能是因為最近有變更欄位長度，所以先檢查並修正長度
-                if (!FilterSettingManager.IsValidSetting(f))
+                if (!SettingService.IsValidSetting(f))
                 {
                     // 檢查並修正長度
                     if (f.CrawlUrl.Length > Length_limit_CrawlUrl)
@@ -73,7 +73,7 @@ namespace JobFilter.Models.Services
                     }
 
                     // 若修正長度後合法，則添加這筆資料
-                    if (FilterSettingManager.IsValidSetting(f))
+                    if (SettingService.IsValidSetting(f))
                     {
                         validDataList.Add(f);
                     }

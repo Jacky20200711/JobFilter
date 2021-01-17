@@ -83,7 +83,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                string ErrorMessage = FilterSettingManager.CreateSetting(_context, filterSetting, User.Identity.Name);
+                string ErrorMessage = SettingService.CreateSetting(_context, filterSetting, User.Identity.Name);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;
@@ -127,7 +127,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                string ErrorMessage = FilterSettingManager.EditSetting(_context, filterSetting, User.Identity.Name, id);
+                string ErrorMessage = SettingService.EditSetting(_context, filterSetting, User.Identity.Name, id);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;
@@ -151,7 +151,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                string ErrorMessage = FilterSettingManager.DeleteSetting(_context, User.Identity.Name, id);
+                string ErrorMessage = SettingService.DeleteSetting(_context, User.Identity.Name, id);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;
@@ -191,7 +191,7 @@ namespace JobFilter.Controllers
                 }
 
                 // 將封鎖的公司添加到該使用者的所有設定檔
-                string ErrorMessage = FilterSettingManager.AddBlockCompany(_context, User.Identity.Name, CompanyName);
+                string ErrorMessage = SettingService.AddBlockCompany(_context, User.Identity.Name, CompanyName);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;

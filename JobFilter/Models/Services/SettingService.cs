@@ -6,14 +6,16 @@ using JobFilter.Models.Services;
 
 namespace JobFilter.Models
 {
-    public static class FilterSettingManager
+    public static class SettingService
     {
+        // 目標網址的開頭
+        public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
+
         // 這裡的長度限制是參照 Models\DataStructure\FilterSetting.cs
         public static int Length_limit_CrawlUrl = 800;
         public static int Length_limit_ExcludeWord = 50;
         public static int Length_limit_IgnoreCompany = 1000;
         public static int Length_limit_Remarks = 5;
-        public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
 
         public static bool IsValidString(string TestStr, int LengthLimit = 1000)
         {
@@ -191,7 +193,7 @@ namespace JobFilter.Models
                     // 檢查該欄位的新長度是否保持合法
                     if (UserSetting.IgnoreCompany.Length + $",{BlockCompany}".Length > Length_limit_IgnoreCompany)
                     {
-                        return "封鎖未完全，請確認您所有的設定檔在封鎖此公司後，字數不會超過上限(1000字)!";
+                        return "封鎖未完全，請確認您所有的設定檔在封鎖此公司後，字數皆不會超過1000字!";
                     }
 
                     // 若長度合法則進行串接
