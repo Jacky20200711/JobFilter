@@ -115,28 +115,7 @@ namespace JobFilter.Models.Services
             }
         }
 
-        private static JobList GetValidJobs(List<JobCrawler> JobCrawlers, FilterSetting filterSetting)
-        {
-            JobList jobs = new JobList();
-
-            foreach (JobCrawler jobCrawler in JobCrawlers)
-            {
-                if (!jobCrawler.IsEncounterError())
-                {
-                    foreach (Job job in jobCrawler.GetJobs())
-                    {
-                        if (IsValidJob(filterSetting, job))
-                        {
-                            jobs.Add(job);
-                        }
-                    }
-                }
-            }
-
-            return jobs;
-        }
-
-        public static JobList GetValidJobList(FilterSetting filterSetting)
+        public static JobList GetValidJobs(FilterSetting filterSetting)
         {
             // 創建多個爬蟲
             string TargetUrl = filterSetting.CrawlUrl;
@@ -158,22 +137,36 @@ namespace JobFilter.Models.Services
             GetJobSections(JobCrawlers);
 
             // 根據設定檔來過濾工作列表
-            return GetValidJobs(JobCrawlers, filterSetting);
+            JobList validJobs = new JobList();
+            foreach (JobCrawler jobCrawler in JobCrawlers)
+            {
+                if (!jobCrawler.IsEncounterError())
+                {
+                    foreach (Job job in jobCrawler.GetJobs())
+                    {
+                        if (IsValidJob(filterSetting, job))
+                        {
+                            validJobs.Add(job);
+                        }
+                    }
+                }
+            }
+            return validJobs;
         }
 
-        public static JobList GetValidJobList(JobList jobList, string blockCompany = null)
+        public static JobList GetValidJobs(JobList jobList, string blockCompany = null)
         {
             // 過濾掉不喜歡的公司
-            JobList validJobList = new JobList();
+            JobList validJobs = new JobList();
             foreach (Job job in jobList)
             {
                 if (job.Company != blockCompany)
                 {
-                    validJobList.Add(job);
+                    validJobs.Add(job);
                 }
             }
 
-            return validJobList;
+            return validJobs;
         }
     }
 }

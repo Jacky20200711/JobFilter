@@ -200,9 +200,9 @@ namespace JobFilter.Controllers
                 await _context.SaveChangesAsync();
 
                 // 過濾 session 儲存的工作列表
-                JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
-                jobList = JobService.GetValidJobList(jobList, CompanyName);
-                HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
+                JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
+                JobList validJobs = JobService.GetValidJobs(jobs, CompanyName);
+                HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(validJobs));
                 return RedirectToRoute(new { controller = "Job", action = "Index" });
             }
             catch (Exception)

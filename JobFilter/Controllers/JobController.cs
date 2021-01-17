@@ -61,8 +61,8 @@ namespace JobFilter.Controllers
                 }
 
                 // 取得過濾後的工作並存到Session
-                JobList jobList = JobService.GetValidJobList(filterSetting);
-                HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(jobList));
+                JobList validJobs = JobService.GetValidJobs(filterSetting);
+                HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(validJobs));
                 return RedirectToAction("Index");
             }
             catch (Exception)

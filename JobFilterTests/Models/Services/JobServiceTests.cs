@@ -99,7 +99,7 @@ namespace JobFilter.Models.Services.Tests
         }
 
         [TestMethod()]
-        public void GetValidJobListTest()
+        public void GetValidJobsTest()
         {
             List<Job> validJobList;
             JobList jobList = new JobList
@@ -109,15 +109,15 @@ namespace JobFilter.Models.Services.Tests
             };
 
             // 不做封鎖
-            validJobList = JobService.GetValidJobList(jobList, null).JobItems;
+            validJobList = JobService.GetValidJobs(jobList, null).JobItems;
             Assert.AreEqual(true, validJobList.Count == 2 && validJobList[0].Company == "A公司" && validJobList[1].Company == "B公司");
 
             // 封鎖A公司
-            validJobList = JobService.GetValidJobList(jobList, "A公司").JobItems;
+            validJobList = JobService.GetValidJobs(jobList, "A公司").JobItems;
             Assert.AreEqual(true, validJobList.Count == 1 && validJobList[0].Company == "B公司");
 
             // 封鎖B公司
-            validJobList = JobService.GetValidJobList(jobList, "B公司").JobItems;
+            validJobList = JobService.GetValidJobs(jobList, "B公司").JobItems;
             Assert.AreEqual(true, validJobList.Count == 1 && validJobList[0].Company == "A公司");
         }
     }
