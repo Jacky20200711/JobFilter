@@ -49,6 +49,10 @@ namespace JobFilter.Models.DataStructure.Tests
             Assert.AreEqual("", jobCrawler.GetValueBetweenTwoString("ABC", "A", ""));
             Assert.AreEqual("", jobCrawler.GetValueBetweenTwoString("", "A", "C"));
             Assert.AreEqual("ABC", jobCrawler.GetValueBetweenTwoString("<li>ABC</li>", "<li>", "</li>"));
+
+            // 測試若目標字串超過80字，且不包含欲擷取的右界，則是否會正確擷取80個字
+            string TargetSection = ">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB";
+            Assert.AreEqual(80, jobCrawler.GetValueBetweenTwoString(TargetSection, ">", "C").Length);
         }
 
         [TestMethod()]
