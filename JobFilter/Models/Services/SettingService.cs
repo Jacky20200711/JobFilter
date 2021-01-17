@@ -12,10 +12,10 @@ namespace JobFilter.Models
         public static string TargetUrlHead = "https://www.104.com.tw/jobs/search/";
 
         // 這裡的長度限制是參照 Models\DataStructure\FilterSetting.cs
-        public static int Length_limit_CrawlUrl = 800;
-        public static int Length_limit_ExcludeWord = 50;
-        public static int Length_limit_IgnoreCompany = 1500;
-        public static int Length_limit_Remarks = 5;
+        public static int limitLenOfUrl = 800;
+        public static int limitLenOfExcludeWord = 50;
+        public static int limitLenOfIgnoreCompany = 1500;
+        public static int limitLenOfRemark = 5;
 
         public static bool IsValidString(string TestStr, int LengthLimit = 1000)
         {
@@ -49,7 +49,7 @@ namespace JobFilter.Models
         {
             // 檢查目標網址(不允許NULL)
             if (filterSetting.CrawlUrl == null ||
-                filterSetting.CrawlUrl.Length > Length_limit_CrawlUrl ||
+                filterSetting.CrawlUrl.Length > limitLenOfUrl ||
                 !filterSetting.CrawlUrl.StartsWith(TargetUrlHead))
             {
                 return false;
@@ -68,19 +68,19 @@ namespace JobFilter.Models
             }
 
             // 檢查欲排除的關鍵字
-            if (!IsValidString(filterSetting.ExcludeWord, Length_limit_ExcludeWord))
+            if (!IsValidString(filterSetting.ExcludeWord, limitLenOfExcludeWord))
             {
                 return false;
             }
 
             // 檢查欲排除的公司名稱
-            if (!IsValidString(filterSetting.IgnoreCompany, Length_limit_IgnoreCompany))
+            if (!IsValidString(filterSetting.IgnoreCompany, limitLenOfIgnoreCompany))
             {
                 return false;
             }
 
             // 檢查備註
-            if (!IsValidString(filterSetting.Remarks, Length_limit_Remarks))
+            if (!IsValidString(filterSetting.Remarks, limitLenOfRemark))
             {
                 return false;
             }
@@ -191,9 +191,9 @@ namespace JobFilter.Models
                 else
                 {
                     // 檢查該欄位的新長度是否保持合法
-                    if (UserSetting.IgnoreCompany.Length + $",{BlockCompany}".Length > Length_limit_IgnoreCompany)
+                    if (UserSetting.IgnoreCompany.Length + $",{BlockCompany}".Length > limitLenOfIgnoreCompany)
                     {
-                        return $"封鎖未完全，請確認您所有的設定檔在封鎖此公司後，字數皆不會超過{Length_limit_IgnoreCompany}字!";
+                        return $"封鎖未完全，請確認您所有的設定檔在封鎖此公司後，字數皆不會超過{limitLenOfIgnoreCompany}字!";
                     }
 
                     // 若長度合法則進行串接

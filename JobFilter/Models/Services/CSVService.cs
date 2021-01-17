@@ -43,10 +43,10 @@ namespace JobFilter.Models.Services
         public static List<FilterSetting> GetValidDataBeforeImport(List<FilterSetting> DataList)
         {
             List<FilterSetting> validDataList = new List<FilterSetting>();
-            int Length_limit_CrawlUrl = 800;
-            int Length_limit_ExcludeWord = 50;
-            int Length_limit_IgnoreCompany = 1000;
-            int Length_limit_Remarks = 5;
+            int limitLenOfUrl = SettingService.limitLenOfUrl;
+            int limitLenOfExcludeWord = SettingService.limitLenOfExcludeWord;
+            int limitLenOfIgnoreCompany = SettingService.limitLenOfIgnoreCompany;
+            int limitLenOfRemark = SettingService.limitLenOfRemark;
 
             // 匯入前先檢查所有的設定
             foreach(FilterSetting f in DataList)
@@ -55,21 +55,21 @@ namespace JobFilter.Models.Services
                 if (!SettingService.IsValidSetting(f))
                 {
                     // 檢查並修正長度
-                    if (f.CrawlUrl.Length > Length_limit_CrawlUrl)
+                    if (f.CrawlUrl.Length > limitLenOfUrl)
                     {
-                        f.CrawlUrl = f.CrawlUrl.Substring(0, Length_limit_CrawlUrl);
+                        f.CrawlUrl = f.CrawlUrl.Substring(0, limitLenOfUrl);
                     }
-                    if (f.ExcludeWord.Length > Length_limit_ExcludeWord)
+                    if (f.ExcludeWord.Length > limitLenOfExcludeWord)
                     {
-                        f.ExcludeWord = f.ExcludeWord.Substring(0, Length_limit_ExcludeWord);
+                        f.ExcludeWord = f.ExcludeWord.Substring(0, limitLenOfExcludeWord);
                     }
-                    if (f.IgnoreCompany.Length > Length_limit_IgnoreCompany)
+                    if (f.IgnoreCompany.Length > limitLenOfIgnoreCompany)
                     {
-                        f.IgnoreCompany = f.IgnoreCompany.Substring(0, Length_limit_IgnoreCompany);
+                        f.IgnoreCompany = f.IgnoreCompany.Substring(0, limitLenOfIgnoreCompany);
                     }
-                    if (f.Remarks.Length > Length_limit_Remarks)
+                    if (f.Remarks.Length > limitLenOfRemark)
                     {
-                        f.Remarks = f.Remarks.Substring(0, Length_limit_Remarks);
+                        f.Remarks = f.Remarks.Substring(0, limitLenOfRemark);
                     }
 
                     // 若修正長度後合法，則添加這筆資料
