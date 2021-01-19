@@ -72,7 +72,7 @@ namespace JobFilter.Areas.Identity.Pages.Account
             if (remoteError != null)
             {
                 ErrorMessage = $"發生錯誤，請稍後再試: {remoteError}";
-                return RedirectToPage("./Login", new {ReturnUrl = returnUrl });
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
