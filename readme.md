@@ -2,13 +2,13 @@
 令使用者可以設定目標網址、薪資水準、多個欲排除的關鍵字、多個欲排除的公司名稱，  
 來進一步過濾從104返回的工作列表，令顯示的工作列表更加符合期望。  
 ※目標網址的開頭必須是 https://www.104.com.tw/jobs/search/  
-※若查詢的結果有多個分頁，則程式會嘗試解析前8頁的內容。  
+※若查詢的結果有多個分頁，則程式會嘗試解析前7頁的內容。  
 &emsp;  
 # 使用技術  
 01.使用 MVC 架構  
 02.使用 HttpClient 爬取網頁  
 03.使用 AngleSharp 解析網頁  
-04.使用 Asynchronous 來提升爬取的效率  
+04.使用 Asynchronous 和 Multi-Thread 來提升爬取與解析的效率  
 05.使用 Session 存取過濾後的工作項目  
 06.使用 Entity Framework Code First 搭建資料庫  
 07.使用 ASP.NET Identity 搭建會員系統  

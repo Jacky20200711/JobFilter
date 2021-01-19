@@ -97,7 +97,7 @@ namespace JobFilter.Models.Services
 
         public static JobList GetValidJobs(FilterSetting filterSetting)
         {
-            // 創建多個爬蟲
+            // 創建多個爬蟲(令其數量為 NumberOfLogicalProcessors - 1)
             string TargetUrl = filterSetting.CrawlUrl;
             char ConnectionChar = TargetUrl.Last() == '/' ? '?' : '&';
             List<JobCrawler> JobCrawlers = new List<JobCrawler>
@@ -109,7 +109,6 @@ namespace JobFilter.Models.Services
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=5"),
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=6"),
                 new JobCrawler($"{TargetUrl}{ConnectionChar}page=7"),
-                new JobCrawler($"{TargetUrl}{ConnectionChar}page=8"),
             };
 
             // 令爬蟲們抓取頁面 & 取得工作列表
