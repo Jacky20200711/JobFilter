@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using JobFilter.Data;
-using JobFilter.Models;
 using JobFilter.Models.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

@@ -1,5 +1,4 @@
 ﻿using JobFilter.Data;
-using JobFilter.Models;
 using JobFilter.Models.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
