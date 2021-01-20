@@ -5,7 +5,7 @@
             CharCode > 47 && CharCode < 58 ||
             CharCode > 64 && CharCode < 91 ||
             CharCode > 96 && CharCode < 123 ||
-            CharCode > 0x4E00 && CharCode < 0x9FA5)) {
+            CharCode >= 0x4E00 && CharCode <= 0x9FA5)) {
             alert("排除內容和備註只能輸入中英數、逗點、底線、加號");
             return false;
         }

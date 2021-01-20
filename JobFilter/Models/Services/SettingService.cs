@@ -36,7 +36,7 @@ namespace JobFilter.Models
                     CharCode > 47 && CharCode < 58 ||
                     CharCode > 64 && CharCode < 91 ||
                     CharCode > 96 && CharCode < 123 ||
-                    CharCode > 0x4E00 && CharCode < 0x9FA5))
+                    CharCode >= 0x4E00 && CharCode <= 0x9FA5))
                 {
                     return false;
                 }
