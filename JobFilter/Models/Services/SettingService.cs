@@ -167,7 +167,6 @@ namespace JobFilter.Models
         public static string AddBlockCompany(ApplicationDbContext _context, string UserEmail, string BlockCompany = null)
         {
             
-            // 檢查該公司的名稱與長度
             if (!IsValidString(BlockCompany, 50))
             {
                return "封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制(50字)!";
@@ -179,7 +178,7 @@ namespace JobFilter.Models
                 return "系統忙碌中，請稍後再試 >___<";
             }
 
-            // 嘗試將新封鎖的公司添加到該 User 的所有設定檔
+            // 將該公司添加到該用戶的所有設定檔
             foreach (var UserSetting in TargetSetting)
             {
                 // 檢查設定檔的欄位是否為 NULL

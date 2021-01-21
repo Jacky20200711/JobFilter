@@ -101,8 +101,13 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> Edit(int? id, int? returnPage = 0)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var filterSetting = await _context.FilterSetting.FindAsync(id);
-            if (id == null || filterSetting == null)
+            if (filterSetting == null)
             {
                 return NotFound();
             }
@@ -182,7 +187,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                // 優先確認 session 儲存的工作列表不為空 
+                // 檢查 Session 儲存的工作列表是否為空
                 string JobListStr = HttpContext.Session.GetString("jobList");
                 if (JobListStr == null)
                 {
@@ -190,7 +195,7 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                // 將封鎖的公司添加到該使用者的所有設定檔
+                // 將該公司添加到該用戶的所有設定檔
                 string ErrorMessage = SettingService.AddBlockCompany(_context, User.Identity.Name, CompanyName);
                 if (ErrorMessage != null)
                 {
@@ -199,7 +204,7 @@ namespace JobFilter.Controllers
                 }
                 await _context.SaveChangesAsync();
 
-                // 過濾 session 儲存的工作列表
+                // 過濾 Session 儲存的工作列表，去除該公司所提供的工作
                 JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 JobList validJobs = JobService.GetValidJobs(jobs, CompanyName);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(validJobs));

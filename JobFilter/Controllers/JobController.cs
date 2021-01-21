@@ -29,6 +29,7 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 檢查 Session 儲存的工作列表是否為空
                 page = page == null ? 1 : page;
                 string JobListStr = HttpContext.Session.GetString("jobList");
                 if (JobListStr == null)
@@ -37,6 +38,7 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
+                // 顯示 Session 儲存的工作列表和總工作數量
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 ViewBag.numOfJob = jobList.Count;
                 return View(await jobList.ToPagedListAsync((int)page, 10));

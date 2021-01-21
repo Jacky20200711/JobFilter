@@ -134,7 +134,7 @@ namespace JobFilter.Models.Services
 
         public static JobList GetValidJobs(JobList jobList, string blockCompany = null)
         {
-            // 過濾掉不喜歡的公司
+            // 去除該公司所提供的工作
             JobList validJobs = new JobList();
             foreach (Job job in jobList)
             {
