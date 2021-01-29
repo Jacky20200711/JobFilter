@@ -183,7 +183,7 @@ namespace JobFilter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> AddBlockCompany(string CompanyName)
+        public async Task<IActionResult> AddBlockCompany(string CompanyName, int? returnPage = 0)
         {
             try
             {
@@ -193,6 +193,13 @@ namespace JobFilter.Controllers
                 {
                     ViewBag.Error = "系統忙碌中，請稍後再試 >___<";
                     return View("~/Views/Shared/ErrorPage.cshtml");
+                }
+
+                // 紀錄之前所在的分頁
+                returnPage = returnPage == null ? 0 : returnPage;
+                if (returnPage != 0)
+                {
+                    HttpContext.Session.SetInt32("returnPage", (int)returnPage);
                 }
 
                 // 將該公司添加到該用戶的所有設定檔

@@ -38,9 +38,18 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                // 顯示 Session 儲存的工作列表和總工作數量
+                // 準備傳送 Session 儲存的工作列表和總工作數量
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 ViewBag.numOfJob = jobList.Count;
+
+                // 若 Session 有儲存之前所在的分頁則跳轉回該分頁
+                int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
+                if(TryGetPage != null)
+                {
+                    page = TryGetPage;
+                    HttpContext.Session.Remove("returnPage"); // 避免永遠卡在此分頁
+                }
+
                 return View(await jobList.ToPagedListAsync((int)page, 10));
             }
             catch(Exception)
