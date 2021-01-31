@@ -16,9 +16,9 @@ namespace JobFilter.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger _logger;
 
-        public UserController(ApplicationDbContext usertext, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
+        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
         {
-            _context = usertext;
+            _context = context;
             _userManager = userManager;
             _logger = logger;
         }
@@ -116,6 +116,8 @@ namespace JobFilter.Controllers
                 return NotFound();
             }
 
+            // 儲存欲修改的用戶郵件
+            HttpContext.Session.SetString("UserEmail", user.Email);
             return View(user);
         }
 
@@ -125,13 +127,14 @@ namespace JobFilter.Controllers
             if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
 
             // 令超級管理員不能被編輯
-            var user = _context.Users.FirstOrDefault(u => u.Email == identityUser.Email);
-            if (user.Email == UserService.SuperAdmin)
+            string UserEmail = HttpContext.Session.GetString("UserEmail");
+            if (UserEmail == UserService.SuperAdmin)
             {
                 return NotFound();
             }
 
             // 修改會員郵件
+            var user = _context.Users.FirstOrDefault(u => u.Email == UserEmail);
             user.Email = identityUser.Email;
             user.UserName = identityUser.Email;
 
