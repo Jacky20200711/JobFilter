@@ -7,6 +7,7 @@ using JobFilter.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace JobFilter
 {
@@ -19,14 +20,16 @@ namespace JobFilter
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddMvc().AddRazorRuntimeCompilation();
@@ -79,8 +82,7 @@ namespace JobFilter
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             app.UseDeveloperExceptionPage();
             app.UseDatabaseErrorPage();
@@ -96,6 +98,22 @@ namespace JobFilter
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            CreateAdminRole(userManager, roleManager).Wait();
+        }
+
+        public async Task CreateAdminRole(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            // Create role
+            var roleCheck = await roleManager.RoleExistsAsync("Admin");
+            if (!roleCheck)
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            // Add SuperAdmin to the role
+            IdentityUser user = await userManager.FindByEmailAsync("fewer135@gmail.com");
+            await userManager.AddToRoleAsync(user, "Admin");
         }
     }
 }

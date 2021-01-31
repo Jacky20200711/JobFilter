@@ -51,16 +51,16 @@ namespace JobFilter.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult SetSessionForCheckAllSettings()
         {
-            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
             HttpContext.Session.SetString("CheckAllSettings", "1");
             return RedirectToAction("Index", new { page = 1 });
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult RemoveSessionOfCheckAllSettings()
         {
-            if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
             HttpContext.Session.Remove("CheckAllSettings");
             return RedirectToAction("Index", new { page = 1 });
         }
@@ -175,9 +175,9 @@ namespace JobFilter.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAll()
         {
-            if (User.Identity.Name != UserService.SuperAdmin) return NotFound();
             _context.RemoveRange(_context.FilterSetting);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

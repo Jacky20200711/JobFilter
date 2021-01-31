@@ -7,7 +7,7 @@ using System;
 
 namespace JobFilter.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class CSVController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,7 +23,6 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVService.ExportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "Setting", action = "Index" });
             }
@@ -39,7 +38,6 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVService.ImportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "Setting", action = "Index" });
             }
@@ -55,7 +53,6 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVService.ExportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }
@@ -71,7 +68,6 @@ namespace JobFilter.Controllers
         {
             try
             {
-                if (!UserService.InAdminGroup(User.Identity.Name)) return NotFound();
                 CSVService.ImportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }
