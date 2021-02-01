@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace JobFilter
 {
@@ -111,8 +112,16 @@ namespace JobFilter
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
-            // Add SuperAdmin to the role
-            IdentityUser user = await userManager.FindByEmailAsync("fewer135@gmail.com");
+            // Get superAdmin, if it's not exist then create it. 
+            string superAdmin = "fewer135@gmail.com";
+            IdentityUser user = await userManager.FindByEmailAsync(superAdmin);
+            if(user == null)
+            {
+                user = new IdentityUser { UserName = superAdmin, Email = superAdmin };
+                await userManager.CreateAsync(user, Path.GetRandomFileName());
+            }
+
+            // Add superAdmin to the role
             await userManager.AddToRoleAsync(user, "Admin");
         }
     }
