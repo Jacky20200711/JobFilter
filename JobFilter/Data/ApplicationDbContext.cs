@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using JobFilter.Models;
 
@@ -13,6 +10,12 @@ namespace JobFilter.Data
             : base(options)
         {
         }
-        public DbSet<JobFilter.Models.FilterSetting> FilterSetting { get; set; }
+        public DbSet<FilterSetting> FilterSetting { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<FilterSetting>().HasIndex(f =>  f.UserEmail).IsUnique(false).HasFilter(null);
+        }
     }
 }

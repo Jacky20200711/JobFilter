@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20210205052957_AddIndexToUserEmailInSetting.cs" />
+    <Compile Remove="Data\Migrations\20210205052957_AddIndexToUserEmailInSetting.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="NLog.config" />
   </ItemGroup>
 
