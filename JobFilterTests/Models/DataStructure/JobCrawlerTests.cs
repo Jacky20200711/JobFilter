@@ -33,9 +33,9 @@ namespace JobFilter.Models.DataStructure.Tests
             JobCrawler jobCrawler = new JobCrawler("");
             Assert.AreEqual(50000, jobCrawler.GetMaxWage("月薪30000~50000"));
             Assert.AreEqual(50000, jobCrawler.GetMaxWage("月薪30,000~50,000"));
-            Assert.AreEqual(800000 / 12, jobCrawler.GetMaxWage("年薪80,0000"));
-            Assert.AreEqual(1000000 / 12, jobCrawler.GetMaxWage("年薪90,0000~100,0000"));
+            Assert.AreEqual(2147483647, jobCrawler.GetMaxWage("年薪80,0000"));
             Assert.AreEqual(2147483647, jobCrawler.GetMaxWage("待遇面議"));
+            Assert.AreEqual(1000000 / 12, jobCrawler.GetMaxWage("年薪90,0000~100,0000"));
         }
 
         [TestMethod()]
@@ -52,7 +52,7 @@ namespace JobFilter.Models.DataStructure.Tests
 
             // 測試若目標字串超過80字，且不包含欲擷取的右界，則是否會正確擷取80個字
             string TargetSection = ">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB";
-            Assert.AreEqual(80, jobCrawler.GetValueBetweenTwoString(TargetSection, ">", "C").Length);
+            Assert.AreEqual(80, jobCrawler.GetValueBetweenTwoString(TargetSection, ">", "C", 80).Length);
         }
 
         [TestMethod()]

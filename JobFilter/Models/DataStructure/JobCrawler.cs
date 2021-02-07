@@ -91,7 +91,7 @@ namespace JobFilter.Models.DataStructure
             }
         }
 
-        public string GetValueBetweenTwoString(string TargetSection, string S1, string S2, int AllowLength)
+        public string GetValueBetweenTwoString(string TargetSection, string S1, string S2, int AllowLength = 100000)
         {
             if (string.IsNullOrEmpty(TargetSection) || string.IsNullOrEmpty(S1) || string.IsNullOrEmpty(S2))
             {
