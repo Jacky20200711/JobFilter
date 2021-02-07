@@ -40,6 +40,7 @@ namespace JobFilter.Models.DataStructure
             bool HasFindDigit = false;
             foreach (char C in TargetSection)
             {
+                // 忽略數字中間的千分號
                 if (C == ',') continue;
 
                 int CharCode = Convert.ToInt32(C);
@@ -54,22 +55,24 @@ namespace JobFilter.Models.DataStructure
                     if (HasFindDigit) break;
                 }
             }
-            // 沒寫數字代表待遇面議(以40000表示)
+
+            // 沒寫數字則代表面議(最低月薪以40000表示)
             return chars.Count == 0 ? 40000 : int.Parse(string.Join("", chars));
         }
 
         public int GetMinWage(string TargetSection)
         {
-            int result = GetFirstNum(TargetSection);
-
-            return TargetSection.Contains("年薪") ? result / 12 : result;
+            int firstNum = GetFirstNum(TargetSection);
+            return TargetSection.Contains("年薪") ? firstNum / 12 : firstNum;
         }
 
         public int GetMaxWage(string TargetSection)
         {
             // 若面議則返回最大值，確保不會被過濾掉
-            if(TargetSection.Contains("面議"))
+            if (TargetSection.Contains("面議"))
+            {
                 return 2147483647;
+            }
 
             // 薪資範圍是以 '~' 做分割
             int index = TargetSection.IndexOf('~');
@@ -77,8 +80,8 @@ namespace JobFilter.Models.DataStructure
             // 但可能沒寫薪資範圍，而只有寫最低月薪或最低年薪
             if (index < 0)
             {
-                // 若只有一個數字，用 GetMinWage 處理即可
-                return GetMinWage(TargetSection);
+                // 若只有一個數字則返回最大值，確保已符合最低月薪的工作不會被過濾掉
+                return 2147483647;
             }
             else
             {
