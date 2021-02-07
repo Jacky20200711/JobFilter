@@ -30,9 +30,11 @@ namespace JobFilter.Models.DataStructure.Tests
         [TestMethod()]
         public void GetMaxWageTest()
         {
+            // 若只有寫一個數字則返回最大值，確保[只寫一個數字但有符合最低月薪的工作]不會被過濾掉
             JobCrawler jobCrawler = new JobCrawler("");
             Assert.AreEqual(50000, jobCrawler.GetMaxWage("月薪30000~50000"));
             Assert.AreEqual(50000, jobCrawler.GetMaxWage("月薪30,000~50,000"));
+            Assert.AreEqual(2147483647, jobCrawler.GetMaxWage("月薪50,000"));
             Assert.AreEqual(2147483647, jobCrawler.GetMaxWage("年薪80,0000"));
             Assert.AreEqual(2147483647, jobCrawler.GetMaxWage("待遇面議"));
             Assert.AreEqual(1000000 / 12, jobCrawler.GetMaxWage("年薪90,0000~100,0000"));
