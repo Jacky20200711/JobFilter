@@ -47,28 +47,13 @@ namespace JobFilter.Models.DataStructure.Tests
             Assert.AreEqual("B", jobCrawler.GetValueBetweenTwoString("ABC", "A", "C"));
             Assert.AreEqual("B", jobCrawler.GetValueBetweenTwoString("ACB\"AC", "AC", "\""));
             Assert.AreEqual("B", jobCrawler.GetValueBetweenTwoString("<li>B</li>", "<li>", "</li>"));
-            Assert.AreEqual("", jobCrawler.GetValueBetweenTwoString("ABC", "", "C"));
             Assert.AreEqual("", jobCrawler.GetValueBetweenTwoString("ABC", "A", ""));
             Assert.AreEqual("", jobCrawler.GetValueBetweenTwoString("", "A", "C"));
             Assert.AreEqual("ABC", jobCrawler.GetValueBetweenTwoString("<li>ABC</li>", "<li>", "</li>"));
 
-            // 測試若目標字串超過80字，且不包含欲擷取的右界，則是否會正確擷取80個字
-            string TargetSection = ">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB";
-            Assert.AreEqual(80, jobCrawler.GetValueBetweenTwoString(TargetSection, ">", "C", 80).Length);
-        }
-
-        [TestMethod()]
-        public void GetSubStringTest()
-        {
-            // 檢查第一個參數是否為 null 由 JobCrawler.ExtractJobData 處理
-            // 檢查第二個參數是否大於字串由 JobCrawler.ExtractJobData 處理
-            // 不需要在此對上述情況進行測試
-            JobCrawler jobCrawler = new JobCrawler("");
-            Assert.AreEqual("BCDE", jobCrawler.GetSubString("ABCDE", 1, 4));
-            Assert.AreEqual("ABC", jobCrawler.GetSubString("ABC", 0, 5));
-            Assert.AreEqual("C", jobCrawler.GetSubString("ABC", 2, 5));
-            Assert.AreEqual("測", jobCrawler.GetSubString("測", 0, 1));
-            Assert.AreEqual("測", jobCrawler.GetSubString("測", 0, 5));
+            // 測試若不包含欲擷取的右界，則返回的字串是否 = "左界到尾端的字元" + "..."
+            string TargetSection = ">ABCDE";
+            Assert.AreEqual(8, jobCrawler.GetValueBetweenTwoString(TargetSection, ">", "<").Length);
         }
     }
 }
