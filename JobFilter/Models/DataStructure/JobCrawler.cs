@@ -162,9 +162,9 @@ namespace JobFilter.Models.DataStructure
                     PartialContent = PartialContent.Replace("<em class=\"b-txt--highlight\">", "");
                     PartialContent = PartialContent.Replace("</em>", "").TrimEnd().Replace("\n", " ");
                     PartialContent = GetValueBetweenTwoString(PartialContent, ">", "<");
-                    if(PartialContent.Length > 36)
+                    if(PartialContent.Length > 32)
                     {
-                        PartialContent = PartialContent.Substring(0, 36) + "..."; // 將顯示字數限制在一行以內
+                        PartialContent = PartialContent.Substring(0, 32) + "..."; // 將顯示字數限制在一行以內
                     }
 
                     // 擷取工作薪資
