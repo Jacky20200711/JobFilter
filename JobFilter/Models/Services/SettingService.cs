@@ -167,11 +167,12 @@ namespace JobFilter.Models
         public static string AddBlockCompany(ApplicationDbContext _context, string UserEmail, string BlockCompany = null)
         {
             
-            if (!IsValidString(BlockCompany, 50))
+            if (!IsValidString(BlockCompany))
             {
-               return "封鎖失敗，此公司的名稱含有不支援的字元或是字數超過限制(50字)!";
+               return "封鎖失敗，此公司的名稱含有不支援的字元!";
             }
 
+            // 取得所有該用戶的設定檔
             var TargetSetting = _context.FilterSetting.Where(m => m.UserEmail == UserEmail);
             if (TargetSetting == null)
             {
@@ -192,7 +193,7 @@ namespace JobFilter.Models
                     // 檢查該欄位的新長度是否保持合法
                     if (UserSetting.IgnoreCompany.Length + $",{BlockCompany}".Length > limitLenOfIgnoreCompany)
                     {
-                        return $"封鎖未完全，請確認您所有的設定檔在封鎖此公司後，字數皆不會超過{limitLenOfIgnoreCompany}字!";
+                        return $"請確認您所有的設定檔在封鎖此公司後，字數皆不會超過{limitLenOfIgnoreCompany}字!";
                     }
 
                     // 若長度合法則進行串接
