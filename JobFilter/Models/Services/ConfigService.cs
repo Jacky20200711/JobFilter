@@ -20,7 +20,7 @@ namespace JobFilter.Models.Services
             return config[$"AppSetting:{Key}"];
         }
 
-        // Overload，從設定檔取得很多 KEY 的 Value
+        // 從設定檔取得很多 KEY 的 Value
         public static Dictionary<string, string> GetValueByKey(List<string> Keys)
         {
             var builder = new ConfigurationBuilder()

@@ -12,13 +12,16 @@ namespace JobFilter.Models.Services
         {
             HashSet<string> DataSet = new HashSet<string>();
 
+            // 若字串為空則返回空的 HashTable
             if (string.IsNullOrEmpty(DataStr))
             {
                 return DataSet;
             }
 
+            // 若字串不為空，則以逗號切割出字串內的資料
             foreach (string data in DataStr.Split(','))
             {
+                // 若切割出來的資料不為空則加入 HashTable
                 if (!string.IsNullOrEmpty(data))
                 {
                     DataSet.Add(data);
@@ -30,6 +33,7 @@ namespace JobFilter.Models.Services
 
         public static bool IsValidJob(FilterSetting filterSetting, Job job)
         {
+            // 檢查設定檔儲存的字串，並切割出字串內的資料(欲排除的關鍵字 & 欲排除的公司)
             HashSet<string> IgnoreKeywords = GetSplitedDataSet(filterSetting.ExcludeWord);
             HashSet<string> IgnoreCompanys = GetSplitedDataSet(filterSetting.IgnoreCompany);
 
@@ -114,7 +118,7 @@ namespace JobFilter.Models.Services
             GetTargetPages(JobCrawlers);
             GetJobSections(JobCrawlers);
 
-            // 根據設定檔來過濾工作列表
+            // 根據設定檔來過濾每一隻爬蟲所擁有的工作列表
             JobList validJobs = new JobList();
             foreach (JobCrawler jobCrawler in JobCrawlers)
             {

@@ -19,16 +19,19 @@ namespace JobFilter.Models
 
         public static bool IsValidString(string TestStr, int LengthLimit = 1000)
         {
+            // 檢查字串是否為空
             if (string.IsNullOrEmpty(TestStr))
             {
                 return true;
             }
 
+            // 檢查字串是否超過長度限制
             if (TestStr.Length > LengthLimit)
             {
                 return false;
             }
 
+            // 檢查字串是否含有非法字元
             foreach (char c in TestStr)
             {
                 int CharCode = Convert.ToInt32(c);

@@ -10,13 +10,13 @@ namespace JobFilter.Models.DataStructure
     public class JobCrawler
     {
         private Logger _logger = LogManager.GetCurrentClassLogger();
-        private List<string> TagsContent = new List<string>();
-        private List<Job> Jobs = new List<Job>();
-        private string _url;
-        private bool EncounterError = false;
-        private string PageContent = null;
-        private string CrawlResult = null;
-        private string ExtractResult = null;
+        private List<string> TagsContent = new List<string>();    // 用來存放解析頁面時取得的標籤內容
+        private List<Job> Jobs = new List<Job>();                 // 用來存放解析頁面時取得的工作列表
+        private string _url;                  // 用來存放這隻爬蟲所負責的頁面網址
+        private bool EncounterError = false;  // 用來記錄爬取與解析頁面的過程中，是否中途出錯
+        private string PageContent = null;    // 用來存放爬取的頁面內容
+        private string CrawlResult = null;    // 用來判斷是否完成爬取頁面的任務
+        private string ExtractResult = null;  // 用來判斷是否完成解析頁面的任務
 
         public JobCrawler(string url)
         {
@@ -47,11 +47,13 @@ namespace JobFilter.Models.DataStructure
 
                 if (CharCode > 47 && CharCode < 58)
                 {
+                    // 從遇到第一個數字開始，持續擷取遇到的數字
                     HasFindDigit = true;
                     chars.Add(C);
                 }
                 else
                 {
+                    // 若在遇到第一個數字後遇到了非數字則跳出
                     if (HasFindDigit) break;
                 }
             }
@@ -62,13 +64,14 @@ namespace JobFilter.Models.DataStructure
 
         public int GetMinWage(string TargetSection)
         {
+            // 若薪資內容為年薪且只有一個數字，將它除以12即為最低月薪
             int firstNum = GetFirstNum(TargetSection);
             return TargetSection.Contains("年薪") ? firstNum / 12 : firstNum;
         }
 
         public int GetMaxWage(string TargetSection)
         {
-            // 若面議則返回最大值，確保不會被過濾掉
+            // 若面議則令最高月薪返回最大值，確保最低月薪為40000以上的工作不會被過濾掉
             if (TargetSection.Contains("面議"))
             {
                 return 2147483647;
@@ -85,7 +88,7 @@ namespace JobFilter.Models.DataStructure
             }
             else
             {
-                // 從 '~' 所在的索引擷取數字
+                // 從 '~' 所在的索引擷取第二個數字
                 int result = GetFirstNum(TargetSection.Substring(index));
                 return TargetSection.Contains("年薪") ? result / 12 : result;
             }
@@ -93,8 +96,8 @@ namespace JobFilter.Models.DataStructure
 
         public string GetValueBetweenTwoString(string TargetSection, string S1, string S2)
         {
-            int IndexOfS1 = TargetSection.IndexOf(S1);
-            int IndexOfS2 = TargetSection.IndexOf(S2, IndexOfS1 + S1.Length);
+            int IndexOfS1 = TargetSection.IndexOf(S1);                          // 搜尋S1的索引
+            int IndexOfS2 = TargetSection.IndexOf(S2, IndexOfS1 + S1.Length);   // 從S1後面搜尋S2的索引
 
             if (IndexOfS1 < 0)
             {
@@ -103,12 +106,12 @@ namespace JobFilter.Models.DataStructure
             
             int startIndex = IndexOfS1 + S1.Length;
 
-            // 若抓不到右界，則返回 "左界到尾端的字元" + "..."
+            // 若抓不到右界，則返回 "S1到尾端的字元" + "..."
             if (IndexOfS2 < 0)
             {
                 return TargetSection.Substring(startIndex, TargetSection.Length - startIndex) + "...";
             }
-            // 若抓得到右界，則返回左界和右界中間的字元
+            // 若抓得到右界，則返回 S1 和 S2 之間的字元
             else
             {
                 return TargetSection.Substring(startIndex, IndexOfS2 - startIndex);
@@ -202,12 +205,16 @@ namespace JobFilter.Models.DataStructure
 
         public async Task LoadPage()
         {
-            HttpClient httpClient = new HttpClient();
-            var responseMessage = await httpClient.GetAsync(_url);
             try
             {
+                // 爬取指定頁面
+                HttpClient httpClient = new HttpClient();
+                var responseMessage = await httpClient.GetAsync(_url);
+
+                // 確認請求頁面的狀態
                 if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
                 {
+                    // 讀取頁面的內容
                     PageContent = responseMessage.Content.ReadAsStringAsync().Result;
                     CrawlResult = "OK";
                 }

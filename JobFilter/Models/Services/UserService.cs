@@ -8,6 +8,7 @@ namespace JobFilter.Models.Services
     {
         public static string IsValidUser(IdentityUser identityUser)
         {
+            // 檢查欲新增用戶的郵件格式和密碼長度
             if (string.IsNullOrEmpty(identityUser.Email) ||
                 string.IsNullOrEmpty(identityUser.PasswordHash) ||
                 !Regex.IsMatch(identityUser.Email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$") ||
