@@ -47,7 +47,7 @@ namespace JobFilter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Email,PasswordHash")] IdentityUser identityUser)
         {
-            // 檢查郵件格式和密碼長度
+            // 調用 UserService 提供的函數來檢查郵件格式和密碼長度，若沒有通過檢查則顯示對應的錯誤訊息
             string ErrorMessage = UserService.IsValidUser(identityUser);
             if (ErrorMessage != null)
             {
@@ -55,12 +55,13 @@ namespace JobFilter.Controllers
                 return View();
             }
 
+            // 若成功通過檢查則建立該用戶
             // _userManager 會自動幫你檢查該郵件是否已被註冊，若已被註冊則不會進行動作
             var user = new IdentityUser { UserName = identityUser.Email, Email = identityUser.Email };
             await _userManager.CreateAsync(user, identityUser.PasswordHash);
             _logger.LogInformation($"[{User.Identity.Name}]新增了用戶[{user.Email}]");
 
-            // 返回之前的分頁
+            // 返回之前所在的用戶列表分頁
             int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
             int page = TryGetPage != null ? (int)TryGetPage : 1;
             return RedirectToAction("Index", new { page });
@@ -87,7 +88,7 @@ namespace JobFilter.Controllers
             _context.SaveChanges();
             _logger.LogWarning($"[{User.Identity.Name}]刪除了用戶[{user.Email}]");
 
-            // 返回之前的分頁
+            // 返回之前所在的用戶列表分頁
             int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
             int page = TryGetPage != null ? (int)TryGetPage : 1;
             return RedirectToAction("Index", new { page });
@@ -134,7 +135,7 @@ namespace JobFilter.Controllers
             await _userManager.AddPasswordAsync(user, identityUser.PasswordHash);
             _logger.LogInformation($"[{User.Identity.Name}]修改了[{user.Email}]的資料");
 
-            // 返回之前的分頁
+            // 返回之前所在的用戶列表分頁
             int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
             int page = TryGetPage != null ? (int)TryGetPage : 1;
             return RedirectToAction("Index", new { page });
@@ -142,6 +143,7 @@ namespace JobFilter.Controllers
 
         public async Task<IActionResult> DeleteAll()
         {
+            // 刪除超級管理員以外的用戶
             _context.RemoveRange(_context.Users.Where(m => m.Email != UserService.SuperAdmin));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -23,6 +23,7 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 調用 CSVService 提供的函數來匯出設定檔
                 CSVService.ExportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "Setting", action = "Index" });
             }
@@ -38,6 +39,7 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 調用 CSVService 提供的函數來匯入設定檔
                 CSVService.ImportFilterSetting(_context);
                 return RedirectToRoute(new { controller = "Setting", action = "Index" });
             }
@@ -53,6 +55,7 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 調用 CSVService 提供的函數來匯出用戶資料
                 CSVService.ExportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }
@@ -68,6 +71,7 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 調用 CSVService 提供的函數來匯入用戶資料
                 CSVService.ImportUser(_context);
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }

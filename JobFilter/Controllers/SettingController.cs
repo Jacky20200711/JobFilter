@@ -35,10 +35,13 @@ namespace JobFilter.Controllers
             {
                 page = page == null ? 1 : page;
                 string UserEmail = User.Identity.Name;
+
+                // 若用戶是管理員且有設置查看全部設定檔的Session，則列出所有的設定檔(由新到舊)
                 if (HttpContext.Session.GetString("CheckAllSettings") != null && UserService.InAdminGroup(UserEmail))
                 {
                     return View(await _context.FilterSetting.OrderByDescending(m => m.Id).ToPagedListAsync(page, 10));
                 }
+                // 否則只列出該用戶的設定檔(由新到舊)
                 else
                 {
                     return View(await _context.FilterSetting.Where(m => m.UserEmail == UserEmail).OrderByDescending(m => m.Id).ToPagedListAsync(page, 5));
@@ -54,6 +57,7 @@ namespace JobFilter.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult SetSessionForCheckAllSettings()
         {
+            // 設置查看全部設定檔的Session
             HttpContext.Session.SetString("CheckAllSettings", "1");
             return RedirectToAction("Index", new { page = 1 });
         }
@@ -61,6 +65,7 @@ namespace JobFilter.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult RemoveSessionOfCheckAllSettings()
         {
+            // 移除查看全部設定檔的Session
             HttpContext.Session.Remove("CheckAllSettings");
             return RedirectToAction("Index", new { page = 1 });
         }
@@ -83,12 +88,15 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 調用 SettingService 提供的函數來建立設定檔，若中途出錯則跳轉到指定的錯誤頁面
                 string ErrorMessage = SettingService.CreateSetting(_context, filterSetting, User.Identity.Name);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
+
+                // 若中途沒有出錯則寫入變更到DB，並跳轉回設定檔列表
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -132,15 +140,16 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 調用 SettingService 提供的函數來編輯設定檔，若中途出錯則跳轉到指定的錯誤頁面
                 string ErrorMessage = SettingService.EditSetting(_context, filterSetting, User.Identity.Name, id);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
-                await _context.SaveChangesAsync();
 
-                // 返回之前的分頁
+                // 若中途沒有出錯則寫入變更到DB，並跳轉回之前所在的設定檔列表分頁
+                await _context.SaveChangesAsync();
                 int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
                 int page = TryGetPage != null ? (int)TryGetPage : 1;
                 return RedirectToAction("Index", new { page });
@@ -156,15 +165,16 @@ namespace JobFilter.Controllers
         {
             try
             {
+                // 調用 SettingService 提供的函數來刪除設定檔，若中途出錯則跳轉到指定的錯誤頁面
                 string ErrorMessage = SettingService.DeleteSetting(_context, User.Identity.Name, id);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
-                await _context.SaveChangesAsync();
 
-                // 返回之前的分頁
+                // 若中途沒有出錯則寫入變更到DB，並跳轉回之前所在的設定檔列表分頁
+                await _context.SaveChangesAsync();
                 int page = returnPage != null ? (int)returnPage : 1;
                 return RedirectToAction("Index", new { page });
             }
@@ -178,6 +188,7 @@ namespace JobFilter.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAll()
         {
+            // 刪除所有的設定檔
             _context.RemoveRange(_context.FilterSetting);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -195,26 +206,30 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                // 紀錄之前所在的分頁
+                // 紀錄之前所在的工作列表分頁
                 returnPage = returnPage == null ? 0 : returnPage;
                 if (returnPage != 0)
                 {
                     HttpContext.Session.SetInt32("returnPage", (int)returnPage);
                 }
 
-                // 將該公司添加到該用戶的所有設定檔
+                // 調用 SettingService 提供的函數將該公司添加到該用戶的所有設定檔，若中途出錯則跳轉到指定的錯誤頁面
                 string ErrorMessage = SettingService.AddBlockCompany(_context, User.Identity.Name, CompanyName);
                 if (ErrorMessage != null)
                 {
                     ViewBag.Error = ErrorMessage;
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
+
+                // 若中途沒有出錯則寫入變更到DB
                 await _context.SaveChangesAsync();
 
-                // 過濾 Session 儲存的工作列表，去除該公司所提供的工作
+                // 檢查 Session 儲存的工作列表，去除該公司所提供的工作
                 JobList jobs = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 JobList validJobs = JobService.GetValidJobs(jobs, CompanyName);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(validJobs));
+
+                // 跳轉回之前所在的工作列表分頁(分頁判斷的邏輯在 Job/Index )
                 return RedirectToRoute(new { controller = "Job", action = "Index" });
             }
             catch (Exception)

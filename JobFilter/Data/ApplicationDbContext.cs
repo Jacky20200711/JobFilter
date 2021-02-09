@@ -15,7 +15,7 @@ namespace JobFilter.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<FilterSetting>().HasIndex(f =>  f.UserEmail).IsUnique(false).HasFilter(null);
+            modelBuilder.Entity<FilterSetting>().HasIndex(f => f.UserEmail).IsUnique(false).HasFilter(null);
         }
     }
 }

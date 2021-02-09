@@ -38,16 +38,16 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                // 準備傳送 Session 儲存的工作列表和總工作數量
+                // 取得 Session 儲存的工作列表和總工作數量
                 JobList jobList = JsonConvert.DeserializeObject<JobList>(JobListStr);
                 ViewBag.numOfJob = jobList.Count;
 
-                // 若 Session 有儲存之前所在的分頁則跳轉回該分頁
+                // 查看 Session 是否有儲存之前所在的工作列表分頁，若有則將之後要跳轉的分頁設成該分頁
                 int? TryGetPage = HttpContext.Session.GetInt32("returnPage");
                 if(TryGetPage != null)
                 {
                     page = TryGetPage;
-                    HttpContext.Session.Remove("returnPage"); // 避免永遠卡在此分頁
+                    HttpContext.Session.Remove("returnPage"); // 移除 Session 以避免永遠卡在此分頁
                 }
 
                 return View(await jobList.ToPagedListAsync((int)page, 10));
@@ -63,7 +63,7 @@ namespace JobFilter.Controllers
         {
             try
             {
-                // 令用戶只能執行自己的設定
+                // 若用戶欲執行的設定檔不是自己的，則跳轉到指定的錯誤頁面
                 var filterSetting = _context.FilterSetting.FirstOrDefault(x => x.Id == id);
                 if (filterSetting == null || filterSetting.UserEmail != User.Identity.Name)
                 {
@@ -71,7 +71,7 @@ namespace JobFilter.Controllers
                     return View("~/Views/Shared/ErrorPage.cshtml");
                 }
 
-                // 取得過濾後的工作並存到Session
+                // 取得過濾後的工作列表並存到 Session
                 JobList validJobs = JobService.GetValidJobs(filterSetting);
                 HttpContext.Session.SetString("jobList", JsonConvert.SerializeObject(validJobs));
                 return RedirectToAction("Index");
