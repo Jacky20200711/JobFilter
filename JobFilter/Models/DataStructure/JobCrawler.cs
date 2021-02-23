@@ -133,7 +133,23 @@ namespace JobFilter.Models.DataStructure
 
                     // 擷取工作名稱
                     string TargetStr = "data-job-name";
-                    int Index = tag.IndexOf(TargetStr) + TargetStr.Length;
+                    int Index = tag.IndexOf(TargetStr);
+
+                    /*
+                        若104搜尋到的工作不到20個(即不滿一頁)，則在 "搜尋結果太少" 的提示下方會出現推薦工作，
+                        觀察頁面代碼後，發現該提示和各工作一樣，都被夾帶在其中一組<article>，假設該提示出現在第X組，
+                        那麼當程式解析第X組的工作名稱時會抓不到東西，可以利用這一點來避免解析到下方的推薦工作!
+                    */
+
+                    // 檢查當前這組 <article> 是否可以擷取到工作名稱，若不能則結束任務
+                    if (Index > -1)
+                    {
+                        Index += TargetStr.Length;
+                    }
+                    else
+                    {
+                        break;
+                    }
                     string JobTitle = GetValueBetweenTwoString(tag.Substring(Index, 20), "\"", "\"");
 
                     // 擷取公司名稱
