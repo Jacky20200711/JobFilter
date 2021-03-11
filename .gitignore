@@ -6,3 +6,4 @@ bin/
 JobFilter/Properties/PublishProfiles/FolderProfile.pubxml.user
 JobFilter/Properties/PublishProfiles/FolderProfile.pubxml
 JobFilter/.config/dotnet-tools.json
+JobFilter/JobFilter.csproj.user
