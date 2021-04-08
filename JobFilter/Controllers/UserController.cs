@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using JobFilter.Data;
 using JobFilter.Models.Services;
@@ -11,26 +12,29 @@ using X.PagedList;
 
 namespace JobFilter.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger _logger;
 
-        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
+        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<UserController> logger)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
             _logger = logger;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int? page = 1)
         {
             page = page == null ? 1 : page;
             return View(await _context.Users.Where(m => m.Email != UserService.SuperAdmin).ToPagedListAsync(page, 10)); // 隱藏超級管理員
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(int? returnPage = 0)
         {
             // 紀錄之前所在的分頁
@@ -43,6 +47,7 @@ namespace JobFilter.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Email,PasswordHash")] IdentityUser identityUser)
@@ -67,6 +72,7 @@ namespace JobFilter.Controllers
             return RedirectToAction("Index", new { page });
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(string id, int? returnPage = 0)
         {
             // 紀錄之前所在的分頁
@@ -94,6 +100,7 @@ namespace JobFilter.Controllers
             return RedirectToAction("Index", new { page });
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(string id, int? returnPage = 0)
         {
             // 紀錄之前所在的分頁
@@ -115,6 +122,7 @@ namespace JobFilter.Controllers
             return View(user);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(IdentityUser identityUser)
         {
@@ -141,12 +149,42 @@ namespace JobFilter.Controllers
             return RedirectToAction("Index", new { page });
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAll()
         {
             // 刪除超級管理員以外的用戶
             _context.RemoveRange(_context.Users.Where(m => m.Email != UserService.SuperAdmin));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CreateAdminRole()
+        {
+            // 只有超級管理員可以創建管理員群組
+            if(User.Identity.Name != UserService.SuperAdmin)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                // 創建管理員群組
+                var roleCheck = await _roleManager.RoleExistsAsync("Admin");
+                if (!roleCheck)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+
+                // 將超級管理員加入該群組
+                IdentityUser user = await _userManager.FindByEmailAsync(UserService.SuperAdmin);
+                await _userManager.AddToRoleAsync(user, "Admin");
+                return RedirectToAction(nameof(Index));
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"CreateAdminRole error = {ex}");
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

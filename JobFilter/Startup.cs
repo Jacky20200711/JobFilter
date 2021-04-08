@@ -99,30 +99,6 @@ namespace JobFilter
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-
-            CreateAdminRole(userManager, roleManager).Wait();
-        }
-
-        public async Task CreateAdminRole(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            // Create role
-            var roleCheck = await roleManager.RoleExistsAsync("Admin");
-            if (!roleCheck)
-            {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-            }
-
-            // Get superAdmin, if it's not exist then create it. 
-            string superAdmin = "fewer135@gmail.com";
-            IdentityUser user = await userManager.FindByEmailAsync(superAdmin);
-            if(user == null)
-            {
-                user = new IdentityUser { UserName = superAdmin, Email = superAdmin };
-                await userManager.CreateAsync(user, Path.GetRandomFileName());
-            }
-
-            // Add superAdmin to the role
-            await userManager.AddToRoleAsync(user, "Admin");
         }
     }
 }
