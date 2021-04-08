@@ -21,7 +21,7 @@ namespace JobFilter.Models
         [MaxLength(50, ErrorMessage = "最多50個字")]
         public string ExcludeWord { get; set; }
 
-        [MaxLength(1500, ErrorMessage = "最多1500個字")]
+        [MaxLength(3000, ErrorMessage = "最多3000個字")]
         public string IgnoreCompany { get; set; }
 
         [MaxLength(5, ErrorMessage = "最多5個字")]

@@ -14,7 +14,7 @@ namespace JobFilter.Models
         // 這裡的長度限制是參照 Models\DataStructure\FilterSetting.cs
         public static int limitLenOfUrl = 800;
         public static int limitLenOfExcludeWord = 50;
-        public static int limitLenOfIgnoreCompany = 1500;
+        public static int limitLenOfIgnoreCompany = 3000;
         public static int limitLenOfRemark = 5;
 
         public static bool IsValidString(string TestStr, int LengthLimit = 1000)
